@@ -1,9 +1,9 @@
-import AvatarIcon from "./view/avatar.js";
-import NewNavMenu from "./view/nav-menu.js";
-import NewSort from "./view/sort.js";
-import NewFilms from "./view/film-list.js";
-import NewFilmCard from "./view/film-card.js";
-import { render } from "./render.js";
+import AvatarIcon from './view/avatar.js';
+import NewNavMenu from './view/nav-menu.js';
+import NewSort from './view/sort.js';
+import NewFilms from './view/film-list.js';
+import NewFilmCard from './view/film-card.js';
+import { render } from './render.js';
 const MOVIE_CARD = 5;
 
 const header = document.querySelector('.header');
