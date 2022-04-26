@@ -10,6 +10,7 @@ import NewFilmsMostComment from './view/films-most-commented.js';
 const MOVIE_CARD = 6;
 const EXTRA_MOVIE_CARD = 3;
 
+
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 render( new AvatarIcon (), header);
