@@ -8,7 +8,7 @@ export default class AvatarIcon {
 
   getElement () {
     if(!this.element){
-      this.element = createElement(this.createAvatarIcon());
+      this.element = createElement(this. createDomElement());
     }
     return this.element;
   }
