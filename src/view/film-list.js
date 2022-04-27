@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-const films = () =>
+const getDomFilms = () =>
   `<section class="films">
 <section class="films-list">
 <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
@@ -9,13 +9,13 @@ const films = () =>
 </section>`;
 
 export default class NewFilms {
-  createFilms() {
-    return films ();
+  createDomElement() {
+    return getDomFilms();
   }
 
   getElement() {
     if(!this.element){
-      this.element = createElement(this.createFilms());
+      this.element = createElement(this.createDomElement());
     }
     return this.element;
   }

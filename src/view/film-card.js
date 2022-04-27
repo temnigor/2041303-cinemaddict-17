@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-const filmCard = () =>
+const getDomFilmCard = () =>
   `<article class="film-card">
 <a class="film-card__link">
   <h3 class="film-card__title">The Man with the Golden Arm</h3>
@@ -21,13 +21,13 @@ const filmCard = () =>
 </article>`;
 
 export default class NewFilmCard {
-  creatFilmCard () {
-    return filmCard();
+  createDomElement() {
+    return getDomFilmCard();
   }
 
   getElement() {
     if(!this.element){
-      this.element = createElement(this.creatFilmCard());
+      this.element = createElement(this.createDomElement());
     }
     return this.element;
   }

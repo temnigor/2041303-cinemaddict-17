@@ -1,18 +1,18 @@
 import { createElement } from '../render.js';
-const createFilmsMostComment = () =>
+const getDomFilmsMostComment = () =>
   `<section class="films-list films-list--extra">
 <h2 class="films-list__title ">Most commented</h2>
 <div class="films-list__container most_commented">
 </div>
 </section>`;
 export default class NewFilmsMostComment {
-  createFilms() {
-    return createFilmsMostComment();
+  createDomElement() {
+    return getDomFilmsMostComment();
   }
 
   getElement() {
     if(!this.element) {
-      this.element = createElement(this.createFilms());
+      this.element = createElement(this.createDomElement());
     }
     return this.element;
   }
