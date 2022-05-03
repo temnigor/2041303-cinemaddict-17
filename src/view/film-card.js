@@ -3,23 +3,23 @@ import { createElement } from '../render.js';
 import { getReleaseYears, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
 
 const getDomFilmCard = (filmInfo) => {
-const {
-  id,
-  comments,
-  film_info:{title, alternative_title, total_rating, poster, age_rating, director,
-    writers:[...allWriters],
-    actors:[...allActors],
-    release:{date, release_country},
-    runtime,
-    genre :[...allGenre],
-    description},
-  user_details:{ watchlist, already_watched, watching_date, favorite }
-} = filmInfo;
-const normalGenre = getNormalList(...allGenre);
-const normalDescription = getNormalDescription(description);
-const releaseDate = getReleaseYears(date);
-const runtimeHourMinute = getRuntime(runtime);
-return (  `<article class="film-card">
+  const {
+    id,
+    comments,
+    film_info:{title, alternative_title, total_rating, poster, age_rating, director,
+      writers:[...allWriters],
+      actors:[...allActors],
+      release:{date, release_country},
+      runtime,
+      genre :[...allGenre],
+      description},
+    user_details:{ watchlist, already_watched, watching_date, favorite }
+  } = filmInfo;
+  const normalGenre = getNormalList(...allGenre);
+  const normalDescription = getNormalDescription(description);
+  const releaseDate = getReleaseYears(date);
+  const runtimeHourMinute = getRuntime(runtime);
+  return (  `<article class="film-card">
 <a class="film-card__link">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${total_rating}</p>
@@ -41,11 +41,12 @@ return (  `<article class="film-card">
 };
 
 export default class NewFilmCard {
-constructor( filmInfo) {
-this.filmInfo = filmInfo;
-}
+  constructor( filmInfo) {
+    this.filmInfo = filmInfo;
+  }
+
   createDomElement() {
-    console.log()
+    console.log();
     return getDomFilmCard(this.filmInfo);
   }
 

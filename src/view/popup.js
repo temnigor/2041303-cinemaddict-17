@@ -1,17 +1,17 @@
-import { createElement } from "../render";
+import { createElement } from '../render';
 import { getRuntime, getReleaseData, getGenreList, getNormalList, getDataComment} from '../utils.js';
 const getComment = (comments) => {
-  console.log(comments)
+  console.log(comments);
   const commentList = document.createElement('div');
-  comments.forEach(commentInfo => {
+  comments.forEach((commentInfo) => {
     const {
       author,
       comment,
       date,
       emotion
-} = commentInfo;
-const normalDate = getDataComment(date)
-const comentDom = `<li class="film-details__comment">
+    } = commentInfo;
+    const normalDate = getDataComment(date);
+    const comentDom = `<li class="film-details__comment">
 <span class="film-details__comment-emoji">
   <img src="./images/emoji/${emotion}.png" alt="emoji-${emotion}" width="55" height="55">
 </span>
@@ -24,10 +24,10 @@ const comentDom = `<li class="film-details__comment">
   </p>
 </div>
 </li>`;
-commentList.innerHTML = `${commentList.innerHTML} ${comentDom}`
+    commentList.innerHTML = `${commentList.innerHTML} ${comentDom}`;
   });
   return commentList;
-  };
+};
 
 
 const getDomPopup = (filmInfo, commentsArray) => {
@@ -47,9 +47,9 @@ const getDomPopup = (filmInfo, commentsArray) => {
   const normalWriters = getNormalList(...allWriters);
   const normalActors = getNormalList(...allActors);
   const runtimeHourMinute = getRuntime(runtime);
-   const normalGenre = getGenreList(genre).innerHTML;
-   const normalDate = getReleaseData(date)
-   const comentsList = getComment(commentsArray).innerHTML;
+  const normalGenre = getGenreList(genre).innerHTML;
+  const normalDate = getReleaseData(date);
+  const comentsList = getComment(commentsArray).innerHTML;
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
   <div class="film-details__top-container">
@@ -169,17 +169,20 @@ export default class NewPopup {
     this.filmInfo = filmInfo;
     this.filmComment = filmComment;
   }
-createDomElement() {
-  return getDomPopup(this.filmInfo, this.filmComment)
-}
-getElement() {
-  console.log(this.filmComment)
-  if(!this.element) {
-  this.element = createElement(this.createDomElement())
-}
-return this.element;
-}
- removeElement() {
-  this.element = null;
-}
+
+  createDomElement() {
+    return getDomPopup(this.filmInfo, this.filmComment);
+  }
+
+  getElement() {
+    console.log(this.filmComment);
+    if(!this.element) {
+      this.element = createElement(this.createDomElement());
+    }
+    return this.element;
+  }
+
+  removeElement() {
+    this.element = null;
+  }
 }

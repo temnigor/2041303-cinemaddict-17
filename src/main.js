@@ -15,13 +15,13 @@ import NewFilmPopup from './prisenter/popup-prisenter.js';
 import NewComment from './model/movic-coment-model.js';
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
-const footer = document.querySelector('.footer')
+const footer = document.querySelector('.footer');
 const filmsCatalog = new NewFilmsCatalog();
 const filmsCatalogRated = new NewFilmsCatalogRated();
 const filmsCatalogMostComment = new NewFilmsCatalogMostComment();
-const moviceCardModel = new NewMovicCardModel()
-const filmPopup = new NewFilmPopup()
-const filmComment = new NewComment()
+const moviceCardModel = new NewMovicCardModel();
+const filmPopup = new NewFilmPopup();
+const filmComment = new NewComment();
 render( new AvatarIcon (), header);
 render( new NewNavMenu(), main);
 render(new NewSort(), main);
