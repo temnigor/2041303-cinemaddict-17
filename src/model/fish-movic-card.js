@@ -3,12 +3,12 @@ const getSomeFilm = ()=> ({
   'comments': [
     42, 34
   ],
-  'film_info': {
+  'filmInfo': {
     'title': 'A Little Pony Without The Carpet',
-    'alternative_title': 'Laziness Who Sold Themselves',
-    'total_rating': 5.3,
+    'alternativeTitle': 'Laziness Who Sold Themselves',
+    'totalRating': 5.3,
     'poster': 'images/posters/the-dance-of-life.jpg',
-    'age_rating': 0,
+    'ageRating': 0,
     'director': 'Tom Ford',
     'writers': [
       'Takeshi Kitano',
@@ -21,7 +21,7 @@ const getSomeFilm = ()=> ({
     ],
     'release': {
       'date': '2019-05-11T00:00:00.000Z',
-      'release_country': 'Finland'
+      'releaseCountry': 'Finland'
     },
     'runtime': 77,
     'genre': [
@@ -31,7 +31,7 @@ const getSomeFilm = ()=> ({
     ],
     'description': 'Oscar-winning film, a war drama about two young people, from the creators of timeless classic "Nu, Pogodi!" and "Alice in Wonderland", with the best fight scenes since Bruce Lee.'
   },
-  'user_details': {
+  'userDetails': {
     'watchlist': false,
     'already_watched': true,
     'watching_date': '2019-04-12T16:12:32.554Z',

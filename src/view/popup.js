@@ -32,10 +32,10 @@ const getComment = (comments) => {
 const getDomPopup = (filmInfo, commentsArray) => {
   const {
 
-    film_info:{title, alternative_title, total_rating, poster, age_rating, director,
+    filmInfo:{title, alternativeTitle, totalRating, poster, ageRating, director,
       writers:[...allWriters],
       actors:[...allActors],
-      release:{date, release_country},
+      release:{date, releaseCountry},
       runtime,
       genre,
       description}
@@ -57,18 +57,18 @@ const getDomPopup = (filmInfo, commentsArray) => {
       <div class="film-details__poster">
         <img class="film-details__poster-img" src=${poster} alt="">
 
-        <p class="film-details__age">${age_rating}+</p>
+        <p class="film-details__age">${ageRating}+</p>
       </div>
 
       <div class="film-details__info">
         <div class="film-details__info-head">
           <div class="film-details__title-wrap">
             <h3 class="film-details__title">${title}</h3>
-            <p class="film-details__title-original">Original: ${alternative_title}</p>
+            <p class="film-details__title-original">Original: ${alternativeTitle}</p>
           </div>
 
           <div class="film-details__rating">
-            <p class="film-details__total-rating">${total_rating}</p>
+            <p class="film-details__total-rating">${totalRating}</p>
           </div>
         </div>
 
@@ -95,7 +95,7 @@ const getDomPopup = (filmInfo, commentsArray) => {
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Country</td>
-            <td class="film-details__cell">${release_country}</td>
+            <td class="film-details__cell">${releaseCountry}</td>
           </tr>
           <tr class="film-details__row">
             <td class="film-details__term">Genres</td>

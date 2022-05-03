@@ -1,6 +1,6 @@
 import NewFilmCard from '../view/film-card.js';
 import { render } from '../render.js';
-const EXTRA_MOVIE_CARD = 3;
+const EXTRA_MOVIE_CARD = 1;
 export default class NewFilmsCatalogMostComment {
   init = (filmContener, moviceCardModel) => {
     this.filmsContainer = filmContener;
