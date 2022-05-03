@@ -2,7 +2,6 @@ import AvatarIcon from './view/avatar.js';
 import NewNavMenu from './view/nav-menu.js';
 import NewSort from './view/sort.js';
 import NewFilms from './view/film-list.js';
-import dayjs from 'dayjs';
 import NewButtonShowMore from './view/button-show-more.js';
 import NewFilmsRated from './view/films-rated.js';
 import NewFilmsMostComment from './view/films-most-commented.js';
@@ -33,8 +32,8 @@ render(new NewButtonShowMore, films);
 render(new NewFilmsRated, films);
 render(new NewFilmsMostComment, films);
 const topRated = main.querySelector('.rated');
-//filmsCatalogRated.init(topRated);
+filmsCatalogRated.init(topRated, moviceCardModel);
 const mostCommented = main.querySelector('.most_commented');
-//filmsCatalogMostComment.init(mostCommented);
+filmsCatalogMostComment.init(mostCommented, moviceCardModel);
 filmPopup.init(footer, moviceCardModel, filmComment);
 

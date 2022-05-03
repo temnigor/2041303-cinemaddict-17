@@ -4,16 +4,12 @@ import { getReleaseYears, getRuntime, getNormalList, getNormalDescription} from 
 
 const getDomFilmCard = (filmInfo) => {
   const {
-    id,
     comments,
-    film_info:{title, alternative_title, total_rating, poster, age_rating, director,
-      writers:[...allWriters],
-      actors:[...allActors],
-      release:{date, release_country},
+    film_info:{title, total_rating, poster,
+      release:{date},
       runtime,
       genre :[...allGenre],
-      description},
-    user_details:{ watchlist, already_watched, watching_date, favorite }
+      description}
   } = filmInfo;
   const normalGenre = getNormalList(...allGenre);
   const normalDescription = getNormalDescription(description);
@@ -46,7 +42,6 @@ export default class NewFilmCard {
   }
 
   createDomElement() {
-    console.log();
     return getDomFilmCard(this.filmInfo);
   }
 

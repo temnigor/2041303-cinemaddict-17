@@ -1,7 +1,6 @@
 import { createElement } from '../render';
 import { getRuntime, getReleaseData, getGenreList, getNormalList, getDataComment} from '../utils.js';
 const getComment = (comments) => {
-  console.log(comments);
   const commentList = document.createElement('div');
   comments.forEach((commentInfo) => {
     const {
@@ -32,16 +31,14 @@ const getComment = (comments) => {
 
 const getDomPopup = (filmInfo, commentsArray) => {
   const {
-    id,
-    comments,
+
     film_info:{title, alternative_title, total_rating, poster, age_rating, director,
       writers:[...allWriters],
       actors:[...allActors],
       release:{date, release_country},
       runtime,
       genre,
-      description},
-    user_details:{ watchlist, already_watched, watching_date, favorite }
+      description}
   } = filmInfo;
 
   const normalWriters = getNormalList(...allWriters);
@@ -175,7 +172,6 @@ export default class NewPopup {
   }
 
   getElement() {
-    console.log(this.filmComment);
     if(!this.element) {
       this.element = createElement(this.createDomElement());
     }
