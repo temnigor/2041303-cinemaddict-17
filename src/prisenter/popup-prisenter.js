@@ -5,7 +5,6 @@ const getNeedComment = (allFilmComments, moviceModel) => {
   const keyMoviceComments = moviceModel[0].comments;
   const needComments = [];
   keyMoviceComments.forEach((oneKey)=>{
-    console.log(oneKey);
     for(const comment of allFilmComments){
       if(oneKey === Number(comment.id)){
         needComments.push(comment);
