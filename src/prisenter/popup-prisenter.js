@@ -22,7 +22,7 @@ export default class NewFilmPopup {
     this.allFilmComment = [...this.filmComments.getComments()];
     this.filmComment = getNeedComment(this.allFilmComment, this.allFilmsModel);
 
-    return render(new NewPopup(this.allFilmsModel[0], this.filmComment), this.filmsContainer);
+    render(new NewPopup(this.allFilmsModel[0], this.filmComment), this.filmsContainer);
 
   };
 }
