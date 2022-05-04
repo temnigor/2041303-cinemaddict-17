@@ -1,6 +1,6 @@
 
 import { createElement } from '../render.js';
-import { getReleaseYears, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
+import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
 
 const getDomFilmCard = (filmInfo) => {
   const {
@@ -8,12 +8,12 @@ const getDomFilmCard = (filmInfo) => {
     filmInfo:{title, totalRating, poster,
       release:{date},
       runtime,
-      genre :[...allGenre],
+      genre :allGenre,
       description}
   } = filmInfo;
-  const normalGenre = getNormalList(...allGenre);
+  const normalGenre = getNormalList(allGenre);
   const normalDescription = getNormalDescription(description);
-  const releaseDate = getReleaseYears(date);
+  const releaseDate = getReleaseYear(date);
   const runtimeHourMinute = getRuntime(runtime);
   return (  `<article class="film-card">
 <a class="film-card__link">

@@ -13,7 +13,6 @@ import NewFilmCardModel from './model/film-card-model.js';
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 const body = document.querySelector('body');
-console.log(body)
 const filmsCatalogPrisenter = new NewFilmsCatalog();
 const filmsCatalogRatedPrisenter = new NewFilmsCatalogRated();
 const filmsCatalogMostCommentPrisenter = new NewFilmsCatalogMostComment();
