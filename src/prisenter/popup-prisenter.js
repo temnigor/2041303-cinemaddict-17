@@ -1,7 +1,6 @@
 
 import NewPopup from '../view/popup.js';
 import { render } from '../render.js';
-const body = document.querySelector('body')
 const getNeedComment = (allFilmComments, filmsModel) => {
   const keyFilmsComments = filmsModel.comments;
   const needComments = [];
@@ -23,14 +22,14 @@ const getEventClouse = (popup, filmContener) => {
   document.addEventListener('keydown', (evt)=>{
     if(evt.code === 'Escape') {
       removeElementAndEvent(popup, filmContener);
-}
-});
+    }
+  });
 };
 function removeElementAndEvent (popup, filmContener) {
   filmContener.removeChild(popup.element);
   filmContener.classList.remove('hide-overflow');
   document.removeEventListener('keydown', getEventClouse);
-};
+}
 
 export default class NewFilmPopup {
   #filmsContainer = null;
@@ -47,9 +46,10 @@ export default class NewFilmPopup {
 
     this.#renderPopup(this.#filmCardModel, this.#filmComment);
   };
+
   #renderPopup = (filmModel, filmComment) => {
     const popup = new NewPopup(filmModel, filmComment);
-    render (popup, this.#filmsContainer)
-    getEventClouse(popup, this.#filmsContainer)
-  }
+    render (popup, this.#filmsContainer);
+    getEventClouse(popup, this.#filmsContainer);
+  };
 }

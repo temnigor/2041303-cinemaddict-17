@@ -11,12 +11,15 @@ export default class NewFilmsCatalogMostComment {
     this.#filmsContainer = filmContener;
     this.#filmsCardModel = filmsCardModel;
     this.#allFilmsModel = [...this.#filmsCardModel.films];
-    for(let i = 0; i<EXTRA_MOVIE_CARD; i++){
-      this.#renderMostCommentFilmCards(this.#allFilmsModel[i]);
+    if(+this.#allFilmsModel !== 0) {
+      for(let i = 0; i<EXTRA_MOVIE_CARD; i++){
+        this.#renderMostCommentFilmCards(this.#allFilmsModel[i]);
+      }
     }
   };
+
   #renderMostCommentFilmCards = (filmModel) => {
     const filmCard = new NewFilmCard(filmModel);
     render(filmCard, this.#filmsContainer);
-  }
+  };
 }

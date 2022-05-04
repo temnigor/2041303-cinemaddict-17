@@ -9,12 +9,15 @@ export default class NewFilmsCatalogRated {
     this.#filmsContainer = filmContener;
     this.#filmsCardModel = filmsCardModel;
     this.#allFilmsModel = [...this.#filmsCardModel.films];
-    for(let i = 0; i<EXTRA_MOVIE_CARD; i++){
-      this.#renderFilmsRated(this.#allFilmsModel[i]);
+    if(+this.#allFilmsModel !== 0) {
+      for(let i = 0; i<EXTRA_MOVIE_CARD; i++){
+        this.#renderFilmsRated(this.#allFilmsModel[i]);
+      }
     }
   };
+
   #renderFilmsRated = (filmsModel) => {
     const filmCard = new NewFilmCard(filmsModel);
     render(filmCard, this.#filmsContainer);
-  }
+  };
 }
