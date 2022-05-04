@@ -12,6 +12,8 @@ import NewFilmsCatalogMostComment from './prisenter/most-comment-films-prisenter
 import NewFilmCardModel from './model/film-card-model.js';
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
+const body = document.querySelector('body');
+console.log(body)
 const filmsCatalogPrisenter = new NewFilmsCatalog();
 const filmsCatalogRatedPrisenter = new NewFilmsCatalogRated();
 const filmsCatalogMostCommentPrisenter = new NewFilmsCatalogMostComment();
@@ -21,7 +23,7 @@ render( new NewNavMenu(), main);
 render(new NewSort(), main);
 render(new NewFilms(), main);
 const filmsContainer = main.querySelector('.films-list__container');
-filmsCatalogPrisenter.init(filmsContainer, filmsCardModel);
+filmsCatalogPrisenter.init(filmsContainer, filmsCardModel, body);
 const films = main.querySelector('.films');
 render(new NewButtonShowMore, films);
 render(new NewFilmsRated, films);

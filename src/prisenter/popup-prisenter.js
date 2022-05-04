@@ -1,8 +1,8 @@
 
 import NewPopup from '../view/popup.js';
 import { render } from '../render.js';
+const body = document.querySelector('body')
 const getNeedComment = (allFilmComments, filmsModel) => {
-  console.log(filmsModel)
   const keyFilmsComments = filmsModel.comments;
   const needComments = [];
   keyFilmsComments.forEach((oneKey)=>{
@@ -15,21 +15,21 @@ const getNeedComment = (allFilmComments, filmsModel) => {
   return needComments;
 };
 
-function removeElementAndEvent (popup) {
-  document.removeEventListener('keydown', getEventClouse)
-  popup.element.remove();
-};
-
-const getEventClouse = (popup) => {
+const getEventClouse = (popup, filmContener) => {
   popup.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
-    evt.preventDefault()
-    removeElementAndEvent(popup);
+    evt.preventDefault();
+    removeElementAndEvent(popup, filmContener);
   });
   document.addEventListener('keydown', (evt)=>{
     if(evt.code === 'Escape') {
-      removeElementAndEvent(popup)
+      removeElementAndEvent(popup, filmContener);
 }
 });
+};
+function removeElementAndEvent (popup, filmContener) {
+  filmContener.removeChild(popup.element);
+  filmContener.classList.remove('hide-overflow');
+  document.removeEventListener('keydown', getEventClouse);
 };
 
 export default class NewFilmPopup {
@@ -50,6 +50,6 @@ export default class NewFilmPopup {
   #renderPopup = (filmModel, filmComment) => {
     const popup = new NewPopup(filmModel, filmComment);
     render (popup, this.#filmsContainer)
-    getEventClouse(popup)
+    getEventClouse(popup, this.#filmsContainer)
   }
 }
