@@ -10,7 +10,11 @@ export default class NewFilmsCatalogRated {
     this.#filmsCardModel = filmsCardModel;
     this.#allFilmsModel = [...this.#filmsCardModel.films];
     for(let i = 0; i<EXTRA_MOVIE_CARD; i++){
-      render(new NewFilmCard(this.#allFilmsModel[i]), this.#filmsContainer);
+      this.#renderFilmsRated(this.#allFilmsModel[i]);
     }
   };
+  #renderFilmsRated = (filmsModel) => {
+    const filmCard = new NewFilmCard(filmsModel);
+    render(filmCard, this.#filmsContainer);
+  }
 }

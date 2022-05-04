@@ -10,17 +10,12 @@ import NewFilmsCatalog from './prisenter/films-prisenter.js';
 import NewFilmsCatalogRated from './prisenter/rated-films-precenter.js';
 import NewFilmsCatalogMostComment from './prisenter/most-comment-films-prisenter.js';
 import NewFilmCardModel from './model/film-card-model.js';
-import NewFilmPopup from './prisenter/popup-prisenter.js';
-import NewComment from './model/film-coment-model.js';
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
-const footer = document.querySelector('.footer');
 const filmsCatalogPrisenter = new NewFilmsCatalog();
 const filmsCatalogRatedPrisenter = new NewFilmsCatalogRated();
 const filmsCatalogMostCommentPrisenter = new NewFilmsCatalogMostComment();
 const filmsCardModel = new NewFilmCardModel();
-const filmPopupPrisenter = new NewFilmPopup();
-const filmCommentPrisenter = new NewComment();
 render( new AvatarIcon (), header);
 render( new NewNavMenu(), main);
 render(new NewSort(), main);
@@ -35,5 +30,5 @@ const topRated = main.querySelector('.rated');
 filmsCatalogRatedPrisenter.init(topRated, filmsCardModel);
 const mostCommented = main.querySelector('.most_commented');
 filmsCatalogMostCommentPrisenter.init(mostCommented, filmsCardModel);
-filmPopupPrisenter.init(footer, filmsCardModel, filmCommentPrisenter);
+
 

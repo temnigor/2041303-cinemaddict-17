@@ -2,7 +2,8 @@
 import NewPopup from '../view/popup.js';
 import { render } from '../render.js';
 const getNeedComment = (allFilmComments, filmsModel) => {
-  const keyFilmsComments = filmsModel[0].comments;
+  console.log(filmsModel)
+  const keyFilmsComments = filmsModel.comments;
   const needComments = [];
   keyFilmsComments.forEach((oneKey)=>{
     for(const comment of allFilmComments){
@@ -13,22 +14,42 @@ const getNeedComment = (allFilmComments, filmsModel) => {
   });
   return needComments;
 };
+
+function removeElementAndEvent (popup) {
+  document.removeEventListener('keydown', getEventClouse)
+  popup.element.remove();
+};
+
+const getEventClouse = (popup) => {
+  popup.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
+    evt.preventDefault()
+    removeElementAndEvent(popup);
+  });
+  document.addEventListener('keydown', (evt)=>{
+    if(evt.code === 'Escape') {
+      removeElementAndEvent(popup)
+}
+});
+};
+
 export default class NewFilmPopup {
   #filmsContainer = null;
-  #filmsCardModel = null;
-  #allFilmsModel = [];
+  #filmCardModel = null;
   #filmComments = null;
   #allFilmComment = [];
   #filmComment =null;
-  init = (filmContener, filmsCardModel, filmComment ) => {
+  init = (filmContener, filmCardModel, filmComment ) => {
     this.#filmsContainer = filmContener;
-    this.#filmsCardModel = filmsCardModel;
-    this.#allFilmsModel = [...this.#filmsCardModel.films];
+    this.#filmCardModel = filmCardModel;
     this.#filmComments = filmComment;
     this.#allFilmComment = [...this.#filmComments.comments];
-    this.#filmComment = getNeedComment(this.#allFilmComment, this.#allFilmsModel);
+    this.#filmComment = getNeedComment(this.#allFilmComment, this.#filmCardModel);
 
-    render(new NewPopup(this.#allFilmsModel[0], this.#filmComment), this.#filmsContainer);
-
+    this.#renderPopup(this.#filmCardModel, this.#filmComment);
   };
+  #renderPopup = (filmModel, filmComment) => {
+    const popup = new NewPopup(filmModel, filmComment);
+    render (popup, this.#filmsContainer)
+    getEventClouse(popup)
+  }
 }
