@@ -2,35 +2,38 @@ import AvatarIcon from './view/avatar.js';
 import NewNavMenu from './view/nav-menu.js';
 import NewSort from './view/sort.js';
 import NewFilms from './view/film-list.js';
-import NewFilmCard from './view/film-card.js';
-import { render } from './render.js';
 import NewButtonShowMore from './view/button-show-more.js';
 import NewFilmsRated from './view/films-rated.js';
 import NewFilmsMostComment from './view/films-most-commented.js';
-const MOVIE_CARD = 6;
-const EXTRA_MOVIE_CARD = 3;
-
-
+import { render } from './render.js';
+import NewFilmsCatalog from './prisenter/films-prisenter.js';
+import NewFilmsCatalogRated from './prisenter/rated-films-precenter.js';
+import NewFilmsCatalogMostComment from './prisenter/most-comment-films-prisenter.js';
+import NewFilmCardModel from './model/film-card-model.js';
+import NewFilmPopup from './prisenter/popup-prisenter.js';
+import NewComment from './model/film-coment-model.js';
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
+const footer = document.querySelector('.footer');
+const filmsCatalogPrisenter = new NewFilmsCatalog();
+const filmsCatalogRatedPrisenter = new NewFilmsCatalogRated();
+const filmsCatalogMostCommentPrisenter = new NewFilmsCatalogMostComment();
+const filmsCardModel = new NewFilmCardModel();
+const filmPopupPrisenter = new NewFilmPopup();
+const filmCommentPrisenter = new NewComment();
 render( new AvatarIcon (), header);
 render( new NewNavMenu(), main);
 render(new NewSort(), main);
 render(new NewFilms(), main);
 const filmsContainer = main.querySelector('.films-list__container');
-for(let i = 1; i<MOVIE_CARD; i++){
-  render(new NewFilmCard(), filmsContainer);
-}
+filmsCatalogPrisenter.init(filmsContainer, filmsCardModel);
 const films = main.querySelector('.films');
 render(new NewButtonShowMore, films);
-render(new NewFilmsRated(), films);
+render(new NewFilmsRated, films);
 render(new NewFilmsMostComment, films);
 const topRated = main.querySelector('.rated');
-for(let i = 1; i<EXTRA_MOVIE_CARD; i++){
-  render(new NewFilmCard(), topRated);
-}
+filmsCatalogRatedPrisenter.init(topRated, filmsCardModel);
 const mostCommented = main.querySelector('.most_commented');
-for(let i = 1; i<EXTRA_MOVIE_CARD; i++){
-  render(new NewFilmCard(), mostCommented);
-}
+filmsCatalogMostCommentPrisenter.init(mostCommented, filmsCardModel);
+filmPopupPrisenter.init(footer, filmsCardModel, filmCommentPrisenter);
 
