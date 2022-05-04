@@ -162,23 +162,26 @@ const getDomPopup = (filmInfo, commentsArray) => {
 
 
 export default class NewPopup {
+  #filmInfo = null;
+  #filmComment = null;
+  #element = null;
   constructor(filmInfo, filmComment) {
-    this.filmInfo = filmInfo;
-    this.filmComment = filmComment;
+    this.#filmInfo = filmInfo;
+    this.#filmComment = filmComment;
   }
 
-  createDomElement() {
-    return getDomPopup(this.filmInfo, this.filmComment);
+  get domElement() {
+    return getDomPopup(this.#filmInfo, this.#filmComment);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element) {
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

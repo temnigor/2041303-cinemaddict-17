@@ -37,22 +37,24 @@ const getDomFilmCard = (filmInfo) => {
 };
 
 export default class NewFilmCard {
+  #filmInfo = null;
+  #element = null;
   constructor( filmInfo) {
-    this.filmInfo = filmInfo;
+    this.#filmInfo = filmInfo;
   }
 
-  createDomElement() {
-    return getDomFilmCard(this.filmInfo);
+  get domElement() {
+    return getDomFilmCard(this.#filmInfo);
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element){
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

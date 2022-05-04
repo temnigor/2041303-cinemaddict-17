@@ -1,18 +1,19 @@
 import { createElement } from '../render.js';
 const getDomButtonShowMore = () => '<button class="films-list__show-more">Show more</button>';
 export default class NewButtonShowMore {
-  createDomElement() {
+  #element = null;
+  get domElement() {
     return getDomButtonShowMore();
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this. createDomElement());
+  get element() {
+    if(!this.#element){
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

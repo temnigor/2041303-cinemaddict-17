@@ -6,19 +6,19 @@ const getDomNavMenu = () => `<nav class="main-navigation">
 <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a></nav>`;
 
 export default class NewNavMenu {
-
-  createDomElement() {
+  #element = null;
+  get domElement() {
     return getDomNavMenu();
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element){
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

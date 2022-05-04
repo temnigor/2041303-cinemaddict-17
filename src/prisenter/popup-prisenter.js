@@ -14,15 +14,21 @@ const getNeedComment = (allFilmComments, filmsModel) => {
   return needComments;
 };
 export default class NewFilmPopup {
+  #filmsContainer = null;
+  #filmsCardModel = null;
+  #allFilmsModel = [];
+  #filmComments = null;
+  #allFilmComment = [];
+  #filmComment =null;
   init = (filmContener, filmsCardModel, filmComment ) => {
-    this.filmsContainer = filmContener;
-    this.filmsCardModel = filmsCardModel;
-    this.allFilmsModel = [...this.filmsCardModel.getFilms()];
-    this.filmComments = filmComment;
-    this.allFilmComment = [...this.filmComments.getComments()];
-    this.filmComment = getNeedComment(this.allFilmComment, this.allFilmsModel);
+    this.#filmsContainer = filmContener;
+    this.#filmsCardModel = filmsCardModel;
+    this.#allFilmsModel = [...this.#filmsCardModel.films];
+    this.#filmComments = filmComment;
+    this.#allFilmComment = [...this.#filmComments.comments];
+    this.#filmComment = getNeedComment(this.#allFilmComment, this.#allFilmsModel);
 
-    render(new NewPopup(this.allFilmsModel[0], this.filmComment), this.filmsContainer);
+    render(new NewPopup(this.#allFilmsModel[0], this.#filmComment), this.#filmsContainer);
 
   };
 }

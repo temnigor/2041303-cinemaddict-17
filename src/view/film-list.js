@@ -9,18 +9,19 @@ const getDomFilms = () =>
 </section>`;
 
 export default class NewFilms {
-  createDomElement() {
+  #element = null;
+  get domElement() {
     return getDomFilms();
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element){
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement () {
-    this.element = null;
+    this.#element = null;
   }
 }

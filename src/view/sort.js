@@ -6,18 +6,19 @@ const getDomSort = ()=> `<ul class="sort">
     <li><a href="#" class="sort__button sort__button--active">Sort by rating</a></li>
   </ul>`;
 export default class NewSort {
-  createDomElement() {
+  #element = null;
+  get domElement() {
     return getDomSort ();
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element){
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement () {
-    this.element = null;
+    this.#element = null;
   }
 }
