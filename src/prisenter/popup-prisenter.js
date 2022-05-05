@@ -20,7 +20,7 @@ export default class NewFilmPopup {
   };
 
   #getNeedComment = (allFilmComments, filmsModel) => {
-    const keyFilmsComments = filmsModel.comment;
+    const keyFilmsComments = filmsModel.comments;
     const needComments = [];
     keyFilmsComments.forEach((oneKey)=>{
       for(const comment of allFilmComments){
