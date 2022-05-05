@@ -1,5 +1,5 @@
 import { createElement } from '../render';
-import { getRuntime, getReleaseData, getGenreList, getNormalList, getDataComment} from '../utils.js';
+import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils.js';
 const getComment = (comments) => {
   const commentList = document.createElement('div');
   comments.forEach((commentInfo) => {
@@ -9,7 +9,7 @@ const getComment = (comments) => {
       date,
       emotion
     } = commentInfo;
-    const normalDate = getDataComment(date);
+    const normalDate = getDateComment(date);
     const comentDom = `<li class="film-details__comment">
 <span class="film-details__comment-emoji">
   <img src="./images/emoji/${emotion}.png" alt="emoji-${emotion}" width="55" height="55">
@@ -33,19 +33,19 @@ const getDomPopup = (filmInfo, commentsArray) => {
   const {
 
     filmInfo:{title, alternativeTitle, totalRating, poster, ageRating, director,
-      writers:[...allWriters],
-      actors:[...allActors],
+      writers:allWriters,
+      actors:allActors,
       release:{date, releaseCountry},
       runtime,
       genre,
       description}
   } = filmInfo;
 
-  const normalWriters = getNormalList(...allWriters);
-  const normalActors = getNormalList(...allActors);
+  const normalWriters = getNormalList(allWriters);
+  const normalActors = getNormalList(allActors);
   const runtimeHourMinute = getRuntime(runtime);
   const normalGenre = getGenreList(genre).innerHTML;
-  const normalDate = getReleaseData(date);
+  const normalDate = getReleaseDate(date);
   const comentsList = getComment(commentsArray).innerHTML;
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
@@ -162,23 +162,26 @@ const getDomPopup = (filmInfo, commentsArray) => {
 
 
 export default class NewPopup {
+  #filmInfo = null;
+  #filmComment = null;
+  #element = null;
   constructor(filmInfo, filmComment) {
-    this.filmInfo = filmInfo;
-    this.filmComment = filmComment;
+    this.#filmInfo = filmInfo;
+    this.#filmComment = filmComment;
   }
 
-  createDomElement() {
-    return getDomPopup(this.filmInfo, this.filmComment);
+  get domElement() {
+    return getDomPopup(this.#filmInfo, this.#filmComment);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element) {
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

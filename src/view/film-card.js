@@ -1,6 +1,6 @@
 
 import { createElement } from '../render.js';
-import { getReleaseYears, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
+import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
 
 const getDomFilmCard = (filmInfo) => {
   const {
@@ -8,12 +8,12 @@ const getDomFilmCard = (filmInfo) => {
     filmInfo:{title, totalRating, poster,
       release:{date},
       runtime,
-      genre :[...allGenre],
+      genre :allGenre,
       description}
   } = filmInfo;
-  const normalGenre = getNormalList(...allGenre);
+  const normalGenre = getNormalList(allGenre);
   const normalDescription = getNormalDescription(description);
-  const releaseDate = getReleaseYears(date);
+  const releaseDate = getReleaseYear(date);
   const runtimeHourMinute = getRuntime(runtime);
   return (  `<article class="film-card">
 <a class="film-card__link">
@@ -37,22 +37,24 @@ const getDomFilmCard = (filmInfo) => {
 };
 
 export default class NewFilmCard {
+  #filmInfo = null;
+  #element = null;
   constructor( filmInfo) {
-    this.filmInfo = filmInfo;
+    this.#filmInfo = filmInfo;
   }
 
-  createDomElement() {
-    return getDomFilmCard(this.filmInfo);
+  get domElement() {
+    return getDomFilmCard(this.#filmInfo);
   }
 
-  getElement() {
-    if(!this.element){
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element){
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

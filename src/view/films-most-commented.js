@@ -6,18 +6,19 @@ const getDomFilmsMostComment = () =>
 </div>
 </section>`;
 export default class NewFilmsMostComment {
-  createDomElement() {
+  #element = null;
+  get domElement() {
     return getDomFilmsMostComment();
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element) {
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

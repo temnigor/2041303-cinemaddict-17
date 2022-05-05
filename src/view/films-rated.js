@@ -7,18 +7,19 @@ const getDomFilmsRatedList = () =>
 </section>`;
 
 export default class NewFilmsRated {
-  createDomElement() {
+  #element = null;
+  get domElement() {
     return getDomFilmsRatedList();
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.createDomElement());
+  get element() {
+    if(!this.#element) {
+      this.#element = createElement(this.domElement);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
