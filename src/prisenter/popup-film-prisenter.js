@@ -1,6 +1,6 @@
 
 import NewPopup from '../view/popup.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 export default class NewFilmPopup {
   #filmsContainer = null;
   #filmCardModel = null;

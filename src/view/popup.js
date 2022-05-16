@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils.js';
+import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils/popup-and-film-cards-utils.js';
 const getComment = (comments) => {
   const commentsList = comments.map((commentInfo) => {
     const {

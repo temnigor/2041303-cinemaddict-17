@@ -1,8 +1,8 @@
 
 import NewFilmCard from '../view/film-card.js';
-import NewFilmPopup from './popup-prisenter.js';
+import NewFilmPopup from './popup-film-prisenter.js';
 import NewComment from '../model/film-coment-model.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 import NewButtonShowMore from '../view/button-show-more.js';
 import NewNoFilmCard from '../view/no-films-card.js';
 const FILM_COUNT_PER_STEP = 5;

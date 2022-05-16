@@ -1,5 +1,5 @@
 import NewFilmCard from '../view/film-card.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 const EXTRA_MOVIE_CARD = 2;
 
 export default class NewFilmsCatalogMostComment {

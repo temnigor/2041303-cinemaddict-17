@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
+import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils/popup-and-film-cards-utils.js';
 
 const getDomFilmCard = (filmInfo) => {
   const {
