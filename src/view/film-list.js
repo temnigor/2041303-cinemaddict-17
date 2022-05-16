@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 const getDomFilms = () =>
   `<section class="films">
 <section class="films-list">
@@ -8,20 +8,8 @@ const getDomFilms = () =>
 </section>
 </section>`;
 
-export default class NewFilms {
-  #element = null;
-  get domElement() {
+export default class NewFilms extends AbstractView {
+  get template() {
     return getDomFilms();
-  }
-
-  get element() {
-    if(!this.#element){
-      this.#element = createElement(this.domElement);
-    }
-    return this.#element;
-  }
-
-  removeElement () {
-    this.#element = null;
   }
 }

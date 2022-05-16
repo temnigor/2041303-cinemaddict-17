@@ -11,9 +11,7 @@ const getReleaseDate = (date) => dayjs(date).format('DD MMMM YYYY');
 const getDateComment = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 const getGenreList = (genre) => {
 
-  const list = genre.map((element)=>{
- return`<span class="film-details__genre">${element},</span>`;
-}).join('');
+  const list = genre.map((element)=>`<span class="film-details__genre">${element},</span>`).join('');
   return list;
 };
 const getString = (array) => `${array.join(', ')}`;

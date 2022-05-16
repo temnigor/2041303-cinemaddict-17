@@ -1,7 +1,7 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils.js';
 const getComment = (comments) => {
- const commentsList = comments.map((commentInfo) => {
+  const commentsList = comments.map((commentInfo) => {
     const {
       author,
       comment,
@@ -22,9 +22,9 @@ const getComment = (comments) => {
   </p>
 </div>
 </li>`;
-return commentDom;
+    return commentDom;
   }).join(' ');
-return commentsList;
+  return commentsList;
 };
 
 
@@ -121,7 +121,7 @@ const getDomPopup = (filmInfo, commentsArray) => {
       <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsArray.length}</span></h3>
 
       <ul class="film-details__comments-list">
-        ${comentsList};
+        ${comentsList}
       </ul>
 
       <div class="film-details__new-comment">
@@ -160,27 +160,16 @@ const getDomPopup = (filmInfo, commentsArray) => {
 };
 
 
-export default class NewPopup {
+export default class NewPopup extends AbstractView {
   #filmInfo = null;
   #filmComment = null;
-  #element = null;
   constructor(filmInfo, filmComment) {
+    super();
     this.#filmInfo = filmInfo;
     this.#filmComment = filmComment;
   }
 
-  get domElement() {
+  get template() {
     return getDomPopup(this.#filmInfo, this.#filmComment);
-  }
-
-  get element() {
-    if(!this.#element) {
-      this.#element = createElement(this.domElement);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
