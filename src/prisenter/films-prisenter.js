@@ -29,25 +29,22 @@ export default class NewFilmsCatalog {
       }
       if(this.#allFilmsModel.length>FILM_COUNT_PER_STEP){
         render(this.#buttonShowMore,this.#buttonPlace);
-        this.#buttonShowMore.element.addEventListener('click', this.#loadMoreFilms);
+        this.#buttonShowMore.clickHandlerMoreFilm(() => {
+          this.#allFilmsModel.slice(this.#filmRenderCount, this.#filmRenderCount+FILM_COUNT_PER_STEP)
+            .forEach((filmModel)=> this.#renderFilmCards(filmModel));
+          this.#filmRenderCount+=FILM_COUNT_PER_STEP;
+          if(this.#filmRenderCount>=this.#allFilmsModel.length){
+            this.#buttonPlace.removeChild(this.#buttonShowMore.element);
+            this.#buttonShowMore.removeElement();
+          }
+        });
       }
-    }
-  };
-
-  #loadMoreFilms = (evt) => {
-    evt.preventDefault();
-    this.#allFilmsModel.slice(this.#filmRenderCount, this.#filmRenderCount+FILM_COUNT_PER_STEP)
-      .forEach((filmModel)=> this.#renderFilmCards(filmModel));
-    this.#filmRenderCount+=FILM_COUNT_PER_STEP;
-    if(this.#filmRenderCount>=this.#allFilmsModel.length){
-      this.#buttonPlace.removeChild(this.#buttonShowMore.element);
-      this.#buttonShowMore.removeElement();
     }
   };
 
   #renderFilmCards = (filmModel) => {
     const filmCard = new NewFilmCard (filmModel);
-    filmCard.element.querySelector('.film-card__link').addEventListener('click', ()=>{
+    filmCard.clikcOpenPopup(()=>{
       const filmPopupPrisenter = new NewFilmPopup();
       const filmCommentPrisenter = new NewComment();
       this.body.classList.add('hide-overflow');

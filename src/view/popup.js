@@ -172,4 +172,29 @@ export default class NewPopup extends AbstractView {
   get template() {
     return getDomPopup(this.#filmInfo, this.#filmComment);
   }
+
+  getEventClouse = (callback) => {
+    this._callback = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
+      evt.preventDefault();
+      this.#removeElementAndEvent();
+    });
+    document.addEventListener('keydown',this.#findKey);
+  };
+
+  #findKey = (evt) => {
+    if(evt.code === 'Escape'){
+      evt.preventDefault();
+      this.#removeElementAndEvent();
+    }
+  };
+
+  #removeElementAndEvent = () => {
+    this._callback();
+    document.removeEventListener('keydown', this.#findKey);
+  };
+
+  removePopup = () =>{
+    this.element.remove();
+  };
 }

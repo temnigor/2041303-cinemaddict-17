@@ -4,4 +4,14 @@ export default class NewButtonShowMore extends AbstractView {
   get template() {
     return getDomButtonShowMore();
   }
+
+  clickHandlerMoreFilm = (callback)=>{
+    this._callback = callback;
+    this.element.addEventListener('click', this.#clickHandler);
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback();
+  };
 }
