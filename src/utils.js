@@ -10,10 +10,8 @@ const getRuntime = (min) =>{
 const getReleaseDate = (date) => dayjs(date).format('DD MMMM YYYY');
 const getDateComment = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 const getGenreList = (genre) => {
-  const list = document.createElement('div');
-  for(const element of genre){
-    list.innerHTML = `${list.innerHTML}<span class="film-details__genre">${element}</span>`;
-  }
+
+  const list = genre.map((element)=>`<span class="film-details__genre">${element},</span>`).join('');
   return list;
 };
 const getString = (array) => `${array.join(', ')}`;

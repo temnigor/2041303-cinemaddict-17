@@ -1,5 +1,4 @@
-
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
 
 const getDomFilmCard = (filmInfo) => {
@@ -36,25 +35,24 @@ const getDomFilmCard = (filmInfo) => {
 </article>`);
 };
 
-export default class NewFilmCard {
+export default class NewFilmCard extends AbstractView{
   #filmInfo = null;
-  #element = null;
   constructor( filmInfo) {
+    super();
     this.#filmInfo = filmInfo;
   }
 
-  get domElement() {
+  get template() {
     return getDomFilmCard(this.#filmInfo);
   }
 
-  get element() {
-    if(!this.#element){
-      this.#element = createElement(this.domElement);
-    }
-    return this.#element;
-  }
+  clikcOpenPopup = (callback ) =>{
+    this._callback.click = callback;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
 }

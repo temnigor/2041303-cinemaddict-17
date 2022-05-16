@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 const getDomFilmsRatedList = () =>
   `<section class="films-list films-list--extra ">
 <h2 class="films-list__title">Top rated</h2>
@@ -6,20 +6,8 @@ const getDomFilmsRatedList = () =>
 </div>
 </section>`;
 
-export default class NewFilmsRated {
-  #element = null;
-  get domElement() {
+export default class NewFilmsRated extends AbstractView {
+  get template() {
     return getDomFilmsRatedList();
-  }
-
-  get element() {
-    if(!this.#element) {
-      this.#element = createElement(this.domElement);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
