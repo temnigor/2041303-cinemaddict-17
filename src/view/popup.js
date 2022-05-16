@@ -1,8 +1,7 @@
 import { createElement } from '../render';
 import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils.js';
 const getComment = (comments) => {
-  const commentList = document.createElement('div');
-  comments.forEach((commentInfo) => {
+ const commentsList = comments.map((commentInfo) => {
     const {
       author,
       comment,
@@ -10,7 +9,7 @@ const getComment = (comments) => {
       emotion
     } = commentInfo;
     const normalDate = getDateComment(date);
-    const comentDom = `<li class="film-details__comment">
+    const commentDom = `<li class="film-details__comment">
 <span class="film-details__comment-emoji">
   <img src="./images/emoji/${emotion}.png" alt="emoji-${emotion}" width="55" height="55">
 </span>
@@ -23,9 +22,9 @@ const getComment = (comments) => {
   </p>
 </div>
 </li>`;
-    commentList.innerHTML = `${commentList.innerHTML} ${comentDom}`;
-  });
-  return commentList;
+return commentDom;
+  }).join(' ');
+return commentsList;
 };
 
 
@@ -44,9 +43,9 @@ const getDomPopup = (filmInfo, commentsArray) => {
   const normalWriters = getNormalList(allWriters);
   const normalActors = getNormalList(allActors);
   const runtimeHourMinute = getRuntime(runtime);
-  const normalGenre = getGenreList(genre).innerHTML;
+  const normalGenre = getGenreList(genre);
   const normalDate = getReleaseDate(date);
-  const comentsList = getComment(commentsArray).innerHTML;
+  const comentsList = getComment(commentsArray);
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
   <div class="film-details__top-container">

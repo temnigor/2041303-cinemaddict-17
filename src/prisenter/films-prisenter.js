@@ -39,7 +39,7 @@ export default class NewFilmsCatalog {
     this.#allFilmsModel.slice(this.#filmRenderCount, this.#filmRenderCount+FILM_COUNT_PER_STEP)
       .forEach((filmModel)=> this.#renderFilmCards(filmModel));
     this.#filmRenderCount+=FILM_COUNT_PER_STEP;
-    if(this.#filmRenderCount>this.#allFilmsModel.length){
+    if(this.#filmRenderCount>=this.#allFilmsModel.length){
       this.#buttonPlace.removeChild(this.#buttonShowMore.element);
       this.#buttonShowMore.removeElement();
     }
