@@ -1,17 +1,17 @@
 import AbstractView from '../framework/view/abstract-view.js';
 const getDomButtonShowMore = () => '<button class="films-list__show-more">Show more</button>';
-export default class NewButtonShowMore extends AbstractView {
+export default class ButtonShowMore extends AbstractView {
   get template() {
     return getDomButtonShowMore();
   }
 
-  clickHandlerMoreFilm = (callback)=>{
-    this._callback = callback;
-    this.element.addEventListener('click', this.#clickHandler);
+  setClickMoreFilmHandler = (callback)=>{
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#setClickHandler);
   };
 
-  #clickHandler = (evt) => {
+  #setClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback();
+    this._callback.click();
   };
 }

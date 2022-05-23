@@ -1,24 +1,27 @@
 
-import NewPopup from '../view/popup.js';
-import { render } from '../render.js';
-export default class NewFilmPopup {
+import Popup from '../view/popup.js';
+import { render } from '../framework/render.js';
+export default class PopupFilmPrisenter {
   #filmsContainer = null;
   #filmCardModel = null;
   #filmComments = null;
   #allFilmComment = [];
   #filmComment =null;
   #popup = null;
+  #popupPlace = null;
   init = (filmContener, filmCardModel, filmComment ) => {
     this.#filmsContainer = filmContener;
     this.#filmCardModel = filmCardModel;
     this.#filmComments = filmComment;
     this.#allFilmComment = [...this.#filmComments.comments];
     this.#filmComment = this.#getNeedComment(this.#allFilmComment, this.#filmCardModel);
-    this.#popup = new NewPopup( this.#filmCardModel, this.#filmComment);
+    this.#popup = new Popup( this.#filmCardModel, this.#filmComment);
+
     render (this.#popup, this.#filmsContainer);
-    this.#popup.getEventClouse(()=>{
+    this.#popup.setEventClouseHandler(()=>{
       this.#filmsContainer.classList.remove('hide-overflow');
-      this.#popup.removePopup();
+      this.#filmsContainer.removeChild(this.#popup.element);
+      this.#popup.removeElement();
     });
   };
 

@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
+import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils/popup-and-film-cards-utils.js';
 
 const getDomFilmCard = (filmInfo) => {
   const {
@@ -35,7 +35,7 @@ const getDomFilmCard = (filmInfo) => {
 </article>`);
 };
 
-export default class NewFilmCard extends AbstractView{
+export default class FilmCard extends AbstractView{
   #filmInfo = null;
   constructor( filmInfo) {
     super();
@@ -46,12 +46,12 @@ export default class NewFilmCard extends AbstractView{
     return getDomFilmCard(this.#filmInfo);
   }
 
-  clikcOpenPopup = (callback ) =>{
+  setClikcOpenPopupHandler = (callback ) =>{
     this._callback.click = callback;
-    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#setClickHandler);
   };
 
-  #clickHandler = (evt) => {
+  #setClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.click();
   };

@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils.js';
+import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils/popup-and-film-cards-utils.js';
 const getComment = (comments) => {
   const commentsList = comments.map((commentInfo) => {
     const {
@@ -160,7 +160,7 @@ const getDomPopup = (filmInfo, commentsArray) => {
 };
 
 
-export default class NewPopup extends AbstractView {
+export default class Popup extends AbstractView {
   #filmInfo = null;
   #filmComment = null;
   constructor(filmInfo, filmComment) {
@@ -173,16 +173,16 @@ export default class NewPopup extends AbstractView {
     return getDomPopup(this.#filmInfo, this.#filmComment);
   }
 
-  getEventClouse = (callback) => {
-    this._callback = callback;
+  setEventClouseHandler = (callback) => {
+    this._callback.click = callback;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
       evt.preventDefault();
       this.#removeElementAndEvent();
     });
-    document.addEventListener('keydown',this.#findKey);
+    document.addEventListener('keydown',this.#removeElementAndEventKeydown);
   };
 
-  #findKey = (evt) => {
+  #removeElementAndEventKeydown = (evt) => {
     if(evt.code === 'Escape'){
       evt.preventDefault();
       this.#removeElementAndEvent();
@@ -190,11 +190,7 @@ export default class NewPopup extends AbstractView {
   };
 
   #removeElementAndEvent = () => {
-    this._callback();
-    document.removeEventListener('keydown', this.#findKey);
-  };
-
-  removePopup = () =>{
-    this.element.remove();
+    this._callback.click();
+    document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
   };
 }

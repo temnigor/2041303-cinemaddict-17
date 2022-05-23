@@ -1,3 +1,8 @@
+function randomFromUserDetails(min, max) {
+  const mainNum = Math.floor(Math.random() * (max - min + 1) + min);
+  const result = !(mainNum <5);
+  return result;
+}
 const getSomeFilm = ()=> ({
   'id': '0',
   'comments': [
@@ -28,10 +33,10 @@ const getSomeFilm = ()=> ({
     'description': 'Oscar-winning film, a war drama about two young people, from the creators of timeless classic "Nu, Pogodi!" and "Alice in Wonderland", with the best fight scenes since Bruce Lee.'
   },
   'userDetails': {
-    'watchlist': false,
-    'already_watched': true,
+    'watchlist': randomFromUserDetails(1,10),
+    'already_watched': randomFromUserDetails(1,10),
     'watching_date': '2019-04-12T16:12:32.554Z',
-    'favorite': false
+    'favorite': randomFromUserDetails(1,10)
   }
 });
 export {getSomeFilm};
