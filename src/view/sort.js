@@ -4,7 +4,7 @@ const getDomSort = ()=> `<ul class="sort">
     <li><a href="#" class="sort__button">Sort by date</a></li>
     <li><a href="#" class="sort__button sort__button--active">Sort by rating</a></li>
   </ul>`;
-export default class NewSort extends AbstractView {
+export default class Sort extends AbstractView {
   get template() {
     return getDomSort ();
   }

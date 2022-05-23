@@ -6,7 +6,7 @@ const getDomFilmsRatedList = () =>
 </div>
 </section>`;
 
-export default class NewFilmsRated extends AbstractView {
+export default class FilmsRated extends AbstractView {
   get template() {
     return getDomFilmsRatedList();
   }

@@ -1,19 +1,19 @@
-const filterType = {
+const FilterType = {
   WATCHLIST:'watchlist',
   ALREADY_WATCHED:'already_watched',
   FAVORITE:'favorite'
 };
-const isWatchlist = (element)=> element.userDetails.watchlist === true;
-const isAlreadyWatched = (element) => element.userDetails.already_watched === true;
-const isFavorite = (element) => element.userDetails.favorite === true;
+const isWatchlist = (film)=> film.userDetails.watchlist === true;
+const isAlreadyWatched = (film) => film.userDetails.already_watched === true;
+const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
-  [filterType.WATCHLIST]: (filmsArray) => filmsArray.filter((film) => isWatchlist(film)),
-  [filterType.ALREADY_WATCHED]: (filmsArray)=>filmsArray.filter((film) => isAlreadyWatched(film)),
-  [filterType.FAVORITE]: (filmsArray)=>filmsArray.filter((film) => isFavorite(film))
+  [FilterType.WATCHLIST]: (films) => films.filter((film) => isWatchlist(film)),
+  [FilterType.ALREADY_WATCHED]: (films)=>films.filter((film) => isAlreadyWatched(film)),
+  [FilterType.FAVORITE]: (films)=>films.filter((film) => isFavorite(film))
 };
-const generateFilter = (filmsArray)=> Object.entries(filter).map(([nameArray, filterArray])=>({
+const generateFilter = (films)=> Object.entries(filter).map(([nameArray, filterArray])=>({
   name: nameArray,
-  count: filterArray(filmsArray)
+  count: filterArray(films)
 })
 );
 export {generateFilter};

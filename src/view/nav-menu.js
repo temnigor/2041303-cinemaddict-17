@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { generateFilter } from '../utils/filters.js';
-const getDomNavMenu = (filmsArray) =>{
-  const [wishlist, history, favorites] = generateFilter(filmsArray);
+const getDomNavMenu = (films) =>{
+  const [wishlist, history, favorites] = generateFilter(films);
   return (`<nav class="main-navigation">
 <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
 <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${wishlist.count.length}</span></a>
@@ -10,14 +10,14 @@ const getDomNavMenu = (filmsArray) =>{
   );
 };
 
-export default class NewNavMenu extends AbstractView {
-  #filmsArray = null;
-  constructor(filmsArray){
+export default class NavMenu extends AbstractView {
+  #films = null;
+  constructor(films){
     super();
-    this.#filmsArray = filmsArray;
+    this.#films = films;
   }
 
   get template() {
-    return getDomNavMenu(this.#filmsArray);
+    return getDomNavMenu(this.#films);
   }
 }

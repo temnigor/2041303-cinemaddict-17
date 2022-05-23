@@ -1,8 +1,8 @@
-import NewFilmCard from '../view/film-card.js';
+import FilmCard from '../view/film-card.js';
 import { render } from '../framework/render.js';
 const EXTRA_MOVIE_CARD = 2;
 
-export default class NewFilmsCatalogMostComment {
+export default class MostCommentFilmsPrisenter {
   #filmsContainer = null;
   #filmsCardModel = null;
   #allFilmsModel = [];
@@ -19,7 +19,7 @@ export default class NewFilmsCatalogMostComment {
   };
 
   #renderMostCommentFilmCards = (filmModel) => {
-    const filmCard = new NewFilmCard(filmModel);
+    const filmCard = new FilmCard(filmModel);
     render(filmCard, this.#filmsContainer);
   };
 }

@@ -1,7 +1,7 @@
-import NewFilmCard from '../view/film-card.js';
+import FilmCard from '../view/film-card.js';
 import { render } from '../framework/render.js';
 const EXTRA_MOVIE_CARD = 2;
-export default class NewFilmsCatalogRated {
+export default class RatedFilmsPrisenter {
   #filmsContainer = null;
   #filmsCardModel = null;
   #allFilmsModel = [];
@@ -17,7 +17,7 @@ export default class NewFilmsCatalogRated {
   };
 
   #renderFilmsRated = (filmsModel) => {
-    const filmCard = new NewFilmCard(filmsModel);
+    const filmCard = new FilmCard(filmsModel);
     render(filmCard, this.#filmsContainer);
   };
 }

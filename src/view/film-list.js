@@ -8,7 +8,7 @@ const getDomFilms = () =>
 </section>
 </section>`;
 
-export default class NewFilms extends AbstractView {
+export default class FilmList extends AbstractView {
   get template() {
     return getDomFilms();
   }
