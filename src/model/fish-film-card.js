@@ -4,6 +4,14 @@ function randomFromUserDetails(min, max) {
   const result = !(mainNum <5);
   return result;
 }
+function randomData () {
+  let num = Math.floor(Math.random() * (20 - 1 + 1) + 1);
+  if(num<10){
+    num+=10;
+  }
+  return `20${num}-05-11T00:00:00.000Z`;
+}
+
 const getSomeFilm = ()=> ({
   'id': nanoid(),
   'comments': [
@@ -12,7 +20,7 @@ const getSomeFilm = ()=> ({
   'filmInfo': {
     'title': 'A Little Pony Without The Carpet',
     'alternativeTitle': 'Laziness Who Sold Themselves',
-    'totalRating': 5.3,
+    'totalRating': Math.floor(Math.random() * (10 - 1 + 1) + 1),
     'poster': 'images/posters/the-dance-of-life.jpg',
     'ageRating': 0,
     'director': 'Tom Ford',
@@ -26,7 +34,7 @@ const getSomeFilm = ()=> ({
       'Morgan Freeman'
     ],
     'release': {
-      'date': '2019-05-11T00:00:00.000Z',
+      'date': randomData(),
       'releaseCountry': 'Finland'
     },
     'runtime': 77,

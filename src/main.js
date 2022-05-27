@@ -1,6 +1,5 @@
 import AvatarIcon from './view/avatar.js';
 import { render } from './framework/render.js';
-import Sort from './view/sort.js';
 import FilmList from './view/film-list.js';
 import FilmsRated from './view/films-rated.js';
 import FilmsMostComment from './view/films-most-commented.js';
@@ -16,7 +15,6 @@ const filmsCatalogRatedPrisenter = new RatedFilmsPrisenter();
 const filmsCatalogMostCommentPrisenter = new MostCommentFilmsPrisenter();
 const filmsCardModel = new FilmCardModel();
 render( new AvatarIcon (), header);
-render(new Sort(), main);
 render(new FilmList(), main);
 const filmsContainer = main.querySelector('.films-list__container');
 filmsCatalogPrisenter.init(filmsContainer, filmsCardModel, body);
