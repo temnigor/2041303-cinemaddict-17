@@ -1,10 +1,11 @@
+import { nanoid } from 'nanoid';
 function randomFromUserDetails(min, max) {
   const mainNum = Math.floor(Math.random() * (max - min + 1) + min);
   const result = !(mainNum <5);
   return result;
 }
 const getSomeFilm = ()=> ({
-  'id': '0',
+  'id': nanoid(),
   'comments': [
     42, 34
   ],
@@ -34,7 +35,7 @@ const getSomeFilm = ()=> ({
   },
   'userDetails': {
     'watchlist': randomFromUserDetails(1,10),
-    'already_watched': randomFromUserDetails(1,10),
+    'alreadyWatched': randomFromUserDetails(1,10),
     'watching_date': '2019-04-12T16:12:32.554Z',
     'favorite': randomFromUserDetails(1,10)
   }

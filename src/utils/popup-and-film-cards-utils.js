@@ -27,5 +27,32 @@ const getNormalDescription = (discription) => {
     : discription;
   return descriptionForfilmCard;
 };
+const getFilmDetailsControlActive = (filmDetailsControlButton)=>{
+  if(filmDetailsControlButton === true){
+    return 'film-details__control-button--active';
+  }
 
-export {getReleaseYear, getRuntime, getReleaseDate, getGenreList, getNormalList, getNormalDescription, getDateComment};
+};
+const getFilmCardControlActive = (filmDetailsControlButton)=>{
+  if(filmDetailsControlButton === true){
+    return 'film-card__controls-item--active';
+  }
+
+};
+const getToggleTrueFalse = (toggleElement)=>{
+  const result = toggleElement === true ? toggleElement = false : toggleElement = true;
+  return result;
+};
+
+export {
+  getReleaseYear,
+  getRuntime,
+  getReleaseDate,
+  getGenreList,
+  getNormalList,
+  getNormalDescription,
+  getDateComment,
+  getFilmDetailsControlActive,
+  getFilmCardControlActive,
+  getToggleTrueFalse
+};

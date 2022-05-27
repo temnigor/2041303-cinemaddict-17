@@ -1,10 +1,10 @@
 const FilterType = {
   WATCHLIST:'watchlist',
-  ALREADY_WATCHED:'already_watched',
+  ALREADY_WATCHED:'alreadyWatched',
   FAVORITE:'favorite'
 };
 const isWatchlist = (film)=> film.userDetails.watchlist === true;
-const isAlreadyWatched = (film) => film.userDetails.already_watched === true;
+const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
   [FilterType.WATCHLIST]: (films) => films.filter((film) => isWatchlist(film)),

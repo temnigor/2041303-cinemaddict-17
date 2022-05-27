@@ -1,55 +1,82 @@
-
-import FilmCard from '../view/film-card.js';
-import PopupFilmPrisenter from './popup-film-prisenter.js';
-import FilmCommentModel from '../model/film-coment-model.js';
 import { render } from '../framework/render.js';
 import ButtonShowMore from '../view/button-show-more.js';
 import NoFilmCard from '../view/no-films-card.js';
+import FilmsPrisenter from './films-prisenter.js';
+import { getNewAllModelCard } from '../utils/prisenter-utils.js';
+import NavMenuPrisenter from './nav-menu-prisenter.js';
 const FILM_COUNT_PER_STEP = 5;
 export default class FilmsCatalogPrisenter {
-  #filmsContainer = null;
+
   #filmsCardModel =  null;
+  #openPopup = {
+    open: null,
+  };
+
   #allFilmsModel = [];
   #noFilmCard = new NoFilmCard();
   #buttonShowMore = new ButtonShowMore();
   #filmRenderCount = FILM_COUNT_PER_STEP;
   #buttonPlace = null;
+  #filmCardPrisenter = new Map();
+  #navMenuPrisenter = new NavMenuPrisenter();
 
   init = (filmContener, filmsCardModel, body) => {
-    this.#filmsContainer = filmContener;
+    this.filmContener= filmContener;
+    this.body = body;
+    this.navMenuPlace = this.body.querySelector('.main');
     this.#filmsCardModel =  filmsCardModel;
     this.#allFilmsModel = [...this.#filmsCardModel.films];
-    this.body = body;
     this.#buttonPlace = this.body.querySelector('.films-list');
+    this.#renderFilmsBoard();
+  };
+
+  #renderFilmsBoard = ()=>{
+    this.#navMenuPrisenter.init(this.#allFilmsModel, this.navMenuPlace);
     if(this.#allFilmsModel.length === 0) {
       render (this.#noFilmCard, this.#buttonPlace);
     }else {
-      for(let i = 0; i<Math.min(this.#allFilmsModel.length-1,FILM_COUNT_PER_STEP); i++){
-        this.#renderFilmCards(this.#allFilmsModel[i]);
-      }
+      this.#renderFilms(0, Math.min(this.#allFilmsModel.length-1,FILM_COUNT_PER_STEP));
       if(this.#allFilmsModel.length>FILM_COUNT_PER_STEP){
         render(this.#buttonShowMore,this.#buttonPlace);
-        this.#buttonShowMore.setClickMoreFilmHandler(() => {
-          this.#allFilmsModel.slice(this.#filmRenderCount, this.#filmRenderCount+FILM_COUNT_PER_STEP)
-            .forEach((filmModel)=> this.#renderFilmCards(filmModel));
-          this.#filmRenderCount+=FILM_COUNT_PER_STEP;
-          if(this.#filmRenderCount>=this.#allFilmsModel.length){
-            this.#buttonPlace.removeChild(this.#buttonShowMore.element);
-            this.#buttonShowMore.removeElement();
-          }
-        });
+        this.#buttonShowMore.setClickMoreFilmHandler(this.#setClickMoreFilmsButton);
       }
     }
   };
 
-  #renderFilmCards = (filmModel) => {
-    const filmCard = new FilmCard (filmModel);
-    filmCard.setClikcOpenPopupHandler(()=>{
-      const filmPopupPrisenter = new PopupFilmPrisenter();
-      const filmCommentPrisenter = new FilmCommentModel();
-      this.body.classList.add('hide-overflow');
-      filmPopupPrisenter.init(this.body, filmModel, filmCommentPrisenter);
+  #setClickMoreFilmsButton = () => {
+    this.#renderFilms(this.#filmRenderCount,this.#filmRenderCount+FILM_COUNT_PER_STEP);
+    this.#filmRenderCount+=FILM_COUNT_PER_STEP;
+    if(this.#filmRenderCount>=this.#allFilmsModel.length){
+      this.#buttonPlace.removeChild(this.#buttonShowMore.element);
+      this.#buttonShowMore.removeElement();
+    }
+  };
+
+  #renderFilms = (from, to) =>{
+    this.#allFilmsModel.slice(from, to).forEach((film)=>{
+      this.#renderFilmCard(this.filmContener, this.body, film, this.reRenderFilmsCard, this.#openPopup);
     });
-    render(filmCard,this.#filmsContainer);
+  };
+
+  #renderFilmCard = (filmContener, body, filmModel, renderFilmsCard, openPopup) => {
+    const filmPrisenter =  new FilmsPrisenter(filmContener, body, renderFilmsCard, openPopup);
+    filmPrisenter.init(filmModel);
+    this.#filmCardPrisenter.set(filmModel.id, filmPrisenter);
+  };
+
+  reRenderFilmsCard = (updateAllFilmsModel) =>{
+    this.#allFilmsModel = getNewAllModelCard(updateAllFilmsModel, this.#allFilmsModel);
+    this.#clearFilmBoard();
+    this.#renderFilmsBoard();
+  };
+
+  #clearFilmBoard = () => {
+    this.#filmCardPrisenter.forEach((filmCard)=> filmCard.destroy());
+    this.#filmCardPrisenter.clear();
+    this.#filmRenderCount = FILM_COUNT_PER_STEP;
+    this.#navMenuPrisenter.destroy();
+    this.#buttonPlace.removeChild(this.#buttonShowMore.element);
+    this.#buttonShowMore.removeElement();
+
   };
 }
