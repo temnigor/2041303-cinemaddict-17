@@ -29,7 +29,7 @@ const getDomFilmCard = (filmInfo) => {
   <span class="film-card__comments">${comments.length} comments</span>
 </a>
 <div class="film-card__controls">
-  <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchlist)}" id="watchlistCard"type="button">Add to watchlist</button>
+  <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchList)}" id="watchListCard" type="button">Add to watchList</button>
   <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${getFilmCardControlActive(userDetails.alreadyWatched)}" id="watchedCard" type="button">Mark as watched</button>
   <button class="film-card__controls-item film-card__controls-item--favorite ${getFilmCardControlActive(userDetails.favorite)}" id="favoriteCard"type="button">Mark as favorite</button>
 </div>
@@ -47,7 +47,7 @@ export default class FilmCard extends AbstractView{
     return getDomFilmCard(this.#filmInfo);
   }
 
-  setClikcOpenPopupHandler = (callback ) =>{
+  setClickOpenPopupHandler = (callback ) =>{
     this._callback.click = callback;
     this.element.querySelector('.film-card__link').addEventListener('click', this.#setClickHandler);
   };
@@ -57,13 +57,13 @@ export default class FilmCard extends AbstractView{
     this._callback.click();
   };
 
-  setFilmDetaeilsControlHandler = (callback)=>{
-    this._callback.clickFilmDetaeilsControl = callback;
+  setFilmDetailsControlHandler = (callback)=>{
+    this._callback.clickFilmDetailsControl = callback;
     this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
   };
 
   #addDetailsControl = (evt)=>{
     evt.preventDefault();
-    this._callback.clickFilmDetaeilsControl(evt);
+    this._callback.clickFilmDetailsControl(evt);
   };
 }

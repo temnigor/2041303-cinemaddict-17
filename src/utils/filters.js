@@ -2,19 +2,19 @@ import dayjs from 'dayjs';
 const SortType = {
   DEFAULT: 'default',
   DATA: 'date',
-  RAITING: 'rating'
+  RATING: 'rating'
 };
 
 const FilterType = {
-  WATCHLIST:'watchlist',
+  WATCH_LIST:'watchList',
   ALREADY_WATCHED:'alreadyWatched',
   FAVORITE:'favorite'
 };
-const isWatchlist = (film)=> film.userDetails.watchlist === true;
+const isWatchList = (film)=> film.userDetails.watchList === true;
 const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
-  [FilterType.WATCHLIST]: (films) => films.filter((film) => isWatchlist(film)),
+  [FilterType.WATCH_LIST]: (films) => films.filter((film) => isWatchList(film)),
   [FilterType.ALREADY_WATCHED]: (films)=>films.filter((film) => isAlreadyWatched(film)),
   [FilterType.FAVORITE]: (films)=>films.filter((film) => isFavorite(film))
 };
@@ -46,7 +46,7 @@ const sortTaskUp = (filmA, filmB) => {
   return weight ?? dayjs(filmA.filmInfo.release.date).diff(dayjs(filmB.filmInfo.release.date));
 };
 
-const sortTaskRaiting = (a, b) => {
+const sortTaskRating = (a, b) => {
 
   if(a.filmInfo.totalRating > b.filmInfo.totalRating){
     return -1;
@@ -58,4 +58,4 @@ const sortTaskRaiting = (a, b) => {
     return 0;
   }
 };
-export {generateFilter, SortType, sortTaskUp, sortTaskRaiting};
+export {generateFilter, SortType, sortTaskUp, sortTaskRating};

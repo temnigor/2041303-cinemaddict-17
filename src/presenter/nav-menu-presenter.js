@@ -1,7 +1,7 @@
 import { RenderPosition, render, remove } from '../framework/render.js';
 import NavMenu from '../view/nav-menu.js';
 
-export default class NavMenuPrisenter {
+export default class NavMenuPresenter {
   #filmsCardModel = null;
   #navMenu = null;
   #navMenuPlace = null;

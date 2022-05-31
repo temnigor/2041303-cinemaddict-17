@@ -1,12 +1,12 @@
 
-const getNewAllModelCard = (udateCard, allModelCard)=>{
-  const index = allModelCard.findIndex((modelCard)=>modelCard.id === udateCard.id);
+const getNewAllModelCard = (upDateCard, allModelCard)=>{
+  const index = allModelCard.findIndex((modelCard)=>modelCard.id === upDateCard.id);
   if (index === -1){
     return allModelCard;
   }
   return [
     ...allModelCard.slice(0,index),
-    udateCard,
+    upDateCard,
     ...allModelCard.slice(index+1)
   ];
 };

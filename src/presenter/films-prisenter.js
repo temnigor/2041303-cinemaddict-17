@@ -1,7 +1,7 @@
 import { remove, render, } from '../framework/render.js';
 import FilmCard from '../view/film-card.js';
-import PopupFilmPrisenter from './popup-film-prisenter.js';
-import FilmCommentModel from '../model/film-coment-model.js';
+import PopupFilmPresenter from './popup-film-prisenter.js';
+import FilmCommentModel from '../model/film-comment-model.js';
 import { getToggleTrueFalse } from '../utils/popup-and-film-cards-utils.js';
 export default class FilmsPrisenter {
   #filmsContainer = null;
@@ -15,13 +15,13 @@ export default class FilmsPrisenter {
 
 
   init = (filmModel) => {
-    const prevfilmCard = this.#filmCard;
+    const prevFilmCard = this.#filmCard;
     this.filmCardModel = filmModel;
     this.#filmCard = new FilmCard (this.filmCardModel);
-    if(prevfilmCard === null){
-      this.#filmCard.setClikcOpenPopupHandler(this.#setClickPopupHandler);
+    if(prevFilmCard === null){
+      this.#filmCard.setClickOpenPopupHandler(this.#setClickPopupHandler);
       render(this.#filmCard,this.#filmsContainer);
-      this.#getFilmDetaeilsControlButton();
+      this.#getFilmDetailsControlButton();
     }
   };
 
@@ -29,11 +29,11 @@ export default class FilmsPrisenter {
     remove(this.#filmCard);
   };
 
-  #getFilmDetaeilsControlButton = () =>{
-    this.#filmCard.setFilmDetaeilsControlHandler((evt)=>{
+  #getFilmDetailsControlButton = () =>{
+    this.#filmCard.setFilmDetailsControlHandler((evt)=>{
       while(Boolean(evt.target.id) === true){
-        if(evt.target.id === 'watchlistCard'){
-          this.filmCardModel.userDetails.watchlist = getToggleTrueFalse(this.filmCardModel.userDetails.watchlist);
+        if(evt.target.id === 'watchListCard'){
+          this.filmCardModel.userDetails.watchList = getToggleTrueFalse(this.filmCardModel.userDetails.watchList);
           this.renderFilmsCard(this.filmCardModel);
           break;
         }
@@ -56,10 +56,9 @@ export default class FilmsPrisenter {
     if(this.openPopup.open !== null){
       this.openPopup.open.removePopup();
     }
-    const filmPopupPrisenter = new PopupFilmPrisenter();
-    const filmCommentPrisenter = new FilmCommentModel();
-    this.openPopup.open = filmPopupPrisenter;
-    this.body.classList.add('hide-overflow');
-    filmPopupPrisenter.init(this.body, this.filmCardModel, filmCommentPrisenter, this.renderFilmsCard);
+    const filmPopupPresenter = new PopupFilmPresenter();
+    const filmCommentPresenter = new FilmCommentModel();
+    this.openPopup.open = filmPopupPresenter;
+    filmPopupPresenter.init(this.body, this.filmCardModel, filmCommentPresenter, this.renderFilmsCard);
   };
 }

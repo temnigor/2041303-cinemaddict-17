@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-const START_SLICE_DISCRIPTION = 0;
-const SIZE_DISCRIPTION = 139;
+const START_SLICE_DESCRIPTION = 0;
+const SIZE_DESCRIPTION = 139;
 const getReleaseYear = (date) => dayjs(date).format('YYYY');
 const getRuntime = (min) =>{
   const hours = Math.trunc(min/60);
@@ -20,12 +20,12 @@ const getNormalList = (...genre) => {
   const result = !array.length <= 2 ? getString (array) : genre[0];
   return result;
 };
-const getNormalDescription = (discription) => {
-  const shortDiscription = discription.slice(START_SLICE_DISCRIPTION,SIZE_DISCRIPTION);
-  const descriptionForfilmCard = shortDiscription<=discription
-    ? `${shortDiscription}...`
-    : discription;
-  return descriptionForfilmCard;
+const getNormalDescription = (description) => {
+  const shortDescription = description.slice(START_SLICE_DESCRIPTION,SIZE_DESCRIPTION);
+  const descriptionForFilmCard = shortDescription<=description
+    ? `${shortDescription}...`
+    : description;
+  return descriptionForFilmCard;
 };
 const getFilmDetailsControlActive = (filmDetailsControlButton)=>{
   if(filmDetailsControlButton === true){
@@ -33,16 +33,10 @@ const getFilmDetailsControlActive = (filmDetailsControlButton)=>{
   }
 
 };
-const getFilmCardControlActive = (filmDetailsControlButton)=>{
-  if(filmDetailsControlButton === true){
-    return 'film-card__controls-item--active';
-  }
-
-};
-const getToggleTrueFalse = (toggleElement)=>{
-  const result = toggleElement === true ? toggleElement = false : toggleElement = true;
-  return result;
-};
+const getFilmCardControlActive = (filmDetailsControlButton)=>
+  filmDetailsControlButton
+    ? 'film-card__controls-item--active'
+    : '';
 
 export {
   getReleaseYear,
@@ -54,5 +48,4 @@ export {
   getDateComment,
   getFilmDetailsControlActive,
   getFilmCardControlActive,
-  getToggleTrueFalse
 };

@@ -1,13 +1,13 @@
 import { RenderPosition, render } from '../framework/render.js';
 import ButtonShowMore from '../view/button-show-more.js';
 import NoFilmCard from '../view/no-films-card.js';
-import FilmsPrisenter from './films-prisenter.js';
-import { getNewAllModelCard } from '../utils/prisenter-utils.js';
-import { SortType, sortTaskUp, sortTaskRaiting} from '../utils/filters.js';
-import NavMenuPrisenter from './nav-menu-prisenter.js';
+import FilmsPresenter from './films-presenter.js';
+import { getNewAllModelCard } from '../utils/presenter-utils.js';
+import { SortType, sortTaskUp, sortTaskRating} from '../utils/filters.js';
+import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
 const FILM_COUNT_PER_STEP = 5;
-export default class FilmsCatalogPrisenter {
+export default class FilmsCatalogPresenter {
 
   #filmsCardModel =  null;
   #openPopup = {
@@ -20,13 +20,13 @@ export default class FilmsCatalogPrisenter {
   #buttonShowMore = new ButtonShowMore();
   #filmRenderCount = FILM_COUNT_PER_STEP;
   #buttonPlace = null;
-  #filmCardPrisenter = new Map();
-  #navMenuPrisenter = new NavMenuPrisenter();
+  #filmCardPresenters = new Map();
+  #navMenuPresenter = new NavMenuPresenter();
   #actualSortType = SortType.DEFAULT;
   #sort = null;
 
-  init = (filmContener, filmsCardModel, body) => {
-    this.filmContener= filmContener;
+  init = (filmContainer, filmsCardModel, body) => {
+    this.filmContainer= filmContainer;
     this.body = body;
     this.menuPlace = this.body.querySelector('.main');
     this.#filmsCardModel =  filmsCardModel;
@@ -41,19 +41,19 @@ export default class FilmsCatalogPrisenter {
   };
 
   #renderFilmsBoard = ()=>{
-    this.#navMenuPrisenter.init(this.#allFilmsModel, this.menuPlace);
+    this.#navMenuPresenter.init(this.#allFilmsModel, this.menuPlace);
     if(this.#allFilmsModel.length === 0) {
       render (this.#noFilmCard, this.#buttonPlace);
     }else {
       this.#renderFilms(0, Math.min(this.#allFilmsModel.length-1,FILM_COUNT_PER_STEP));
       if(this.#allFilmsModel.length>FILM_COUNT_PER_STEP){
         render(this.#buttonShowMore,this.#buttonPlace);
-        this.#buttonShowMore.setClickMoreFilmHandler(this.#setClickMoreFilmsButton);
+        this.#buttonShowMore.setClickMoreFilmHandler(this.clickMoreFilmsButtonHandler);
       }
     }
   };
 
-  #setClickMoreFilmsButton = () => {
+  clickMoreFilmsButtonHandler = () => {
     this.#renderFilms(this.#filmRenderCount,this.#filmRenderCount+FILM_COUNT_PER_STEP);
     this.#filmRenderCount+=FILM_COUNT_PER_STEP;
     if(this.#filmRenderCount>=this.#allFilmsModel.length){
@@ -64,14 +64,14 @@ export default class FilmsCatalogPrisenter {
 
   #renderFilms = (from, to) =>{
     this.#allFilmsModel.slice(from, to).forEach((film)=>{
-      this.#renderFilmCard(this.filmContener, this.body, film, this.reRenderFilmsCard, this.#openPopup);
+      this.#renderFilmCard(this.filmContainer, this.body, film, this.reRenderFilmsCard, this.#openPopup);
     });
   };
 
-  #renderFilmCard = (filmContener, body, filmModel, renderFilmsCard, openPopup) => {
-    const filmPrisenter =  new FilmsPrisenter(filmContener, body, renderFilmsCard, openPopup);
-    filmPrisenter.init(filmModel);
-    this.#filmCardPrisenter.set(filmModel.id, filmPrisenter);
+  #renderFilmCard = (filmContainer, body, filmModel, renderFilmsCard, openPopup) => {
+    const filmPresenter =  new FilmsPresenter(filmContainer, body, renderFilmsCard, openPopup);
+    filmPresenter.init(filmModel);
+    this. #filmCardPresenters.set(filmModel.id, filmPresenter);
   };
 
   reRenderFilmsCard = (updateAllFilmsModel) =>{
@@ -82,10 +82,10 @@ export default class FilmsCatalogPrisenter {
   };
 
   #clearFilmBoard = () => {
-    this.#filmCardPrisenter.forEach((filmCard)=> filmCard.destroy());
-    this.#filmCardPrisenter.clear();
+    this. #filmCardPresenters.forEach((filmCard)=> filmCard.destroy());
+    this. #filmCardPresenters.clear();
     this.#filmRenderCount = FILM_COUNT_PER_STEP;
-    this.#navMenuPrisenter.destroy();
+    this.#navMenuPresenter.destroy();
     this.#buttonPlace.removeChild(this.#buttonShowMore.element);
     this.#buttonShowMore.removeElement();
 
@@ -105,8 +105,8 @@ export default class FilmsCatalogPrisenter {
       case SortType.DATA:
         this.#allFilmsModel = this.#allFilmsModel.sort(sortTaskUp);
         break;
-      case SortType.RAITING:
-        this.#allFilmsModel = this.#allFilmsModel.sort(sortTaskRaiting);
+      case SortType.RATING:
+        this.#allFilmsModel = this.#allFilmsModel.sort(sortTaskRating);
         break;
       case SortType.DEFAULT:
         this.#allFilmsModel = [...this.#defaultAllFilmsModal];

@@ -53,7 +53,7 @@ const getDomPopup = (filmInfo, comments) => {
   const runtimeHourMinute = getRuntime(runtime);
   const normalGenre = getGenreList(genre);
   const normalDate = getReleaseDate(date);
-  const comentsList = getComment(comments);
+  const commentsList = getComment(comments);
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
   <div class="film-details__top-container">
@@ -118,7 +118,7 @@ const getDomPopup = (filmInfo, comments) => {
     </div>
 
     <section class="film-details__controls">
-      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.watchlist)} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
+      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.watchList)} film-details__control-button--watchList" id="watchList" name="watchList">Add to watchlist</button>
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.alreadyWatched)} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.favorite)} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
     </section>
@@ -129,7 +129,7 @@ const getDomPopup = (filmInfo, comments) => {
       <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
       <ul class="film-details__comments-list">
-        ${comentsList}
+        ${commentsList}
       </ul>
 
       <div class="film-details__new-comment">
@@ -182,7 +182,7 @@ export default class Popup extends AbstractView {
     return getDomPopup(this.#filmInfo, this.#filmComment);
   }
 
-  setEventClouseHandler = (callback) => {
+  setEventCloseHandler = (callback) => {
     this._callback.click = callback;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
       evt.preventDefault();
@@ -203,13 +203,13 @@ export default class Popup extends AbstractView {
     document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
   };
 
-  setFilmDetaeilsControlHandler = (callback)=>{
-    this._callback.clickFilmDetaeilsControl = callback;
+  setFilmDetailsControlHandler = (callback)=>{
+    this._callback.clickFilmDetailsControl = callback;
     this.element.querySelector('.film-details__controls').addEventListener('click', this.#addDetailsControl);
   };
 
   #addDetailsControl = (evt)=>{
     evt.preventDefault();
-    this._callback.clickFilmDetaeilsControl(evt);
+    this._callback.clickFilmDetailsControl(evt);
   };
 }

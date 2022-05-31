@@ -42,7 +42,7 @@ const getSomeFilm = ()=> ({
     'description': 'Oscar-winning film, a war drama about two young people, from the creators of timeless classic "Nu, Pogodi!" and "Alice in Wonderland", with the best fight scenes since Bruce Lee.'
   },
   'userDetails': {
-    'watchlist': randomFromUserDetails(1,10),
+    'watchList': randomFromUserDetails(1,10),
     'alreadyWatched': randomFromUserDetails(1,10),
     'watching_date': '2019-04-12T16:12:32.554Z',
     'favorite': randomFromUserDetails(1,10)
