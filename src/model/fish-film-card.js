@@ -1,17 +1,26 @@
+import { nanoid } from 'nanoid';
 function randomFromUserDetails(min, max) {
   const mainNum = Math.floor(Math.random() * (max - min + 1) + min);
   const result = !(mainNum <5);
   return result;
 }
+function randomData () {
+  let num = Math.floor(Math.random() * (20 - 1 + 1) + 1);
+  if(num<10){
+    num+=10;
+  }
+  return `20${num}-05-11T00:00:00.000Z`;
+}
+
 const getSomeFilm = ()=> ({
-  'id': '0',
+  'id': nanoid(),
   'comments': [
     42, 34
   ],
   'filmInfo': {
     'title': 'A Little Pony Without The Carpet',
     'alternativeTitle': 'Laziness Who Sold Themselves',
-    'totalRating': 5.3,
+    'totalRating': Math.floor(Math.random() * (10 - 1 + 1) + 1),
     'poster': 'images/posters/the-dance-of-life.jpg',
     'ageRating': 0,
     'director': 'Tom Ford',
@@ -25,7 +34,7 @@ const getSomeFilm = ()=> ({
       'Morgan Freeman'
     ],
     'release': {
-      'date': '2019-05-11T00:00:00.000Z',
+      'date': randomData(),
       'releaseCountry': 'Finland'
     },
     'runtime': 77,
@@ -33,8 +42,8 @@ const getSomeFilm = ()=> ({
     'description': 'Oscar-winning film, a war drama about two young people, from the creators of timeless classic "Nu, Pogodi!" and "Alice in Wonderland", with the best fight scenes since Bruce Lee.'
   },
   'userDetails': {
-    'watchlist': randomFromUserDetails(1,10),
-    'already_watched': randomFromUserDetails(1,10),
+    'watchList': randomFromUserDetails(1,10),
+    'alreadyWatched': randomFromUserDetails(1,10),
     'watching_date': '2019-04-12T16:12:32.554Z',
     'favorite': randomFromUserDetails(1,10)
   }

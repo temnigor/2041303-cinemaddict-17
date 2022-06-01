@@ -1,12 +1,12 @@
 import FilmCard from '../view/film-card.js';
 import { render } from '../framework/render.js';
 const EXTRA_MOVIE_CARD = 2;
-export default class RatedFilmsPrisenter {
+export default class RatedFilmsPresenter {
   #filmsContainer = null;
   #filmsCardModel = null;
   #allFilmsModel = [];
-  init = (filmContener, filmsCardModel ) => {
-    this.#filmsContainer = filmContener;
+  init = (filmContainer, filmsCardModel ) => {
+    this.#filmsContainer = filmContainer;
     this.#filmsCardModel = filmsCardModel;
     this.#allFilmsModel = [...this.#filmsCardModel.films];
     if(+this.#allFilmsModel !== 0) {
