@@ -1,14 +1,14 @@
-import NewFilmCard from '../view/film-card.js';
-import { render } from '../render.js';
+import FilmCard from '../view/film-card.js';
+import { render } from '../framework/render.js';
 const EXTRA_MOVIE_CARD = 2;
 
-export default class NewFilmsCatalogMostComment {
+export default class MostCommentFilmsPresenter {
   #filmsContainer = null;
   #filmsCardModel = null;
   #allFilmsModel = [];
 
-  init = (filmContener, filmsCardModel) => {
-    this.#filmsContainer = filmContener;
+  init = (filmContainer, filmsCardModel) => {
+    this.#filmsContainer = filmContainer;
     this.#filmsCardModel = filmsCardModel;
     this.#allFilmsModel = [...this.#filmsCardModel.films];
     if(+this.#allFilmsModel !== 0) {
@@ -19,7 +19,7 @@ export default class NewFilmsCatalogMostComment {
   };
 
   #renderMostCommentFilmCards = (filmModel) => {
-    const filmCard = new NewFilmCard(filmModel);
+    const filmCard = new FilmCard(filmModel);
     render(filmCard, this.#filmsContainer);
   };
 }

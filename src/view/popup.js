@@ -1,8 +1,14 @@
-import { createElement } from '../render';
-import { getRuntime, getReleaseDate, getGenreList, getNormalList, getDateComment} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {
+  getRuntime,
+  getReleaseDate,
+  getGenreList,
+  getNormalList,
+  getDateComment,
+  getFilmDetailsControlActive,
+} from '../utils/popup-and-film-cards-utils.js';
 const getComment = (comments) => {
-  const commentList = document.createElement('div');
-  comments.forEach((commentInfo) => {
+  const commentsList = comments.map((commentInfo) => {
     const {
       author,
       comment,
@@ -10,7 +16,7 @@ const getComment = (comments) => {
       emotion
     } = commentInfo;
     const normalDate = getDateComment(date);
-    const comentDom = `<li class="film-details__comment">
+    const commentDom = `<li class="film-details__comment">
 <span class="film-details__comment-emoji">
   <img src="./images/emoji/${emotion}.png" alt="emoji-${emotion}" width="55" height="55">
 </span>
@@ -23,13 +29,13 @@ const getComment = (comments) => {
   </p>
 </div>
 </li>`;
-    commentList.innerHTML = `${commentList.innerHTML} ${comentDom}`;
-  });
-  return commentList;
+    return commentDom;
+  }).join(' ');
+  return commentsList;
 };
 
 
-const getDomPopup = (filmInfo, commentsArray) => {
+const getDomPopup = (filmInfo, comments) => {
   const {
 
     filmInfo:{title, alternativeTitle, totalRating, poster, ageRating, director,
@@ -38,15 +44,16 @@ const getDomPopup = (filmInfo, commentsArray) => {
       release:{date, releaseCountry},
       runtime,
       genre,
-      description}
+      description
+    },
+    userDetails,
   } = filmInfo;
-
   const normalWriters = getNormalList(allWriters);
   const normalActors = getNormalList(allActors);
   const runtimeHourMinute = getRuntime(runtime);
-  const normalGenre = getGenreList(genre).innerHTML;
+  const normalGenre = getGenreList(genre);
   const normalDate = getReleaseDate(date);
-  const comentsList = getComment(commentsArray).innerHTML;
+  const commentsList = getComment(comments);
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
   <div class="film-details__top-container">
@@ -111,18 +118,18 @@ const getDomPopup = (filmInfo, commentsArray) => {
     </div>
 
     <section class="film-details__controls">
-      <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-      <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-      <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.watchList)} film-details__control-button--watchList" id="watchList" name="watchList">Add to watchlist</button>
+      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.alreadyWatched)} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.favorite)} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
     </section>
   </div>
 
   <div class="film-details__bottom-container">
     <section class="film-details__comments-wrap">
-      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsArray.length}</span></h3>
+      <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
       <ul class="film-details__comments-list">
-        ${comentsList};
+        ${commentsList}
       </ul>
 
       <div class="film-details__new-comment">
@@ -161,27 +168,48 @@ const getDomPopup = (filmInfo, commentsArray) => {
 };
 
 
-export default class NewPopup {
+export default class Popup extends AbstractView {
   #filmInfo = null;
   #filmComment = null;
-  #element = null;
   constructor(filmInfo, filmComment) {
+    super();
     this.#filmInfo = filmInfo;
     this.#filmComment = filmComment;
+    this.buttonFilmDetailsControls = this.element.querySelector('.film-details__close-btn');
   }
 
-  get domElement() {
+  get template() {
     return getDomPopup(this.#filmInfo, this.#filmComment);
   }
 
-  get element() {
-    if(!this.#element) {
-      this.#element = createElement(this.domElement);
-    }
-    return this.#element;
-  }
+  setEventCloseHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
+      evt.preventDefault();
+      this.#removeElementAndEvent();
+    });
+    document.addEventListener('keydown',this.#removeElementAndEventKeydown);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #removeElementAndEventKeydown = (evt) => {
+    if(evt.code === 'Escape'){
+      evt.preventDefault();
+      this.#removeElementAndEvent();
+    }
+  };
+
+  #removeElementAndEvent = () => {
+    this._callback.click();
+    document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
+  };
+
+  setFilmDetailsControlHandler = (callback)=>{
+    this._callback.clickFilmDetailsControl = callback;
+    this.element.querySelector('.film-details__controls').addEventListener('click', this.#addDetailsControl);
+  };
+
+  #addDetailsControl = (evt)=>{
+    evt.preventDefault();
+    this._callback.clickFilmDetailsControl(evt);
+  };
 }

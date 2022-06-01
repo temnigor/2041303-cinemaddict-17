@@ -1,6 +1,5 @@
-
-import { createElement } from '../render.js';
-import { getReleaseYear, getRuntime, getNormalList, getNormalDescription} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getReleaseYear, getRuntime, getNormalList, getNormalDescription, getFilmCardControlActive,} from '../utils/popup-and-film-cards-utils.js';
 
 const getDomFilmCard = (filmInfo) => {
   const {
@@ -9,7 +8,8 @@ const getDomFilmCard = (filmInfo) => {
       release:{date},
       runtime,
       genre :allGenre,
-      description}
+      description},
+    userDetails
   } = filmInfo;
   const normalGenre = getNormalList(allGenre);
   const normalDescription = getNormalDescription(description);
@@ -29,32 +29,41 @@ const getDomFilmCard = (filmInfo) => {
   <span class="film-card__comments">${comments.length} comments</span>
 </a>
 <div class="film-card__controls">
-  <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
-  <button class="film-card__controls-item film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
-  <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
+  <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchList)}" id="watchListCard" type="button">Add to watchList</button>
+  <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${getFilmCardControlActive(userDetails.alreadyWatched)}" id="watchedCard" type="button">Mark as watched</button>
+  <button class="film-card__controls-item film-card__controls-item--favorite ${getFilmCardControlActive(userDetails.favorite)}" id="favoriteCard"type="button">Mark as favorite</button>
 </div>
 </article>`);
 };
 
-export default class NewFilmCard {
+export default class FilmCard extends AbstractView{
   #filmInfo = null;
-  #element = null;
   constructor( filmInfo) {
+    super();
     this.#filmInfo = filmInfo;
   }
 
-  get domElement() {
+  get template() {
     return getDomFilmCard(this.#filmInfo);
   }
 
-  get element() {
-    if(!this.#element){
-      this.#element = createElement(this.domElement);
-    }
-    return this.#element;
-  }
+  setClickOpenPopupHandler = (callback ) =>{
+    this._callback.click = callback;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#setClickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #setClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
+
+  setFilmDetailsControlHandler = (callback)=>{
+    this._callback.clickFilmDetailsControl = callback;
+    this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
+  };
+
+  #addDetailsControl = (evt)=>{
+    evt.preventDefault();
+    this._callback.clickFilmDetailsControl(evt);
+  };
 }
