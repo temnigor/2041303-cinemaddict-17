@@ -1,6 +1,12 @@
 import dayjs from 'dayjs';
 const START_SLICE_DESCRIPTION = 0;
 const SIZE_DESCRIPTION = 139;
+const EMOJI =  {
+  'smile': '',
+  'sleeping': '',
+  'puke': '',
+  'angry': ''
+};
 const getReleaseYear = (date) => dayjs(date).format('YYYY');
 const getRuntime = (min) =>{
   const hours = Math.trunc(min/60);
@@ -48,4 +54,5 @@ export {
   getDateComment,
   getFilmDetailsControlActive,
   getFilmCardControlActive,
+  EMOJI,
 };

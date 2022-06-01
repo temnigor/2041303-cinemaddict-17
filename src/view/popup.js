@@ -1,4 +1,5 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import { createElement} from '../framework/render.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {
   getRuntime,
   getReleaseDate,
@@ -6,7 +7,13 @@ import {
   getNormalList,
   getDateComment,
   getFilmDetailsControlActive,
+  EMOJI
 } from '../utils/popup-and-film-cards-utils.js';
+const KeyForSubmit = [
+  'ControlLeft',
+  'Enter',
+  'Command'
+]
 const getComment = (comments) => {
   const commentsList = comments.map((commentInfo) => {
     const {
@@ -29,13 +36,13 @@ const getComment = (comments) => {
   </p>
 </div>
 </li>`;
-    return commentDom;
+  return commentDom;
   }).join(' ');
   return commentsList;
 };
 
 
-const getDomPopup = (filmInfo, comments) => {
+const getDomPopup = (filmInfo, comments, emoji) => {
   const {
 
     filmInfo:{title, alternativeTitle, totalRating, poster, ageRating, director,
@@ -48,6 +55,12 @@ const getDomPopup = (filmInfo, comments) => {
     },
     userDetails,
   } = filmInfo;
+const {
+  smile,
+  sleeping,
+  puke,
+  angry,
+} = emoji;
   const normalWriters = getNormalList(allWriters);
   const normalActors = getNormalList(allActors);
   const runtimeHourMinute = getRuntime(runtime);
@@ -133,29 +146,30 @@ const getDomPopup = (filmInfo, comments) => {
       </ul>
 
       <div class="film-details__new-comment">
-        <div class="film-details__add-emoji-label"></div>
+        <div class="film-details__add-emoji-label">
+        </div>
 
         <label class="film-details__comment-label">
           <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
         </label>
 
         <div class="film-details__emoji-list">
-          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${smile} >
           <label class="film-details__emoji-label" for="emoji-smile">
             <img src="./images/emoji/smile.png" alt="emoji" width="30" height="30">
           </label>
 
-          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${sleeping}>
           <label class="film-details__emoji-label" for="emoji-sleeping">
             <img src="./images/emoji/sleeping.png" alt="emoji" width="30" height="30">
           </label>
 
-          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${puke}>
           <label class="film-details__emoji-label" for="emoji-puke">
             <img src="./images/emoji/puke.png" alt="emoji" width="30" height="30">
           </label>
 
-          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${angry}>
           <label class="film-details__emoji-label" for="emoji-angry">
             <img src="./images/emoji/angry.png" alt="emoji" width="30" height="30">
           </label>
@@ -166,21 +180,51 @@ const getDomPopup = (filmInfo, comments) => {
 </form>
 </section>`);
 };
+const addImagEmojiChios = (imgInfo) =>{
+  return `<img src=${imgInfo.src} alt=${imgInfo.alt} width="55" height="55"></img>`
+}
 
-
-export default class Popup extends AbstractView {
+export default class Popup extends AbstractStatefulView {
   #filmInfo = null;
+  #allFilmComment = null;
+  #filmAddEmoji= null;
+  #filmEmojiList = null;
   #filmComment = null;
+  #keyPressedForSubmit = new Set();
   constructor(filmInfo, filmComment) {
     super();
-    this.#filmInfo = filmInfo;
+    this.#filmInfo = [filmInfo];
     this.#filmComment = filmComment;
+    this._state.comments = Popup.parseAllCommentsToState(this.#filmComment.comments);
+    this._state.filmInfo = Popup.parseAllCommentsToState(this.#filmInfo);
+    this._state.emoji = EMOJI;
+    this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]) ;
     this.buttonFilmDetailsControls = this.element.querySelector('.film-details__close-btn');
+    this.#filmAddEmoji = this.element.querySelector('.film-details__add-emoji-label');
+    this.#filmEmojiList = this.element.querySelector('.film-details__emoji-list');
   }
 
   get template() {
-    return getDomPopup(this.#filmInfo, this.#filmComment);
+    return getDomPopup(this._state.filmInfo[0], this.#allFilmComment, this._state.emoji);
   }
+
+  #getEmojiTemplate =(evtTarget)=>{
+  return addImagEmojiChios(evtTarget)
+}
+
+  #getNeedComment = (allFilmComments, filmsModel) => {
+    console.log(allFilmComments)
+  const keyFilmsComments = filmsModel.comments;
+  const needComments = [];
+  keyFilmsComments.forEach((oneKey)=>{
+    for(const comment of allFilmComments){
+      if(oneKey === Number(comment.id)){
+        needComments.push(comment);
+      }
+    }
+  });
+  return needComments;
+};
 
   setEventCloseHandler = (callback) => {
     this._callback.click = callback;
@@ -201,6 +245,9 @@ export default class Popup extends AbstractView {
   #removeElementAndEvent = () => {
     this._callback.click();
     document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
+    document.removeEventListener('keydown', this.#submitHandler);
+    document.removeEventListener('keyup', this.#deleteUpKey);
+
   };
 
   setFilmDetailsControlHandler = (callback)=>{
@@ -212,4 +259,57 @@ export default class Popup extends AbstractView {
     evt.preventDefault();
     this._callback.clickFilmDetailsControl(evt);
   };
+
+#submitHandler = (evt)=>{
+  evt.preventDefault();
+  this.#keyPressedForSubmit.add(evt.code);
+  let pressedKeys = Array.from(this.#keyPressedForSubmit);
+    if (pressedKeys[0] === KeyForSubmit[0] && pressedKeys[1] === KeyForSubmit[1]
+      || pressedKeys[0] === KeyForSubmit[3] && pressedKeys[1] === KeyForSubmit[1]) {
+      this.#keyPressedForSubmit.clear();
+      pressedKeys = Array.from(this.#keyPressedForSubmit);
+
+      console.log(this._state)
+      alert('ok')
+      return;
+    }
+  }
+
+#deleteUpKey = (evt)=>{
+  this.#keyPressedForSubmit.delete(evt.code);
+};
+
+  setCommitCatalogHandler =(callback)=>{
+    this._callback.emoji = callback;
+    document.addEventListener('keydown', this.#submitHandler);
+    document.addEventListener('keyup', this.#deleteUpKey);
+    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
+  };
+
+  #chiosEmoji = (evt) =>{
+    evt.preventDefault();
+    const x = evt.target.parentElement.control.value
+    console.log(this._state.emoji[toString(x)])
+    console.log(evt.target.parentElement.control.value)
+    //console.log(this.#filmEmojiList.querySelector('input:checked'));
+    if(this.#filmAddEmoji.querySelector('img')){
+      this.#filmAddEmoji.removeChild(this.#filmAddEmoji.querySelector('img'));
+    }
+    this.#filmAddEmoji.appendChild(createElement(this.#getEmojiTemplate(evt.target)));
+    return
+  };
+
+  #deleteComment =(evt)=>{
+    if(evt.target.localName === 'button'){
+      evt.preventDefault();
+    console.log(evt.target.localName);
+  }
+  }
+
+  static parseAllCommentsToState = (allComments) => [...allComments];
+
+  static parseStateToAllComments = (state) => [...state];
 }
+
+
