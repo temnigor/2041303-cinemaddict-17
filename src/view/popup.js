@@ -119,7 +119,7 @@ const getDomPopup = (filmInfo, comments) => {
 
     <section class="film-details__controls">
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.watchList)} film-details__control-button--watchList" id="watchList" name="watchList">Add to watchlist</button>
-      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.alreadyWatched)} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.alreadyWatched)} film-details__control-button--watched" id="watched" name="watched">Already watched!</button>
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.favorite)} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
     </section>
   </div>
