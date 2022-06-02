@@ -45,19 +45,18 @@ const getFilmCardControlActive = (filmDetailsControlButton)=>
     ? 'film-card__controls-item--active'
     : '';
 
-    const getNeedComment = (allFilmComments, filmsModel) => {
-      console.log(allFilmComments)
-      const keyFilmsComments = filmsModel.comments;
-      const needComments = [];
-      keyFilmsComments.forEach((oneKey)=>{
-        for(const comment of allFilmComments){
-          if(oneKey === Number(comment.id)){
-          needComments.push(comment);
-          }
-        }
-      });
-      return needComments;
-    };
+const getNeedComment = (allFilmComments, filmsModel) => {
+  const keyFilmsComments = filmsModel.comments;
+  const needComments = [];
+  keyFilmsComments.forEach((oneKey)=>{
+    for(const comment of allFilmComments){
+      if(oneKey === Number(comment.id)){
+        needComments.push(comment);
+      }
+    }
+  });
+  return needComments;
+};
 
 export {
   getReleaseYear,

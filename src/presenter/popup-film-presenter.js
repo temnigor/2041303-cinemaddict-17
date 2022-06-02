@@ -45,7 +45,6 @@ export default class PopupFilmPresenter {
   };
 
 
-
   #getFilmDetailsControlButton = () =>{
     this.#popup.setFilmDetailsControlHandler((evt)=>{
       while(evt.target.id){
@@ -80,19 +79,21 @@ export default class PopupFilmPresenter {
     this.#filmsContainer.removeChild(this.#popup.element);
     this.#popup.removeElement();
   };
+
   updateFilm =(filmInfo, allfilmComment)=> {
-    this.#filmComments.reBindComments(allfilmComment)
-    this.filmCardModel = filmInfo[0]
-    this.renderFilmsCard(this.filmCardModel)
-  }
-submitComment =(newComment, filmInfo)=>{
-  const comment = getNewComment(newComment)
- this.#filmComments.addNewComment(comment);
- this.filmCardModel = filmInfo[0]
- this.filmCardModel.comments.push(comment.id)
- this.renderFilmsCard(this.filmCardModel);
- this.#getRenderPopup();
-}
+    this.#filmComments.reBindComments(allfilmComment);
+    this.filmCardModel = filmInfo[0];
+    this.renderFilmsCard(this.filmCardModel);
+  };
+
+  submitComment =(newComment, filmInfo)=>{
+    const comment = getNewComment(newComment);
+    this.#filmComments.addNewComment(comment);
+    this.filmCardModel = filmInfo[0];
+    this.filmCardModel.comments.push(comment.id);
+    this.renderFilmsCard(this.filmCardModel);
+    this.#getRenderPopup();
+  };
 
 
 }

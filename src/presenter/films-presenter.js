@@ -1,7 +1,6 @@
 import { remove, render, } from '../framework/render.js';
 import FilmCard from '../view/film-card.js';
 import PopupFilmPresenter from './popup-film-presenter.js';
-import FilmCommentModel from '../model/film-comment-model.js';
 export default class FilmsPresenter {
   #filmsContainer = null;
   #filmCard = null;

@@ -4,12 +4,14 @@ export default class FilmCommentModel {
   get comments () {
     return this.#comments;
   }
+
   reBindComments (commentsArray) {
     this.#comments = commentsArray;
-    return this.#comments
-  }
-  addNewComment =(updateComment)=>{
-    this.#comments.push(updateComment)
     return this.#comments;
   }
+
+  addNewComment =(updateComment)=>{
+    this.#comments.push(updateComment);
+    return this.#comments;
+  };
 }

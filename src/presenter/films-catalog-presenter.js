@@ -26,7 +26,7 @@ export default class FilmsCatalogPresenter {
   #actualSortType = SortType.DEFAULT;
   #sort = null;
   constructor (){
-    this.filmComment = new FilmCommentModel()
+    this.filmComment = new FilmCommentModel();
   }
 
   init = (filmContainer, filmsCardModel, body) => {

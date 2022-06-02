@@ -1,5 +1,4 @@
-import { nanoid } from "nanoid";
-import { getActualDate } from "../utils/popup-and-film-cards-utils.js";
+import { getActualDate } from '../utils/popup-and-film-cards-utils.js';
 const getNewComment = (updateComment)=>({
   'id': 33,
   'author': 'Ilya O\'Reilly',

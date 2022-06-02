@@ -12,14 +12,14 @@ const KeyForSubmit = [
   'ControlLeft',
   'Enter',
   'Command'
-]
+];
 const getImgEmoji =(emojiInfo)=>{
   for(const [key, value] of Object.entries(emojiInfo))
-  if(value === 'checked'){
-  return `<img src="./images/emoji/${key}.png" width="55" height="55" alt="emoji-angry"></img>`;
+  {if(value === 'checked'){
+    return `<img src="./images/emoji/${key}.png" width="55" height="55" alt="emoji-angry"></img>`;
+  }}
+  return'';
 };
-return'';
-}
 const getComment = (comments) => {
   const commentsList = comments.map((commentInfo) => {
     const {
@@ -43,13 +43,13 @@ const getComment = (comments) => {
   </p>
 </div>
 </li>`;
-  return commentDom;
+    return commentDom;
   }).join(' ');
   return commentsList;
 };
 
 
-const getDomPopup = (filmInfo, comments, emoji) => {
+const getDomPopup = (filmInfo, comments, state) => {
   const {
 
     filmInfo:{title, alternativeTitle, totalRating, poster, ageRating, director,
@@ -62,19 +62,20 @@ const getDomPopup = (filmInfo, comments, emoji) => {
     },
     userDetails,
   } = filmInfo;
-const {
-  smile,
-  sleeping,
-  puke,
-  angry,
-} = emoji;
+  const {
+    smile,
+    sleeping,
+    puke,
+    angry,
+  } = state.emoji;
+  const addCommentInput = state.newComment.comment;
   const normalWriters = getNormalList(allWriters);
   const normalActors = getNormalList(allActors);
   const runtimeHourMinute = getRuntime(runtime);
   const normalGenre = getGenreList(genre);
   const normalDate = getReleaseDate(date);
   const commentsList = getComment(comments);
-  const emojiNewComment= getImgEmoji(emoji);
+  const emojiNewComment= getImgEmoji(state.emoji);
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
   <div class="film-details__top-container">
@@ -159,7 +160,7 @@ const {
         </div>
 
         <label class="film-details__comment-label">
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" >${addCommentInput}</textarea>
         </label>
 
         <div class="film-details__emoji-list">
@@ -215,7 +216,7 @@ export default class Popup extends AbstractStatefulView {
   }
 
   get template() {
-    return getDomPopup(this._state.filmInfo[0], this.#allFilmComment, this._state.emoji);
+    return getDomPopup(this._state.filmInfo[0], this.#allFilmComment, this._state);
   }
 
   reset =(filmInfo, filmComment)=>{
@@ -232,24 +233,21 @@ export default class Popup extends AbstractStatefulView {
     };
     this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]);
     this.updateElement(this._state);
-    this.#scrollTopElement(this._state.initElementScrollTop)
-  }
+    this.#scrollTopElement(this._state.initElementScrollTop);
+  };
 
   #getNeedComment = (allFilmComments, filmsModel) => {
-    console.log(allFilmComments)
-    console.log(filmsModel)
-  const keyFilmsComments = filmsModel.comments;
-  const needComments = [];
-  keyFilmsComments.forEach((oneKey)=>{
-    for(const comment of allFilmComments){
-      if(oneKey === Number(comment.id)){
-      needComments.push(comment);
+    const keyFilmsComments = filmsModel.comments;
+    const needComments = [];
+    keyFilmsComments.forEach((oneKey)=>{
+      for(const comment of allFilmComments){
+        if(oneKey === Number(comment.id)){
+          needComments.push(comment);
+        }
       }
-    }
-  });
-  console.log(needComments)
-  return needComments;
-};
+    });
+    return needComments;
+  };
 
   setEventCloseHandler = (callback) => {
     this._callback.click = callback;
@@ -285,30 +283,30 @@ export default class Popup extends AbstractStatefulView {
     this._callback.clickFilmDetailsControl(evt);
   };
 
-#submitHandler = (evt)=>{
-  evt.preventDefault();
-  //if(this._state.newComment.comment.length === 0 && this._state.newComment.emotion.length >=4){
-    this.#keyPressedForSubmit.add(evt.code);
-    let pressedKeys = Array.from(this.#keyPressedForSubmit);
+  #submitHandler = (evt)=>{
+    if(this._state.newComment.comment.length === 10 && this._state.newComment.emotion.length >=4){
+      this.#keyPressedForSubmit.add(evt.code);
+      let pressedKeys = Array.from(this.#keyPressedForSubmit);
       if (pressedKeys[0] === KeyForSubmit[0] && pressedKeys[1] === KeyForSubmit[1]
         || pressedKeys[0] === KeyForSubmit[3] && pressedKeys[1] === KeyForSubmit[1]) {
         this.#keyPressedForSubmit.clear();
         pressedKeys = Array.from(this.#keyPressedForSubmit);
         this._callback.submit(this._state.newComment, this._state.filmInfo);
-      //}
-      return;
-  }
-  return;
-  }
 
-#deleteUpKey = (evt)=>{
-  this.#keyPressedForSubmit.delete(evt.code);
-};
+      }
+    }
 
-setDeleteCommentHandler =(callback)=>{
-  this._callback.deleteComment = callback;
-  this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
-}
+  };
+
+  #deleteUpKey = (evt)=>{
+    this.#keyPressedForSubmit.delete(evt.code);
+  };
+
+  setDeleteCommentHandler =(callback)=>{
+    this._callback.deleteComment = callback;
+    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+  };
+
   setCommitCatalogHandler =(callback)=>{
     this._callback.submit = callback;
     this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
@@ -329,7 +327,7 @@ setDeleteCommentHandler =(callback)=>{
       this._state.emoji[evt.target.parentElement.control.value] = 'checked';
       this._state.newComment.emotion = evt.target.parentElement.control.value;
       this.updateElement(this._state);
-      this.#scrollTopElement(this._state.initElementScrollTop)
+      this.#scrollTopElement(this._state.initElementScrollTop);
     }
 
   };
@@ -339,15 +337,15 @@ setDeleteCommentHandler =(callback)=>{
       evt.preventDefault();
       this._state.initElementScrollTop = this.element.scrollTop;
       this._state.filmInfo[0].comments = this._state.filmInfo[0].comments
-      .filter((comment) =>comment !== +evt.target.dataset.idComments);
+        .filter((comment) =>comment !== +evt.target.dataset.idComments);
       this._state.comments = this._state.comments
-      .filter((comment)=> comment.id !== evt.target.dataset.idComments);
+        .filter((comment)=> comment.id !== evt.target.dataset.idComments);
       this._callback.deleteComment(this._state.filmInfo, this._state.comments);
       this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]);
       this.updateElement(this._state);
-      this.#scrollTopElement(this._state.initElementScrollTop)
-  }
-  }
+      this.#scrollTopElement(this._state.initElementScrollTop);
+    }
+  };
 
   static parseAllCommentsToState = (allComments) => [...allComments];
 
@@ -367,5 +365,5 @@ setDeleteCommentHandler =(callback)=>{
 
   #scrollTopElement=(intValue)=>{
     this.element.scrollTop=intValue;
-  }
+  };
 }
