@@ -3,7 +3,7 @@ import ButtonShowMore from '../view/button-show-more.js';
 import NoFilmCard from '../view/no-films-card.js';
 import FilmsPresenter from './films-presenter.js';
 import { getNewAllModelCard } from '../utils/presenter-utils.js';
-import { SortType, sortTaskUp, sortTaskRating} from '../utils/filters.js';
+import { SortType, sortFilmDate, sortFilmRating} from '../utils/filters.js';
 import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
 import FilmCommentModel from '../model/film-comment-model.js';
@@ -107,10 +107,10 @@ export default class FilmsCatalogPresenter {
   #setSortType = (sortType) =>{
     switch (sortType) {
       case SortType.DATA:
-        this.#allFilmsModel = this.#allFilmsModel.sort(sortTaskUp);
+        this.#allFilmsModel = this.#allFilmsModel.sort(sortFilmDate);
         break;
       case SortType.RATING:
-        this.#allFilmsModel = this.#allFilmsModel.sort(sortTaskRating);
+        this.#allFilmsModel = this.#allFilmsModel.sort(sortFilmRating);
         break;
       case SortType.DEFAULT:
         this.#allFilmsModel = [...this.#defaultAllFilmsModal];
