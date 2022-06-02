@@ -15,7 +15,7 @@ function randomData () {
 const getSomeFilm = ()=> ({
   'id': nanoid(),
   'comments': [
-    42, 34, 10
+    42
   ],
   'filmInfo': {
     'title': 'A Little Pony Without The Carpet',

@@ -1,4 +1,3 @@
-import { createElement} from '../framework/render.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {
   getRuntime,
@@ -14,9 +13,17 @@ const KeyForSubmit = [
   'Enter',
   'Command'
 ]
+const getImgEmoji =(emojiInfo)=>{
+  for(const [key, value] of Object.entries(emojiInfo))
+  if(value === 'checked'){
+  return `<img src="./images/emoji/${key}.png" width="55" height="55" alt="emoji-angry"></img>`;
+};
+return'';
+}
 const getComment = (comments) => {
   const commentsList = comments.map((commentInfo) => {
     const {
+      id,
       author,
       comment,
       date,
@@ -32,7 +39,7 @@ const getComment = (comments) => {
   <p class="film-details__comment-info">
     <span class="film-details__comment-author">${author}</span>
     <span class="film-details__comment-day">${normalDate}</span>
-    <button class="film-details__comment-delete">Delete</button>
+    <button class="film-details__comment-delete" data-id-comments = '${id}'>Delete</button>
   </p>
 </div>
 </li>`;
@@ -67,6 +74,7 @@ const {
   const normalGenre = getGenreList(genre);
   const normalDate = getReleaseDate(date);
   const commentsList = getComment(comments);
+  const emojiNewComment= getImgEmoji(emoji);
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
   <div class="film-details__top-container">
@@ -147,6 +155,7 @@ const {
 
       <div class="film-details__new-comment">
         <div class="film-details__add-emoji-label">
+        ${emojiNewComment}
         </div>
 
         <label class="film-details__comment-label">
@@ -180,9 +189,6 @@ const {
 </form>
 </section>`);
 };
-const addImagEmojiChios = (imgInfo) =>{
-  return `<img src=${imgInfo.src} alt=${imgInfo.alt} width="55" height="55"></img>`
-}
 
 export default class Popup extends AbstractStatefulView {
   #filmInfo = null;
@@ -197,7 +203,11 @@ export default class Popup extends AbstractStatefulView {
     this.#filmComment = filmComment;
     this._state.comments = Popup.parseAllCommentsToState(this.#filmComment.comments);
     this._state.filmInfo = Popup.parseAllCommentsToState(this.#filmInfo);
-    this._state.emoji = EMOJI;
+    this._state.emoji = {...EMOJI};
+    this._state.newComment = {
+      'comment':'',
+      'emotion':''
+    };
     this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]) ;
     this.buttonFilmDetailsControls = this.element.querySelector('.film-details__close-btn');
     this.#filmAddEmoji = this.element.querySelector('.film-details__add-emoji-label');
@@ -208,21 +218,34 @@ export default class Popup extends AbstractStatefulView {
     return getDomPopup(this._state.filmInfo[0], this.#allFilmComment, this._state.emoji);
   }
 
-  #getEmojiTemplate =(evtTarget)=>{
-  return addImagEmojiChios(evtTarget)
-}
+  reset =(filmInfo, filmComment)=>{
+    this._state = {};
+    this.#filmInfo = [filmInfo];
+    this.#filmComment = filmComment;
+    this._state.comments = Popup.parseAllCommentsToState(this.#filmComment.comments);
+    this._state.filmInfo = Popup.parseAllCommentsToState(this.#filmInfo);
+    this._state.emoji = {...EMOJI};
+    this._state.newComment = {
+      'comment':'',
+      'emotion':''
+    };
+    this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]);
+    this.updateElement(this._state);
+  }
 
   #getNeedComment = (allFilmComments, filmsModel) => {
     console.log(allFilmComments)
+    console.log(filmsModel)
   const keyFilmsComments = filmsModel.comments;
   const needComments = [];
   keyFilmsComments.forEach((oneKey)=>{
     for(const comment of allFilmComments){
       if(oneKey === Number(comment.id)){
-        needComments.push(comment);
+      needComments.push(comment);
       }
     }
   });
+  console.log(needComments)
   return needComments;
 };
 
@@ -262,54 +285,77 @@ export default class Popup extends AbstractStatefulView {
 
 #submitHandler = (evt)=>{
   evt.preventDefault();
-  this.#keyPressedForSubmit.add(evt.code);
-  let pressedKeys = Array.from(this.#keyPressedForSubmit);
-    if (pressedKeys[0] === KeyForSubmit[0] && pressedKeys[1] === KeyForSubmit[1]
-      || pressedKeys[0] === KeyForSubmit[3] && pressedKeys[1] === KeyForSubmit[1]) {
-      this.#keyPressedForSubmit.clear();
-      pressedKeys = Array.from(this.#keyPressedForSubmit);
-
-      console.log(this._state)
-      alert('ok')
+  //if(this._state.newComment.comment.length === 0 && this._state.newComment.emotion.length >=4){
+    this.#keyPressedForSubmit.add(evt.code);
+    let pressedKeys = Array.from(this.#keyPressedForSubmit);
+      if (pressedKeys[0] === KeyForSubmit[0] && pressedKeys[1] === KeyForSubmit[1]
+        || pressedKeys[0] === KeyForSubmit[3] && pressedKeys[1] === KeyForSubmit[1]) {
+        this.#keyPressedForSubmit.clear();
+        pressedKeys = Array.from(this.#keyPressedForSubmit);
+        this._callback.submit(this._state.newComment, this._state.filmInfo);
+      //}
       return;
-    }
+  }
+  return;
   }
 
 #deleteUpKey = (evt)=>{
   this.#keyPressedForSubmit.delete(evt.code);
 };
 
+setDeleteCommentHandler =(callback)=>{
+  this._callback.deleteComment = callback;
+  this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+}
   setCommitCatalogHandler =(callback)=>{
-    this._callback.emoji = callback;
-    document.addEventListener('keydown', this.#submitHandler);
-    document.addEventListener('keyup', this.#deleteUpKey);
-    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+    this._callback.submit = callback;
     this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#saveInputText);
+     document.addEventListener('keydown', this.#submitHandler);
+     document.addEventListener('keyup', this.#deleteUpKey);
+  };
+
+  #saveInputText =(evt)=>{
+    this._state.newComment.comment=evt.target.value;
   };
 
   #chiosEmoji = (evt) =>{
     evt.preventDefault();
-    const x = evt.target.parentElement.control.value
-    console.log(this._state.emoji[toString(x)])
-    console.log(evt.target.parentElement.control.value)
-    //console.log(this.#filmEmojiList.querySelector('input:checked'));
-    if(this.#filmAddEmoji.querySelector('img')){
-      this.#filmAddEmoji.removeChild(this.#filmAddEmoji.querySelector('img'));
+    if(evt.target.parentElement.control !== undefined){
+      this._state.emoji = {...EMOJI};
+      this._state.emoji[evt.target.parentElement.control.value] = 'checked';
+      this._state.newComment.emotion = evt.target.parentElement.control.value;
+      this.updateElement(this._state);
     }
-    this.#filmAddEmoji.appendChild(createElement(this.#getEmojiTemplate(evt.target)));
-    return
+
   };
 
   #deleteComment =(evt)=>{
     if(evt.target.localName === 'button'){
       evt.preventDefault();
-    console.log(evt.target.localName);
+      this._state.filmInfo[0].comments = this._state.filmInfo[0].comments
+      .filter((comment) =>comment !== +evt.target.dataset.idComments);
+      this._state.comments = this._state.comments
+      .filter((comment)=> comment.id !== evt.target.dataset.idComments);
+      this._callback.deleteComment(this._state.filmInfo, this._state.comments);
+      this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]);
+      this.updateElement(this._state);
   }
   }
 
   static parseAllCommentsToState = (allComments) => [...allComments];
 
   static parseStateToAllComments = (state) => [...state];
+
+  _restoreHandlers =()=>{
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
+      evt.preventDefault();
+      this.#removeElementAndEvent();
+    });
+    document.addEventListener('keydown', this.#submitHandler);
+    document.addEventListener('keyup', this.#deleteUpKey);
+    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#saveInputText);
+  };
 }
-
-
