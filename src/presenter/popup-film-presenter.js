@@ -31,7 +31,6 @@ export default class PopupFilmPresenter {
   };
 
   #getRenderPopup = () => {
-    console.log(this.#filmComments);
     this.#popup.reset(this.filmCardModel, this.#filmComments);
     this.openPopup.open =  this.#popup;
     this.#filmsContainer.classList.add('hide-overflow');

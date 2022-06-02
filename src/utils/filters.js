@@ -10,7 +10,7 @@ const FilterType = {
   ALREADY_WATCHED:'alreadyWatched',
   FAVORITE:'favorite'
 };
-const isWatchList = (film)=> film.userDetails.watchList === true;
+const isWatchList = (film)=> film.userDetails.watchist === true;
 const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
@@ -43,7 +43,7 @@ const getWeightForNullDate = (dateA, dateB) => {
 const sortTaskUp = (filmA, filmB) => {
   const weight = getWeightForNullDate(filmA.filmInfo.release.date, filmB.filmInfo.release.date);
 
-  return weight ?? dayjs(filmA.filmInfo.release.date).diff(dayjs(filmB.filmInfo.release.date));
+  return weight ?? dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
 };
 
 const sortTaskRating = (a, b) => {

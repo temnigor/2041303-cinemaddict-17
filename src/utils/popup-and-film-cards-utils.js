@@ -13,6 +13,7 @@ const getRuntime = (min) =>{
   const minute = Math.trunc(min%60);
   return `${hours}h ${minute}m`;
 };
+const getActualDate = () => dayjs().format('YYYY/MM/DD HH:mm');
 const getReleaseDate = (date) => dayjs(date).format('DD MMMM YYYY');
 const getDateComment = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 const getGenreList = (genre) => {
@@ -70,4 +71,5 @@ export {
   getFilmCardControlActive,
   EMOJI,
   getNeedComment,
+  getActualDate,
 };

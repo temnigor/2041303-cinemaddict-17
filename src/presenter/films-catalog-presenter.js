@@ -6,6 +6,7 @@ import { getNewAllModelCard } from '../utils/presenter-utils.js';
 import { SortType, sortTaskUp, sortTaskRating} from '../utils/filters.js';
 import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
+import FilmCommentModel from '../model/film-comment-model.js';
 const FILM_COUNT_PER_STEP = 5;
 export default class FilmsCatalogPresenter {
 
@@ -24,6 +25,9 @@ export default class FilmsCatalogPresenter {
   #navMenuPresenter = new NavMenuPresenter();
   #actualSortType = SortType.DEFAULT;
   #sort = null;
+  constructor (){
+    this.filmComment = new FilmCommentModel()
+  }
 
   init = (filmContainer, filmsCardModel, body) => {
     this.filmContainer= filmContainer;
@@ -69,7 +73,7 @@ export default class FilmsCatalogPresenter {
   };
 
   #renderFilmCard = (filmContainer, body, filmModel, renderFilmsCard, openPopup) => {
-    const filmPresenter =  new FilmsPresenter(filmContainer, body, renderFilmsCard, openPopup);
+    const filmPresenter =  new FilmsPresenter(filmContainer, body, renderFilmsCard, openPopup, this.filmComment);
     filmPresenter.init(filmModel);
     this. #filmCardPresenters.set(filmModel.id, filmPresenter);
   };
