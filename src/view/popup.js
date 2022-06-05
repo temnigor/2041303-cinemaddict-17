@@ -232,7 +232,6 @@ export default class Popup extends AbstractStatefulView {
   };
 
   #getNeedComment = (allFilmComments, filmsModel) => {
-    console.log(this._state.filmInfo.comments);
     const keyFilmsComments = filmsModel.comments;
     const needComments = [];
     keyFilmsComments.forEach((oneKey)=>{

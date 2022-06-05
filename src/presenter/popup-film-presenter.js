@@ -31,7 +31,6 @@ export default class PopupFilmPresenter {
   };
 
   #getRenderPopup = () => {
-    console.log(this.filmCardModel)
     this.#popup.reset(this.filmCardModel, this.#filmComments);
     this.openPopup.open =  this.#popup;
     this.#filmsContainer.classList.add('hide-overflow');
@@ -92,7 +91,6 @@ export default class PopupFilmPresenter {
     this.#filmComments.addNewComment(comment);
     this.filmCardModel = filmInfo;
     this.filmCardModel.comments.push(comment.id);
-    console.log(this.filmCardModel)
     this.renderFilmsCard(this.filmCardModel);
     this.#getRenderPopup();
   };
