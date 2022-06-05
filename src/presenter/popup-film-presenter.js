@@ -31,6 +31,7 @@ export default class PopupFilmPresenter {
   };
 
   #getRenderPopup = () => {
+    console.log(this.filmCardModel)
     this.#popup.reset(this.filmCardModel, this.#filmComments);
     this.openPopup.open =  this.#popup;
     this.#filmsContainer.classList.add('hide-overflow');
@@ -80,17 +81,18 @@ export default class PopupFilmPresenter {
     this.#popup.removeElement();
   };
 
-  updateFilm =(filmInfo, allfilmComment)=> {
-    this.#filmComments.reBindComments(allfilmComment);
-    this.filmCardModel = filmInfo[0];
+  updateFilm =(filmInfo, allFilmComment)=> {
+    this.#filmComments.reBindComments(allFilmComment);
+    this.filmCardModel = filmInfo;
     this.renderFilmsCard(this.filmCardModel);
   };
 
   submitComment =(newComment, filmInfo)=>{
     const comment = getNewComment(newComment);
     this.#filmComments.addNewComment(comment);
-    this.filmCardModel = filmInfo[0];
+    this.filmCardModel = filmInfo;
     this.filmCardModel.comments.push(comment.id);
+    console.log(this.filmCardModel)
     this.renderFilmsCard(this.filmCardModel);
     this.#getRenderPopup();
   };

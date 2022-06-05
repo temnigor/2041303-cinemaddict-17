@@ -8,15 +8,10 @@ import {
   getFilmDetailsControlActive,
   EMOJI
 } from '../utils/popup-and-film-cards-utils.js';
-const KeyForSubmit = [
-  'ControlLeft',
-  'Enter',
-  'Command'
-];
 const getImgEmoji =(emojiInfo)=>{
   for(const [key, value] of Object.entries(emojiInfo))
   {if(value === 'checked'){
-    return `<img src="./images/emoji/${key}.png" width="55" height="55" alt="emoji-angry"></img>`;
+    return `<img src="./images/emoji/${key}.png" width="55" height="55" alt="emoji-${key}"></img>`;
   }}
   return'';
 };
@@ -200,43 +195,44 @@ export default class Popup extends AbstractStatefulView {
   #keyPressedForSubmit = new Set();
   constructor(filmInfo, filmComment) {
     super();
-    this.#filmInfo = [filmInfo];
+    this.#filmInfo = filmInfo;
     this.#filmComment = filmComment;
-    this._state.comments = Popup.parseAllCommentsToState(this.#filmComment.comments);
-    this._state.filmInfo = Popup.parseAllCommentsToState(this.#filmInfo);
+    this._state.comments = [...this.#filmComment.comments];
+    this._state.filmInfo = {...this.#filmInfo};
     this._state.emoji = {...EMOJI};
     this._state.newComment = {
       'comment':'',
       'emotion':''
     };
-    this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]);
+    this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo);
     this.buttonFilmDetailsControls = this.element.querySelector('.film-details__close-btn');
     this.#filmAddEmoji = this.element.querySelector('.film-details__add-emoji-label');
     this.#filmEmojiList = this.element.querySelector('.film-details__emoji-list');
   }
 
   get template() {
-    return getDomPopup(this._state.filmInfo[0], this.#allFilmComment, this._state);
+    return getDomPopup(this._state.filmInfo, this.#allFilmComment, this._state);
   }
 
   reset =(filmInfo, filmComment)=>{
     this._state = {};
     this._state.initElementScrollTop = this.element.scrollTop;
-    this.#filmInfo = [filmInfo];
+    this.#filmInfo = filmInfo;
     this.#filmComment = filmComment;
-    this._state.comments = Popup.parseAllCommentsToState(this.#filmComment.comments);
-    this._state.filmInfo = Popup.parseAllCommentsToState(this.#filmInfo);
+    this._state.comments = [...this.#filmComment.comments];
+    this._state.filmInfo = {...this.#filmInfo};
     this._state.emoji = {...EMOJI};
     this._state.newComment = {
       'comment':'',
       'emotion':''
     };
-    this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]);
+    this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo);
     this.updateElement(this._state);
-    this.#scrollTopElement(this._state.initElementScrollTop);
+    this.#scrollToPosition(this._state.initElementScrollTop);
   };
 
   #getNeedComment = (allFilmComments, filmsModel) => {
+    console.log(this._state.filmInfo.comments);
     const keyFilmsComments = filmsModel.comments;
     const needComments = [];
     keyFilmsComments.forEach((oneKey)=>{
@@ -284,18 +280,15 @@ export default class Popup extends AbstractStatefulView {
   };
 
   #submitHandler = (evt)=>{
-    if(this._state.newComment.comment.length === 10 && this._state.newComment.emotion.length >=4){
+    if(this._state.newComment.comment.length >= 1 && this._state.newComment.emotion.length >=4){
       this.#keyPressedForSubmit.add(evt.code);
-      let pressedKeys = Array.from(this.#keyPressedForSubmit);
-      if (pressedKeys[0] === KeyForSubmit[0] && pressedKeys[1] === KeyForSubmit[1]
-        || pressedKeys[0] === KeyForSubmit[3] && pressedKeys[1] === KeyForSubmit[1]) {
+      if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
         this.#keyPressedForSubmit.clear();
-        pressedKeys = Array.from(this.#keyPressedForSubmit);
         this._callback.submit(this._state.newComment, this._state.filmInfo);
 
       }
-    }
 
+    }
   };
 
   #deleteUpKey = (evt)=>{
@@ -327,7 +320,7 @@ export default class Popup extends AbstractStatefulView {
       this._state.emoji[evt.target.parentElement.control.value] = 'checked';
       this._state.newComment.emotion = evt.target.parentElement.control.value;
       this.updateElement(this._state);
-      this.#scrollTopElement(this._state.initElementScrollTop);
+      this.#scrollToPosition(this._state.initElementScrollTop);
     }
 
   };
@@ -336,20 +329,16 @@ export default class Popup extends AbstractStatefulView {
     if(evt.target.localName === 'button'){
       evt.preventDefault();
       this._state.initElementScrollTop = this.element.scrollTop;
-      this._state.filmInfo[0].comments = this._state.filmInfo[0].comments
+      this._state.filmInfo.comments = this._state.filmInfo.comments
         .filter((comment) =>comment !== +evt.target.dataset.idComments);
       this._state.comments = this._state.comments
         .filter((comment)=> comment.id !== evt.target.dataset.idComments);
       this._callback.deleteComment(this._state.filmInfo, this._state.comments);
-      this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo[0]);
+      this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo);
       this.updateElement(this._state);
-      this.#scrollTopElement(this._state.initElementScrollTop);
+      this.#scrollToPosition(this._state.initElementScrollTop);
     }
   };
-
-  static parseAllCommentsToState = (allComments) => [...allComments];
-
-  static parseStateToAllComments = (state) => [...state];
 
   _restoreHandlers =()=>{
     this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
@@ -363,7 +352,7 @@ export default class Popup extends AbstractStatefulView {
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#saveInputText);
   };
 
-  #scrollTopElement=(intValue)=>{
+  #scrollToPosition=(intValue)=>{
     this.element.scrollTop=intValue;
   };
 }

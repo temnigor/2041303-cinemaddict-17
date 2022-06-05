@@ -10,7 +10,7 @@ const FilterType = {
   ALREADY_WATCHED:'alreadyWatched',
   FAVORITE:'favorite'
 };
-const isWatchList = (film)=> film.userDetails.watchist === true;
+const isWatchList = (film)=> film.userDetails.watchList === true;
 const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
