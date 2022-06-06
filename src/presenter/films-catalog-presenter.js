@@ -86,8 +86,11 @@ export default class FilmsCatalogPresenter {
     this. #filmCardPresenters.clear();
     this.#filmRenderCount = FILM_COUNT_PER_STEP;
     this.#navMenuPresenter.destroy();
-    this.#buttonPlace.removeChild(this.#buttonShowMore.element);
-    this.#buttonShowMore.removeElement();
+    if(this.#buttonPlace.querySelector('.films-list__show-more') !== null){
+      this.#buttonPlace.removeChild(this.#buttonShowMore.element);
+      this.#buttonShowMore.removeElement();
+    }
+
 
   };
 
