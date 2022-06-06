@@ -1,4 +1,15 @@
 import dayjs from 'dayjs';
+const UserAction = {
+  UPDATE_FILMS: 'UPDATE_FILMS',
+  ADD_FILMS: 'ADD_FILMS',
+  DELETE_FILM: 'DELETE_FILM',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
 const SortType = {
   DEFAULT: 'default',
   DATA: 'date',
@@ -58,4 +69,4 @@ const sortFilmRating = (a, b) => {
     return 0;
   }
 };
-export {generateFilter, SortType, sortFilmDate, sortFilmRating};
+export {generateFilter, SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType};

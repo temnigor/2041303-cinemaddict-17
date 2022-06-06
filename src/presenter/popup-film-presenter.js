@@ -3,6 +3,7 @@ import Popup from '../view/popup.js';
 import { render } from '../framework/render.js';
 import FilmCardModel from '../model/film-card-model.js';
 import NavMenuPresenter from './nav-menu-presenter.js';
+import { UserAction, UpdateType } from '../utils/filters.js';
 export default class PopupFilmPresenter {
   #filmsContainer = null;
   #filmComments = null;
@@ -50,19 +51,19 @@ export default class PopupFilmPresenter {
       while(evt.target.id){
         if(evt.target.id === 'watchList'){
           this.filmCardModel.userDetails.watchList = !this.filmCardModel.userDetails.watchList;
-          this.renderFilmsCard(this.filmCardModel);
+          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);;
           this.#getRenderPopup();
           break;
         }
         if(evt.target.id === 'watched'){
           this.filmCardModel.userDetails.alreadyWatched = !this.filmCardModel.userDetails.alreadyWatched;
-          this.renderFilmsCard(this.filmCardModel);
+          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
           this.#getRenderPopup();
           break;
         }
         if(evt.target.id === 'favorite'){
           this.filmCardModel.userDetails.favorite = !this.filmCardModel.userDetails.favorite;
-          this.renderFilmsCard(this.filmCardModel);
+          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
           this.#getRenderPopup();
           break;
         }

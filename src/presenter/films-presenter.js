@@ -1,4 +1,5 @@
 import { remove, render, } from '../framework/render.js';
+import { UpdateType, UserAction } from '../utils/filters.js';
 import FilmCard from '../view/film-card.js';
 import PopupFilmPresenter from './popup-film-presenter.js';
 export default class FilmsPresenter {
@@ -33,17 +34,17 @@ export default class FilmsPresenter {
       while(evt.target.id){
         if(evt.target.id === 'watchListCard'){
           this.filmCardModel.userDetails.watchList = !this.filmCardModel.userDetails.watchList;
-          this.renderFilmsCard(this.filmCardModel);
+          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
           break;
         }
         if(evt.target.id === 'watchedCard'){
           this.filmCardModel.userDetails.alreadyWatched = !this.filmCardModel.userDetails.alreadyWatched;
-          this.renderFilmsCard(this.filmCardModel);
+          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
           break;
         }
         if(evt.target.id === 'favoriteCard'){
           this.filmCardModel.userDetails.favorite = !this.filmCardModel.userDetails.favorite;
-          this.renderFilmsCard(this.filmCardModel);
+          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
           break;
         }
         break;
