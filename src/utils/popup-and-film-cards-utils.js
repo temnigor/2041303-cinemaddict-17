@@ -1,12 +1,19 @@
 import dayjs from 'dayjs';
 const START_SLICE_DESCRIPTION = 0;
 const SIZE_DESCRIPTION = 139;
+const EMOJI =  {
+  'smile': '',
+  'sleeping': '',
+  'puke': '',
+  'angry': ''
+};
 const getReleaseYear = (date) => dayjs(date).format('YYYY');
 const getRuntime = (min) =>{
   const hours = Math.trunc(min/60);
   const minute = Math.trunc(min%60);
   return `${hours}h ${minute}m`;
 };
+const getActualDate = () => dayjs().format('YYYY/MM/DD HH:mm');
 const getReleaseDate = (date) => dayjs(date).format('DD MMMM YYYY');
 const getDateComment = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
 const getGenreList = (genre) => {
@@ -38,6 +45,19 @@ const getFilmCardControlActive = (filmDetailsControlButton)=>
     ? 'film-card__controls-item--active'
     : '';
 
+const getNeedComment = (allFilmComments, filmsModel) => {
+  const keyFilmsComments = filmsModel.comments;
+  const needComments = [];
+  keyFilmsComments.forEach((oneKey)=>{
+    for(const comment of allFilmComments){
+      if(oneKey === Number(comment.id)){
+        needComments.push(comment);
+      }
+    }
+  });
+  return needComments;
+};
+
 export {
   getReleaseYear,
   getRuntime,
@@ -48,4 +68,7 @@ export {
   getDateComment,
   getFilmDetailsControlActive,
   getFilmCardControlActive,
+  EMOJI,
+  getNeedComment,
+  getActualDate,
 };

@@ -40,13 +40,13 @@ const getWeightForNullDate = (dateA, dateB) => {
   return null;
 };
 
-const sortTaskUp = (filmA, filmB) => {
+const sortFilmDate = (filmA, filmB) => {
   const weight = getWeightForNullDate(filmA.filmInfo.release.date, filmB.filmInfo.release.date);
 
   return weight ?? dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
 };
 
-const sortTaskRating = (a, b) => {
+const sortFilmRating = (a, b) => {
 
   if(a.filmInfo.totalRating > b.filmInfo.totalRating){
     return -1;
@@ -58,4 +58,4 @@ const sortTaskRating = (a, b) => {
     return 0;
   }
 };
-export {generateFilter, SortType, sortTaskUp, sortTaskRating};
+export {generateFilter, SortType, sortFilmDate, sortFilmRating};
