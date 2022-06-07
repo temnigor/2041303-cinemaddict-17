@@ -1,13 +1,18 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { SortType } from '../utils/filters.js';
-const getDomSort = ()=> `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active" data-sort-type = ${SortType.DEFAULT} >Sort by default</a></li>
-    <li><a href="#" class="sort__button" data-sort-type = ${SortType.DATA}>Sort by date</a></li>
-    <li><a href="#" class="sort__button " data-sort-type = ${SortType.RATING}>Sort by rating</a></li>
+const getDomSort = (currentSortType)=> `<ul class="sort">
+    <li><a href="#" class="sort__button ${ currentSortType === SortType.DEFAULT ? 'sort__button--active' : ''} " data-sort-type = ${SortType.DEFAULT} >Sort by default</a></li>
+    <li><a href="#" class="sort__button ${ currentSortType === SortType.DATA ? 'sort__button--active' : ''}" data-sort-type = ${SortType.DATA}>Sort by date</a></li>
+    <li><a href="#" class="sort__button ${ currentSortType === SortType.RATING ? 'sort__button--active' : ''}" data-sort-type = ${SortType.RATING}>Sort by rating</a></li>
   </ul>`;
 export default class Sort extends AbstractView {
+  #currentSortType = SortType.DEFAULT;
+  constructor(currentSortType){
+    super();
+    this.#currentSortType = currentSortType;
+  }
   get template() {
-    return getDomSort ();
+    return getDomSort (this.#currentSortType);
   }
 
   setClickTypeSortHandler =(callback)=>{
@@ -16,16 +21,10 @@ export default class Sort extends AbstractView {
   };
 
   #setClickHandler=(evt)=>{
+    if (evt.target.tagName !== 'A') {
+      return;
+    };
     evt.preventDefault();
-    this.#removeClassCss();
-    evt.target.classList.add('sort__button--active');
     this._callback.click(evt.target.dataset.sortType);
-  };
-
-  #removeClassCss =()=>{
-    const allSortButtons = Array.from(this.element.children);
-    allSortButtons.forEach((button)=>{
-      button.children[0].classList.remove('sort__button--active');
-    });
   };
 }

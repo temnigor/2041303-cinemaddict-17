@@ -1,4 +1,4 @@
-import Observable from './framework/observable.js';
+import Observable from '../framework/observable.js';
 import { getSomeFilm } from './fish-film-card.js';
 
 export default class FilmCardModel extends Observable {

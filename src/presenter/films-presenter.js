@@ -54,9 +54,9 @@ export default class FilmsPresenter {
 
   #setClickPopupHandler = ()=>{
     this.#isPopupOpen();
-    const filmPopupPresenter = new PopupFilmPresenter();
+    const filmPopupPresenter = new PopupFilmPresenter(this.renderFilmsCard);
     this.openPopup.open = filmPopupPresenter;
-    filmPopupPresenter.init(this.body, this.filmCardModel, this.filmCommits, this.renderFilmsCard, this.openPopup);
+    filmPopupPresenter.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
   };
 
   #isPopupOpen (){
