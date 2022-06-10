@@ -132,6 +132,7 @@ export default class FilmsCatalogPresenter {
     remove(this.#buttonShowMore);
     remove(this.#noFilmCard);
     this.#navMenuPresenter.destroy();
+
     if(resetRenderedFilmsCount){
       this.#filmRenderCount = FILM_COUNT_PER_STEP;
     }else{
