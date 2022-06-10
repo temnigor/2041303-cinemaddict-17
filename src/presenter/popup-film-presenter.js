@@ -1,4 +1,4 @@
-
+import { getNewComment } from '../model/fish-new-comment.js';
 import Popup from '../view/popup.js';
 import { render } from '../framework/render.js';
 import FilmCardModel from '../model/film-card-model.js';
@@ -6,23 +6,21 @@ import NavMenuPresenter from './nav-menu-presenter.js';
 export default class PopupFilmPresenter {
   #filmsContainer = null;
   #filmComments = null;
-  #allFilmComment = [];
-  #filmComment =null;
   #popup = null;
 
-  init = (filmContainer, filmCardModel, filmComment, renderFilmsCard, openPopup) => {
+  init = (filmContainer, filmCardModel, filmComments, renderFilmsCard, openPopup) => {
     this.#filmsContainer = filmContainer;
     this.filmCardModel = filmCardModel;
-    this.#filmComments = filmComment;
+    this.#filmComments = filmComments;
     this.renderFilmsCard = renderFilmsCard;
     this.openPopup = openPopup;
-    this.#allFilmComment = [...this.#filmComments.comments];
-    this.#filmComment = this.#getNeedComment(this.#allFilmComment, this.filmCardModel);
-    this.#popup = new Popup( this.filmCardModel, this.#filmComment);
+    this.#popup = new Popup( this.filmCardModel, this.#filmComments);
     this.changFilmCardModal = new FilmCardModel();
     this.changNavMenu = new NavMenuPresenter();
     render (this.#popup, this.#filmsContainer);
     this.#filmsContainer.classList.add('hide-overflow');
+    this.#popup.setCommitCatalogHandler(this.submitComment);
+    this.#popup.setDeleteCommentHandler(this.updateFilm);
     this.#popup.setEventCloseHandler(()=>{
       this.#filmsContainer.classList.remove('hide-overflow');
       this.#filmsContainer.removeChild(this.#popup.element);
@@ -33,11 +31,11 @@ export default class PopupFilmPresenter {
   };
 
   #getRenderPopup = () => {
-    this.removePopup();
-    this.#popup = new Popup( this.filmCardModel, this.#filmComment);
+    this.#popup.reset(this.filmCardModel, this.#filmComments);
     this.openPopup.open =  this.#popup;
-    render (this.#popup, this.#filmsContainer);
     this.#filmsContainer.classList.add('hide-overflow');
+    this.#popup.setCommitCatalogHandler(this.submitComment);
+    this.#popup.setDeleteCommentHandler(this.updateFilm);
     this.#popup.setEventCloseHandler(()=>{
       this.#filmsContainer.classList.remove('hide-overflow');
       this.openPopup.open = null;
@@ -46,18 +44,6 @@ export default class PopupFilmPresenter {
     this.#getFilmDetailsControlButton();
   };
 
-  #getNeedComment = (allFilmComments, filmsModel) => {
-    const keyFilmsComments = filmsModel.comments;
-    const needComments = [];
-    keyFilmsComments.forEach((oneKey)=>{
-      for(const comment of allFilmComments){
-        if(oneKey === Number(comment.id)){
-          needComments.push(comment);
-        }
-      }
-    });
-    return needComments;
-  };
 
   #getFilmDetailsControlButton = () =>{
     this.#popup.setFilmDetailsControlHandler((evt)=>{
@@ -93,5 +79,21 @@ export default class PopupFilmPresenter {
     this.#filmsContainer.removeChild(this.#popup.element);
     this.#popup.removeElement();
   };
+
+  updateFilm =(filmInfo, allFilmComment)=> {
+    this.#filmComments.reBindComments(allFilmComment);
+    this.filmCardModel = filmInfo;
+    this.renderFilmsCard(this.filmCardModel);
+  };
+
+  submitComment =(newComment, filmInfo)=>{
+    const comment = getNewComment(newComment);
+    this.#filmComments.addNewComment(comment);
+    this.filmCardModel = filmInfo;
+    this.filmCardModel.comments.push(comment.id);
+    this.renderFilmsCard(this.filmCardModel);
+    this.#getRenderPopup();
+  };
+
 
 }

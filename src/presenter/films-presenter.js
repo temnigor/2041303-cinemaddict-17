@@ -1,15 +1,15 @@
 import { remove, render, } from '../framework/render.js';
 import FilmCard from '../view/film-card.js';
 import PopupFilmPresenter from './popup-film-presenter.js';
-import FilmCommentModel from '../model/film-comment-model.js';
 export default class FilmsPresenter {
   #filmsContainer = null;
   #filmCard = null;
-  constructor(filmsContainer, body, renderFilmsCard, openPopup){
+  constructor(filmsContainer, body, renderFilmsCard, openPopup, filmComments){
     this.#filmsContainer = filmsContainer;
     this.body = body;
     this.renderFilmsCard = renderFilmsCard;
     this.openPopup = openPopup;
+    this.filmCommits = filmComments;
   }
 
 
@@ -54,9 +54,8 @@ export default class FilmsPresenter {
   #setClickPopupHandler = ()=>{
     this.#isPopupOpen();
     const filmPopupPresenter = new PopupFilmPresenter();
-    const filmCommentPresenter = new FilmCommentModel();
     this.openPopup.open = filmPopupPresenter;
-    filmPopupPresenter.init(this.body, this.filmCardModel, filmCommentPresenter, this.renderFilmsCard, this.openPopup);
+    filmPopupPresenter.init(this.body, this.filmCardModel, this.filmCommits, this.renderFilmsCard, this.openPopup);
   };
 
   #isPopupOpen (){

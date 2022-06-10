@@ -3,9 +3,10 @@ import ButtonShowMore from '../view/button-show-more.js';
 import NoFilmCard from '../view/no-films-card.js';
 import FilmsPresenter from './films-presenter.js';
 import { getNewAllModelCard } from '../utils/presenter-utils.js';
-import { SortType, sortTaskUp, sortTaskRating} from '../utils/filters.js';
+import { SortType, sortFilmDate, sortFilmRating} from '../utils/filters.js';
 import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
+import FilmCommentModel from '../model/film-comment-model.js';
 const FILM_COUNT_PER_STEP = 5;
 export default class FilmsCatalogPresenter {
 
@@ -24,6 +25,9 @@ export default class FilmsCatalogPresenter {
   #navMenuPresenter = new NavMenuPresenter();
   #actualSortType = SortType.DEFAULT;
   #sort = null;
+  constructor (){
+    this.filmComment = new FilmCommentModel();
+  }
 
   init = (filmContainer, filmsCardModel, body) => {
     this.filmContainer= filmContainer;
@@ -69,7 +73,7 @@ export default class FilmsCatalogPresenter {
   };
 
   #renderFilmCard = (filmContainer, body, filmModel, renderFilmsCard, openPopup) => {
-    const filmPresenter =  new FilmsPresenter(filmContainer, body, renderFilmsCard, openPopup);
+    const filmPresenter =  new FilmsPresenter(filmContainer, body, renderFilmsCard, openPopup, this.filmComment);
     filmPresenter.init(filmModel);
     this. #filmCardPresenters.set(filmModel.id, filmPresenter);
   };
@@ -86,8 +90,11 @@ export default class FilmsCatalogPresenter {
     this. #filmCardPresenters.clear();
     this.#filmRenderCount = FILM_COUNT_PER_STEP;
     this.#navMenuPresenter.destroy();
-    this.#buttonPlace.removeChild(this.#buttonShowMore.element);
-    this.#buttonShowMore.removeElement();
+    if(this.#buttonPlace.querySelector('.films-list__show-more') !== null){
+      this.#buttonPlace.removeChild(this.#buttonShowMore.element);
+      this.#buttonShowMore.removeElement();
+    }
+
 
   };
 
@@ -103,10 +110,10 @@ export default class FilmsCatalogPresenter {
   #setSortType = (sortType) =>{
     switch (sortType) {
       case SortType.DATA:
-        this.#allFilmsModel = this.#allFilmsModel.sort(sortTaskUp);
+        this.#allFilmsModel = this.#allFilmsModel.sort(sortFilmDate);
         break;
       case SortType.RATING:
-        this.#allFilmsModel = this.#allFilmsModel.sort(sortTaskRating);
+        this.#allFilmsModel = this.#allFilmsModel.sort(sortFilmRating);
         break;
       case SortType.DEFAULT:
         this.#allFilmsModel = [...this.#defaultAllFilmsModal];
