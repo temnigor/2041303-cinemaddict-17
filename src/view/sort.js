@@ -11,6 +11,7 @@ export default class Sort extends AbstractView {
     super();
     this.#currentSortType = currentSortType;
   }
+
   get template() {
     return getDomSort (this.#currentSortType);
   }
@@ -23,7 +24,7 @@ export default class Sort extends AbstractView {
   #setClickHandler=(evt)=>{
     if (evt.target.tagName !== 'A') {
       return;
-    };
+    }
     evt.preventDefault();
     this._callback.click(evt.target.dataset.sortType);
   };

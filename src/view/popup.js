@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {
   getRuntime,
@@ -155,7 +156,7 @@ const getDomPopup = (filmInfo, comments, state) => {
         </div>
 
         <label class="film-details__comment-label">
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" >${addCommentInput}</textarea>
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" >${he.encoden(addCommentInput)}</textarea>
         </label>
 
         <div class="film-details__emoji-list">
@@ -283,7 +284,7 @@ export default class Popup extends AbstractStatefulView {
       this.#keyPressedForSubmit.add(evt.code);
       if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
         this.#keyPressedForSubmit.clear();
-        this._callback.submit(this._state.newComment, this._state.filmInfo);
+        this._callback.submit(this._state.filmInfo, this._state.newComment);
 
       }
 
@@ -328,13 +329,7 @@ export default class Popup extends AbstractStatefulView {
     if(evt.target.localName === 'button'){
       evt.preventDefault();
       this._state.initElementScrollTop = this.element.scrollTop;
-      this._state.filmInfo.comments = this._state.filmInfo.comments
-        .filter((comment) =>comment !== +evt.target.dataset.idComments);
-      this._state.comments = this._state.comments
-        .filter((comment)=> comment.id !== evt.target.dataset.idComments);
-      this._callback.deleteComment(this._state.filmInfo, this._state.comments);
-      this.#allFilmComment = this.#getNeedComment(this._state.comments,  this._state.filmInfo);
-      this.updateElement(this._state);
+      this._callback.deleteComment(this._state.filmInfo, evt.target.dataset.idComments);
       this.#scrollToPosition(this._state.initElementScrollTop);
     }
   };

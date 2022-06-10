@@ -65,4 +65,10 @@ export default class FilmsPresenter {
       this.openPopup.open = null;
     }
   }
+
+  resetPopup =(filmInfo, updateComment)=>{
+    this.#filmCard.reset(filmInfo);
+    console.log(updateComment);
+    this.openPopup.open.getRenderPopup(filmInfo, updateComment);
+  };
 }

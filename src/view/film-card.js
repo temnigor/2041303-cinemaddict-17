@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { getReleaseYear, getRuntime, getNormalList, getNormalDescription, getFilmCardControlActive,} from '../utils/popup-and-film-cards-utils.js';
 
 const getDomFilmCard = (filmInfo) => {
@@ -36,7 +36,7 @@ const getDomFilmCard = (filmInfo) => {
 </article>`);
 };
 
-export default class FilmCard extends AbstractView{
+export default class FilmCard extends AbstractStatefulView{
   #filmInfo = null;
   constructor( filmInfo) {
     super();
@@ -65,5 +65,16 @@ export default class FilmCard extends AbstractView{
   #addDetailsControl = (evt)=>{
     evt.preventDefault();
     this._callback.clickFilmDetailsControl(evt);
+  };
+
+  reset =(filmInfo)=>{
+    this.#filmInfo = filmInfo;
+    this.updateElement(this.#filmInfo);
+
+  };
+
+  _restoreHandlers =()=>{
+    this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#setClickHandler);
   };
 }

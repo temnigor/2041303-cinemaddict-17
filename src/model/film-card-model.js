@@ -2,6 +2,7 @@ import Observable from '../framework/observable.js';
 import { getSomeFilm } from './fish-film-card.js';
 
 export default class FilmCardModel extends Observable {
+  #filmUpdate = null;
   #films = Array.from({length:25}, getSomeFilm);
   get films  () {
     return this.#films;
@@ -46,4 +47,14 @@ export default class FilmCardModel extends Observable {
 
     this._notify(updateType);
   };
+
+  deleteCommentId =(filmInfo, deleteId)=>{
+    filmInfo.comments =  filmInfo.comments.filter((comment) =>comment !== +deleteId);
+    return filmInfo;
+  };
+
+  removeFilmUpdate =()=>{
+    this.#filmUpdate = null;
+  };
+
 }

@@ -1,4 +1,5 @@
 import { getSomeComment } from './fish-film-comment.js';
+import { getNewCommentFish } from './fish-new-comment.js';
 export default class FilmCommentModel {
   #newComment = null;
   #comments = Array.from({length:3}, getSomeComment);
@@ -6,21 +7,19 @@ export default class FilmCommentModel {
     return this.#comments;
   }
 
-updateDeleteComment = (commentsDelete)=>{
-  if(commentsDelete.length === this.#comments.length){
-    this.#comments = commentsDelete;
-    return this.#comments;
-  }
-  return;
-}
-
   addNewComment =(updateComment)=>{
     this.#comments.push(updateComment);
     return this.#comments;
   };
 
   getNewComment=(addComment)=>{
-    return this.#newComment = getNewCommentFish(addComment)
-  }
+    this.#newComment = getNewCommentFish(addComment);
+    return this.#newComment;
+  };
+
+  deleteComment =(deleteCommentId)=>{
+    this.#comments = this.#comments
+      .filter((comment)=> comment.id !== deleteCommentId);
+  };
 
 }

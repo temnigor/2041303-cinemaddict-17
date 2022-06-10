@@ -17,6 +17,7 @@ const SortType = {
 };
 
 const FilterType = {
+  All: 'all',
   WATCH_LIST:'watchList',
   ALREADY_WATCHED:'alreadyWatched',
   FAVORITE:'favorite'
@@ -25,6 +26,7 @@ const isWatchList = (film)=> film.userDetails.watchList === true;
 const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
+  [FilterType.All]:(films)=> [...films],
   [FilterType.WATCH_LIST]: (films) => films.filter((film) => isWatchList(film)),
   [FilterType.ALREADY_WATCHED]: (films)=>films.filter((film) => isAlreadyWatched(film)),
   [FilterType.FAVORITE]: (films)=>films.filter((film) => isFavorite(film))
@@ -69,4 +71,4 @@ const sortFilmRating = (a, b) => {
     return 0;
   }
 };
-export {generateFilter, SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType};
+export {generateFilter, SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType, FilterType, filter};

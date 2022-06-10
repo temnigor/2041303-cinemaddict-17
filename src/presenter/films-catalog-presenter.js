@@ -2,8 +2,8 @@ import { RenderPosition, render, remove } from '../framework/render.js';
 import ButtonShowMore from '../view/button-show-more.js';
 import NoFilmCard from '../view/no-films-card.js';
 import FilmsPresenter from './films-presenter.js';
-import { getNewAllModelCard } from '../utils/presenter-utils.js';
-import { SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType} from '../utils/filters.js';
+import FilterModel from '../model/filter-model.js';
+import { SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType, filter} from '../utils/filters.js';
 import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
 import FilmCommentModel from '../model/film-comment-model.js';
@@ -14,67 +14,79 @@ export default class FilmsCatalogPresenter {
   #openPopup = {
     open: null,
   };
-  #currentSortType = null;
+
+  #currentSortType = SortType.DEFAULT;
   #noFilmCard = null;
   #buttonShowMore = null;
   #filmRenderCount = FILM_COUNT_PER_STEP;
   #buttonPlace = null;
   #filmCardPresenters = new Map();
-  #navMenuPresenter = new NavMenuPresenter();
-  #actualSortType = SortType.DEFAULT;
+  #navMenuPresenter = null;
+  #filterNavMenu = null;
   #sort = null;
   constructor (filmContainer, filmsCardModel, body){
     this.filmComment = new FilmCommentModel();
     this.filmContainer = filmContainer;
     this.#filmsCardModel =  filmsCardModel;
-    this.#filmsCardModel.addObserver(this.#handleModelEvent)
     this.body = body;
     this.#buttonPlace = this.body.querySelector('.films-list');
     this.menuPlace = this.body.querySelector('.main');
+    this.#filterNavMenu = new FilterModel();
+    this.#navMenuPresenter = new NavMenuPresenter(this.#filmsCardModel);
+    this.#filmsCardModel.addObserver(this.#handleModelEvent);
+    this.#filterNavMenu.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
     this.#renderFilmsBoard();
   };
 
-  get filmsModels () {
-    switch (SortType) {
+  get filmsModelsFiltered () {
+    const filmsModelsBase = this.#filmsCardModel.films;
+    const filterType = this.#filterNavMenu.filter;
+    const filmsModelsFiltered = filter[filterType](filmsModelsBase);
+    switch (this.#currentSortType) {
       case SortType.DATA:
-        return [...this.#filmsCardModel].sort(sortFilmDate);
+        return [...filmsModelsFiltered].sort(sortFilmDate);
 
       case SortType.RATING:
-        return [...this.#filmsCardModel].sort(sortFilmRating);
+        return [...filmsModelsFiltered].sort(sortFilmRating);
 
     }
-    return this.#filmsCardModel.films;
+    return filmsModelsFiltered;
   }
 
   #renderSort=()=>{
     this.#sort = new Sort(this.#currentSortType);
     render(this.#sort, this.menuPlace, RenderPosition.AFTERBEGIN);
     this.#sort.setClickTypeSortHandler(this.#setSortTypeHandler);
-  }
+  };
+
   #renderShowMoreButton = ()=>{
     this.#buttonShowMore = new ButtonShowMore();
     render(this.#buttonShowMore, this.#buttonPlace);
     this.#buttonShowMore.setClickMoreFilmHandler(this.clickMoreFilmsButtonHandler);
-  }
+  };
+
   #removeButtonShowMore = ()=>{
     this.#buttonPlace.removeChild(this.#buttonShowMore.element);
     this.#buttonShowMore.removeElement();
-  }
+  };
+
   #renderNoFilmsCards = ()=>{
-    this.#noFilmCard = new NoFilmCard();
+    this.#noFilmCard = new NoFilmCard(this.#filterNavMenu.filter);
     render (this.#noFilmCard, this.#buttonPlace);
-  }
+  };
+
   clickMoreFilmsButtonHandler = () => {
-    const filmsModelsLength = this.filmsModels.length;
-    const newRenderFilmsModelsCount = Math.min(filmsModelsLength-1 ,this.#filmRenderCount+FILM_COUNT_PER_STEP)
-    const films = this.filmsModels.slice(filmsModelsLength, newRenderFilmsModelsCount)
+    const filmsModelsLength = this.filmsModelsFiltered.length;
+    const newRenderFilmsModelsCount = Math.min(filmsModelsLength,this.#filmRenderCount+FILM_COUNT_PER_STEP);
+    const films = this.filmsModelsFiltered.slice(this.#filmRenderCount, newRenderFilmsModelsCount);
     this.#renderFilms(films);
-    this.#filmRenderCount = newRenderFilmsModelsCount
+    this.#filmRenderCount = newRenderFilmsModelsCount;
     if(this.#filmRenderCount >= filmsModelsLength){
-    this.#removeButtonShowMore()
+
+      this.#removeButtonShowMore();
     }
   };
 
@@ -97,23 +109,23 @@ export default class FilmsCatalogPresenter {
   };
 
   #renderFilmsBoard = ()=>{
-    const filmsModelsLength = this.filmsModels.length;
+    const filmsModelsLength = this.filmsModelsFiltered.length;
     if(filmsModelsLength === 0) {
       this.#renderNoFilmsCards();
-      return;
+
     }else {
       this.#renderSort();
-      this.#navMenuPresenter.init(this.filmsModels, this.menuPlace);
-      const films = this.filmsModels.slice(0, Math.min(filmsModelsLength-1 ,this.#filmRenderCount))
+      this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu);
+      const films = this.filmsModelsFiltered.slice(0, Math.min(filmsModelsLength,this.#filmRenderCount));
       this.#renderFilms(films);
       if(filmsModelsLength > this.#filmRenderCount){
-      this.#renderShowMoreButton()
+        this.#renderShowMoreButton();
       }
     }
   };
 
   #clearFilmBoard = ({resetRenderedFilmsCount = false, resetSortType = false}={}) => {
-    const filmCount = this.filmsModels.length;
+    const filmCount = this.filmsModelsFiltered.length;
     this. #filmCardPresenters.forEach((filmCard)=> filmCard.destroy());
     this. #filmCardPresenters.clear();
     remove(this.#sort);
@@ -139,55 +151,47 @@ export default class FilmsCatalogPresenter {
     this.#renderFilmsBoard();
   };
 
-  #handleViewAction = (actionType, updateType, update, commentInfo {newComment = false, deleteComment = false}={}) => {
-    console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
+  #handleViewAction = (actionType, updateType, update, commentInfo, {newComment = false, deleteComment = false}={}) => {
+
+    this.updateFilmCardModel = update;
     if(newComment){
-    const comment = this.filmComment.getNewComment(commentInfo);
-    this.filmComment.addNewComment(comment);
-    this.updateFilmCardModel = update;
-    this.updateFilmCardModel.comments.push(comment.id);
-    };
+      const comment = this.filmComment.getNewComment(commentInfo);
+      this.filmComment.addNewComment(comment);
+      this.updateFilmCardModel.comments.push(comment.id);
+    }
     if(deleteComment){
-      this.filmComment = newComment.updateDeleteComment();
-    };
-    this.updateFilmCardModel = update;
+      this.filmComment.deleteComment(commentInfo);
+      this.updateFilmCardModel = this.#filmsCardModel.deleteCommentId(update, commentInfo);
+    }
+
     switch (actionType){
       case UserAction.ADD_FILMS:
-      this.#filmsCardModel.addFilms(updateType, this.updateFilmCardModel);
-      break;
+        this.#filmsCardModel.addFilms(updateType, this.updateFilmCardModel);
+        break;
       case UserAction.UPDATE_FILMS:
-      this.#filmsCardModel.updateFilms(updateType, this.updateFilmCardModel);
-      break;
+        this.#filmsCardModel.updateFilms(updateType, this.updateFilmCardModel);
+        break;
       case UserAction.DELETE_FILM:
-      this.#filmsCardModel.deleteFilms(updateType, this.updateFilmCardModel);
-      break;
+        this.#filmsCardModel.deleteFilms(updateType, this.updateFilmCardModel);
+        break;
     }
 
   };
 
-  #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)\
+  #handleModelEvent = (updateType, updateInfo) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-        this.#filmCardPresenters.get(data.id).init(data);
+        this.#filmCardPresenters.get(updateInfo.id).resetPopup(updateInfo, this.filmComment);
         break;
       case UpdateType.MINOR:
         this.#clearFilmBoard({resetRenderedFilmsCount: true, resetSortType: true});
         this.#renderFilmsBoard();
-        // - обновить список (например, когда задача ушла в архив)
+        if(this.#openPopup.open !==null){
+          this.#openPopup.open.getRenderPopup(updateInfo, this.filmComment);
+        }
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
-        this.#clearFilmBoard();
+        this.#clearFilmBoard({resetRenderedFilmsCount: true});
         this.#renderFilmsBoard();
         break;
     }

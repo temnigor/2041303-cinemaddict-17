@@ -1,4 +1,3 @@
-import { getNewComment } from '../model/fish-new-comment.js';
 import Popup from '../view/popup.js';
 import { render } from '../framework/render.js';
 import FilmCardModel from '../model/film-card-model.js';
@@ -34,9 +33,10 @@ export default class PopupFilmPresenter {
     this.#getFilmDetailsControlButton();
   };
 
-  #getRenderPopup = () => {
+  getRenderPopup = (filmInfo, updateComment) => {
+    this.filmCardModel = filmInfo;
+    this.#filmComments = updateComment;
     this.#popup.reset(this.filmCardModel, this.#filmComments);
-    this.openPopup.open =  this.#popup;
     this.#filmsContainer.classList.add('hide-overflow');
     this.#popup.setCommitCatalogHandler(this.submitComment);
     this.#popup.setDeleteCommentHandler(this.deleteCommentFilm);
@@ -55,19 +55,16 @@ export default class PopupFilmPresenter {
         if(evt.target.id === 'watchList'){
           this.filmCardModel.userDetails.watchList = !this.filmCardModel.userDetails.watchList;
           this.#renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
-          this.#getRenderPopup();
           break;
         }
         if(evt.target.id === 'watched'){
           this.filmCardModel.userDetails.alreadyWatched = !this.filmCardModel.userDetails.alreadyWatched;
           this.#renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
-          this.#getRenderPopup();
           break;
         }
         if(evt.target.id === 'favorite'){
           this.filmCardModel.userDetails.favorite = !this.filmCardModel.userDetails.favorite;
           this.#renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
-          this.#getRenderPopup();
           break;
         }
         break;
@@ -84,13 +81,12 @@ export default class PopupFilmPresenter {
     this.#popup.removeElement();
   };
 
-  deleteCommentFilm =(filmInfo, allFilmComment)=> {
-    this.#renderFilmsCard(UserAction.UPDATE_FILMS,UpdateType.PATCH, filmInfo, allFilmComment);
+  deleteCommentFilm =(filmInfo, deleteCommentId)=> {
+    this.#renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.PATCH, filmInfo, deleteCommentId, {newComment : false, deleteComment : true});
   };
 
-  submitComment =(newComment, filmInfo)=>{
-    this.#renderFilmsCard(UserAction.UPDATE_FILMS,UpdateType.PATCH, filmInfo, newComment);
-    this.#getRenderPopup();
+  submitComment =(filmInfo, newCommentInfo )=>{
+    this.#renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.PATCH, filmInfo, newCommentInfo, {newComment : true, deleteComment : false});
   };
 
 
