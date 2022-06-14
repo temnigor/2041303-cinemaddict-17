@@ -1,6 +1,6 @@
 import { getActualDate } from '../utils/popup-and-film-cards-utils.js';
 const getNewCommentFish = (updateComment)=>({
-  'id': 33,
+  'id': '33',
   'author': 'Ilya O\'Reilly',
   'comment': updateComment.comment,
   'date': getActualDate(),

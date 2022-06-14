@@ -13,13 +13,13 @@ export default class FilmCommentModel {
   };
 
   getNewComment=(addComment)=>{
+    this.#newComment = null;
     this.#newComment = getNewCommentFish(addComment);
     return this.#newComment;
   };
 
   deleteComment =(deleteCommentId)=>{
-    this.#comments = this.#comments
-      .filter((comment)=> comment.id !== deleteCommentId);
+    this.#comments = this.#comments.filter((comment)=> comment.id !== deleteCommentId);
   };
 
 }

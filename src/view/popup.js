@@ -1,4 +1,4 @@
-import he from 'he';
+
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {
   getRuntime,
@@ -156,7 +156,7 @@ const getDomPopup = (filmInfo, comments, state) => {
         </div>
 
         <label class="film-details__comment-label">
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" >${he.encoden(addCommentInput)}</textarea>
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" >${addCommentInput}</textarea>
         </label>
 
         <div class="film-details__emoji-list">
@@ -237,7 +237,7 @@ export default class Popup extends AbstractStatefulView {
     const needComments = [];
     keyFilmsComments.forEach((oneKey)=>{
       for(const comment of allFilmComments){
-        if(oneKey === Number(comment.id)){
+        if(oneKey === comment.id){
           needComments.push(comment);
         }
       }
