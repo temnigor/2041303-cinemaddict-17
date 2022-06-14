@@ -19,10 +19,10 @@ export default class Sort extends AbstractView {
 
   setClickTypeSortHandler =(callback)=>{
     this._callback.click = callback;
-    this.element.addEventListener('click', this.#setClickHandler);
+    this.element.addEventListener('click', this.#sortClickHandler);
   };
 
-  #setClickHandler=(evt)=>{
+  #sortClickHandler=(evt)=>{
     if (evt.target.tagName !== 'A') {
       return;
     }

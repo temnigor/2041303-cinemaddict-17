@@ -80,8 +80,9 @@ export default class FilmsCatalogPresenter {
 
   clickMoreFilmsButtonHandler = () => {
     const filmsModelsLength = this.filmsModelsFiltered.length;
+    const filmsModelsFiltered = this.filmsModelsFiltered;
     const newRenderFilmsModelsCount = Math.min(filmsModelsLength,this.#filmRenderCount+FILM_COUNT_PER_STEP);
-    const films = this.filmsModelsFiltered.slice(this.#filmRenderCount, newRenderFilmsModelsCount);
+    const films = filmsModelsFiltered.slice(this.#filmRenderCount, newRenderFilmsModelsCount);
     this.#renderFilms(films);
     this.#filmRenderCount = newRenderFilmsModelsCount;
     if(this.#filmRenderCount >= filmsModelsLength){

@@ -35,10 +35,10 @@ export default class NavMenu extends AbstractView {
 
   setClickNavHandler = (callback)=>{
     this._callback.clickNav = callback;
-    this.element.addEventListener('click', this.#clickNavMenu);
+    this.element.addEventListener('click', this.#navMenuClickHandler);
   };
 
-  #clickNavMenu =(evt)=>{
+  #navMenuClickHandler =(evt)=>{
     if(evt.target.tagName === 'A'){
       evt.preventDefault();
       this._callback.clickNav(evt.target.dataset.filterType);
