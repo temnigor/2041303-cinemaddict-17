@@ -195,7 +195,7 @@ export default class FilmsCatalogPresenter {
 
   };
 
-  #handleModelEvent = (updateType, updateInfo, comment = false) => {
+  #handleModelEvent = (updateType, updateInfo) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#filmCardPresenters.get(updateInfo.id).resetPopup(updateInfo, this.filmComment);
