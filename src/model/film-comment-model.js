@@ -1,6 +1,5 @@
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../utils/filters.js';
-import { getNewCommentFish } from './fish-new-comment.js';
 export default class FilmCommentModel extends Observable {
   #newComment = null;
   #comments = [];
