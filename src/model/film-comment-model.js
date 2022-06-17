@@ -30,7 +30,7 @@ export default class FilmCommentModel extends Observable {
 
   getNewComment=(addComment)=>{
     this.#newComment = null;
-    this.#newComment = getNewCommentFish(addComment);
+    this.#newComment =(addComment);
     return this.#newComment;
   };
 
