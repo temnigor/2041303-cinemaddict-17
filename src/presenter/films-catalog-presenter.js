@@ -6,7 +6,7 @@ import FilterModel from '../model/filter-model.js';
 import { SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType, filter} from '../utils/filters.js';
 import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
-import FilmCommentModel from '../model/film-comment-model.js';
+import Loading from '../view/loading.js';
 const FILM_COUNT_PER_STEP = 5;
 export default class FilmsCatalogPresenter {
 
@@ -24,8 +24,10 @@ export default class FilmsCatalogPresenter {
   #navMenuPresenter = null;
   #filterNavMenu = null;
   #sort = null;
-  constructor (filmContainer, filmsCardModel, body){
-    this.filmComment = new FilmCommentModel();
+  #loadingView = new Loading();
+  #isLoading = true;
+  constructor (filmContainer, filmsCardModel, body, filmComment){
+    this.filmComment = filmComment;
     this.filmContainer = filmContainer;
     this.#filmsCardModel =  filmsCardModel;
     this.body = body;
@@ -35,6 +37,7 @@ export default class FilmsCatalogPresenter {
     this.#navMenuPresenter = new NavMenuPresenter(this.#filmsCardModel);
     this.#filmsCardModel.addObserver(this.#handleModelEvent);
     this.#filterNavMenu.addObserver(this.#handleModelEvent);
+    this.filmComment.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
@@ -56,6 +59,11 @@ export default class FilmsCatalogPresenter {
     return filmsModelsFiltered;
   }
 
+  #renderFilmLoading = () =>{
+    render(this.#loadingView, this.filmContainer);
+
+  };
+
   #renderSort=()=>{
     this.#sort = new Sort(this.#currentSortType);
     render(this.#sort, this.menuPlace, RenderPosition.AFTERBEGIN);
@@ -74,6 +82,7 @@ export default class FilmsCatalogPresenter {
   };
 
   #renderNoFilmsCards = ()=>{
+    remove(this.#loadingView);
     this.#noFilmCard = new NoFilmCard(this.#filterNavMenu.filter);
     render (this.#noFilmCard, this.#buttonPlace);
   };
@@ -110,8 +119,13 @@ export default class FilmsCatalogPresenter {
   };
 
   #renderFilmsBoard = ()=>{
+    if(this.#isLoading){
+      this.#renderFilmLoading();
+      return;
+    }
     const filmsModelsLength = this.filmsModelsFiltered.length;
     if(filmsModelsLength === 0) {
+      this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu);
       this.#renderNoFilmsCards();
 
     }else {
@@ -132,6 +146,7 @@ export default class FilmsCatalogPresenter {
     remove(this.#sort);
     remove(this.#buttonShowMore);
     remove(this.#noFilmCard);
+    remove(this.#loadingView);
     this.#navMenuPresenter.destroy();
 
     if(resetRenderedFilmsCount){
@@ -180,7 +195,7 @@ export default class FilmsCatalogPresenter {
 
   };
 
-  #handleModelEvent = (updateType, updateInfo) => {
+  #handleModelEvent = (updateType, updateInfo, comment = false) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#filmCardPresenters.get(updateInfo.id).resetPopup(updateInfo, this.filmComment);
@@ -196,6 +211,15 @@ export default class FilmsCatalogPresenter {
         this.#clearFilmBoard({resetRenderedFilmsCount: true});
         this.#renderFilmsBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingView);
+        this.#renderFilmsBoard();
+        break;
+      case UpdateType.INIT_POPUP:
+        this.#filmCardPresenters.get(updateInfo.id).initPopup();
+        break;
+
     }
   };
 }

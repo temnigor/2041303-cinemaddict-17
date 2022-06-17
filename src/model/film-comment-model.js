@@ -1,11 +1,28 @@
-import { getSomeComment } from './fish-film-comment.js';
+import Observable from '../framework/observable.js';
+import { UpdateType } from '../utils/filters.js';
 import { getNewCommentFish } from './fish-new-comment.js';
-export default class FilmCommentModel {
+export default class FilmCommentModel extends Observable {
   #newComment = null;
-  #comments = Array.from({length:3}, getSomeComment);
+  #comments = [];
+  #apiServes = null;
+  constructor(api){
+    super();
+    this.#apiServes= api;
+  }
+
   get comments () {
     return this.#comments;
   }
+
+  init = async (film) =>{
+    try{
+      const comments = await this.#apiServes.getComments(film.id);
+      this.#comments = comments;
+    } catch (err) {
+      throw new Error('Not comment');
+    }
+    this._notify(UpdateType.INIT_POPUP, film);
+  };
 
   addNewComment =(updateComment)=>{
     this.#comments.push(updateComment);

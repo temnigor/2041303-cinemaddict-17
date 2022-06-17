@@ -54,9 +54,8 @@ export default class FilmsPresenter {
 
   #setClickPopupHandler = ()=>{
     this.#isPopupOpen();
-    const filmPopupPresenter = new PopupFilmPresenter(this.renderFilmsCard);
-    this.openPopup.open = filmPopupPresenter;
-    filmPopupPresenter.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
+    this.openPopup.open = new PopupFilmPresenter(this.renderFilmsCard);
+    this.filmCommits.init(this.filmCardModel);
   };
 
   #isPopupOpen (){
@@ -65,6 +64,10 @@ export default class FilmsPresenter {
       this.openPopup.open = null;
     }
   }
+
+  initPopup=()=>{
+    this.openPopup.open.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
+  };
 
   resetPopup =(filmInfo, updateComment)=>{
     this.#filmCard.reset(filmInfo);
