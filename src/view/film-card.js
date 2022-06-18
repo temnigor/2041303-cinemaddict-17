@@ -1,7 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { getReleaseYear, getRuntime, getNormalList, getNormalDescription, getFilmCardControlActive,} from '../utils/popup-and-film-cards-utils.js';
 
-const getDomFilmCard = (filmInfo) => {
+const getDomFilmCard = (filmInfo, isDisabled) => {
   const {
     comments,
     filmInfo:{title, totalRating, poster,
@@ -29,22 +29,23 @@ const getDomFilmCard = (filmInfo) => {
   <span class="film-card__comments">${comments.length} comments</span>
 </a>
 <div class="film-card__controls">
-  <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchList)}" id="watchListCard" type="button">Add to watchList</button>
-  <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${getFilmCardControlActive(userDetails.alreadyWatched)}" id="watchedCard" type="button">Mark as watched</button>
-  <button class="film-card__controls-item film-card__controls-item--favorite ${getFilmCardControlActive(userDetails.favorite)}" id="favoriteCard"type="button">Mark as favorite</button>
+  <button  class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchList)}" id="watchListCard" type="button" ${isDisabled ? 'disabled' : ''}>Add to watchList</button>
+  <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${getFilmCardControlActive(userDetails.alreadyWatched)}" id="watchedCard" type="button" ${isDisabled ? 'disabled' : ''}>Mark as watched</button>
+  <button class="film-card__controls-item film-card__controls-item--favorite ${getFilmCardControlActive(userDetails.favorite)}" id="favoriteCard" type="button" ${isDisabled ? 'disabled' : ''}>Mark as favorite</button>
 </div>
 </article>`);
 };
 
 export default class FilmCard extends AbstractStatefulView{
   #filmInfo = null;
+  #isDisabled = false;
   constructor( filmInfo) {
     super();
     this.#filmInfo = filmInfo;
   }
 
   get template() {
-    return getDomFilmCard(this.#filmInfo);
+    return getDomFilmCard(this.#filmInfo, this.#isDisabled);
   }
 
   setClickOpenPopupHandler = (callback ) =>{
@@ -67,8 +68,9 @@ export default class FilmCard extends AbstractStatefulView{
     this._callback.clickFilmDetailsControl(evt);
   };
 
-  reset =(filmInfo)=>{
+  reset =(filmInfo, disabled=false)=>{
     this.#filmInfo = filmInfo;
+    this.#isDisabled = disabled;
     this.updateElement(this.#filmInfo);
 
   };
@@ -77,4 +79,5 @@ export default class FilmCard extends AbstractStatefulView{
     this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
     this.element.querySelector('.film-card__link').addEventListener('click', this.#setClickHandler);
   };
+
 }

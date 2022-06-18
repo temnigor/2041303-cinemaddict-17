@@ -53,9 +53,10 @@ export default class FilmCardModel extends Observable {
     const index = this.#films.findIndex((task) => task.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexciting task');
     }
     try{
+
       const response = await this.#apiServes.updateFilms(update);
       const updateFilms = this.#adaptToClient(response);
 
@@ -64,40 +65,10 @@ export default class FilmCardModel extends Observable {
         updateFilms,
         ...this.#films.slice(index + 1),
       ];
-
       this._notify(updateType, updateFilms);
     }catch(err){
       throw new Error('Не получилось обновить');
     }
-  };
-
-  addFilms = (updateType, update) => {
-    this.#films = [
-      update,
-      ...this.#films,
-    ];
-
-    this._notify(updateType, update);
-  };
-
-  deleteFilms = (updateType, update) => {
-    const index = this.#films.findIndex((task) => task.id === update.id);
-
-    if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
-    }
-
-    this.#films = [
-      ...this.#films.slice(0, index),
-      ...this.#films.slice(index + 1),
-    ];
-
-    this._notify(updateType);
-  };
-
-  deleteCommentId =(filmInfo, deleteId)=>{
-    filmInfo.comments =  filmInfo.comments.filter((comment) =>comment !== +deleteId);
-    return filmInfo;
   };
 
 }

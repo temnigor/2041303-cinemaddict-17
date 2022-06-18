@@ -9,13 +9,15 @@ import MostCommentFilmsPresenter from './presenter/most-comment-films-presenter.
 import FilmCardModel from './model/film-card-model.js';
 import FilmCommentModel from './model/film-comment-model.js';
 import Api from './model/api-module.js';
+
+const AUTHORIZATION = 'Basic fkjlosfdgjkl';
+const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
+
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 const body = document.querySelector('body');
 const filmsCatalogRatedPresenter = new RatedFilmsPresenter();
 const filmsCatalogMostCommentPresenter = new MostCommentFilmsPresenter();
-const AUTHORIZATION = 'Basic fkjlosfdgjkl';
-const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 const api = new Api(END_POINT, AUTHORIZATION);
 const filmsCardModel = new FilmCardModel(api);
 const filmsComment = new FilmCommentModel (api);

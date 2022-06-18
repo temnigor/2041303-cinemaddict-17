@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 const UserAction = {
-  UPDATE_FILMS: 'UPDATE_FILMS',
-  ADD_FILMS: 'ADD_FILMS',
-  DELETE_FILM: 'DELETE_FILM',
+  UPDATE_FILM: 'UPDATE_FILM',
+  ADD_FILM_COMMENT: 'ADD_FILM_COMMENT',
+  DELETE_COMMENT: 'DELETE_FILM_COMMENT',
 };
 
 const UpdateType = {
@@ -10,7 +10,6 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
-  INIT_POPUP: 'INIT_POPUP'
 };
 const SortType = {
   DEFAULT: 'default',
@@ -24,6 +23,13 @@ const FilterType = {
   ALREADY_WATCHED:'alreadyWatched',
   FAVORITE:'favorite'
 };
+const ShakeClass = {
+  POPUP_COMMENTS : '.film-details__comments-wrap',
+  POPUP :'.film-details__inner',
+  POPUP_DETAILS: '.film-details__controls',
+  FILM_CARD_CONTROLS: '.film-card__controls'
+};
+
 const isWatchList = (film)=> film.userDetails.watchList === true;
 const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
@@ -73,4 +79,4 @@ const sortFilmRating = (a, b) => {
     return 0;
   }
 };
-export {generateFilter, SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType, FilterType, filter};
+export {generateFilter, SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType, FilterType, ShakeClass, filter};

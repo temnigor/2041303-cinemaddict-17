@@ -33,18 +33,24 @@ export default class FilmsPresenter {
     this.#filmCard.setFilmDetailsControlHandler((evt)=>{
       while(evt.target.id){
         if(evt.target.id === 'watchListCard'){
-          this.filmCardModel.userDetails.watchList = !this.filmCardModel.userDetails.watchList;
-          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
+          this.resetFilmCard(this.filmCardModel, true);
+          const updateFilm = this.filmCardModel;
+          updateFilm.userDetails.watchList = !updateFilm.userDetails.watchList;
+          this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
           break;
         }
         if(evt.target.id === 'watchedCard'){
-          this.filmCardModel.userDetails.alreadyWatched = !this.filmCardModel.userDetails.alreadyWatched;
-          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
+          this.resetFilmCard(this.filmCardModel, true);
+          const updateFilm = this.filmCardModel;
+          updateFilm.userDetails.alreadyWatched = !updateFilm.userDetails.alreadyWatched;
+          this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
           break;
         }
         if(evt.target.id === 'favoriteCard'){
-          this.filmCardModel.userDetails.favorite = !this.filmCardModel.userDetails.favorite;
-          this.renderFilmsCard(UserAction.UPDATE_FILMS, UpdateType.MINOR, this.filmCardModel);
+          this.resetFilmCard(this.filmCardModel, true);
+          const updateFilm = this.filmCardModel;
+          updateFilm.userDetails.favorite = !updateFilm.userDetails.favorite;
+          this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
           break;
         }
         break;
@@ -65,12 +71,23 @@ export default class FilmsPresenter {
     }
   }
 
+  shakeFilmCard = (shakeClass)=>{
+    this.#filmCard.shake(this.#filmCard.reset(this.filmCardModel, false), shakeClass);
+  };
+
   initPopup=()=>{
     this.openPopup.open.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
   };
 
-  resetPopup =(filmInfo, updateComment)=>{
-    this.#filmCard.reset(filmInfo);
-    this.openPopup.open.getRenderPopup(filmInfo, updateComment);
+
+  resetPopup =(filmInfo, disabled)=>{
+    this.filmCardModel = filmInfo;
+    this.#filmCard.reset(filmInfo, disabled);
+    this.openPopup.open.getRenderPopup(filmInfo);
+  };
+
+  resetFilmCard=(filmInfo, disabled)=>{
+    this.filmCardModel = filmInfo;
+    this.#filmCard.reset(filmInfo, disabled);
   };
 }

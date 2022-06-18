@@ -3,11 +3,16 @@ import ButtonShowMore from '../view/button-show-more.js';
 import NoFilmCard from '../view/no-films-card.js';
 import FilmsPresenter from './films-presenter.js';
 import FilterModel from '../model/filter-model.js';
-import { SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType, filter} from '../utils/filters.js';
+import { SortType, sortFilmDate, sortFilmRating, UserAction, UpdateType,ShakeClass ,filter} from '../utils/filters.js';
 import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
 import Loading from '../view/loading.js';
-const FILM_COUNT_PER_STEP = 5;
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+const FILM_COUNT_PER_STEP = 4;
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 export default class FilmsCatalogPresenter {
 
   #filmsCardModel =  null;
@@ -26,6 +31,7 @@ export default class FilmsCatalogPresenter {
   #sort = null;
   #loadingView = new Loading();
   #isLoading = true;
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
   constructor (filmContainer, filmsCardModel, body, filmComment){
     this.filmComment = filmComment;
     this.filmContainer = filmContainer;
@@ -168,44 +174,50 @@ export default class FilmsCatalogPresenter {
     this.#renderFilmsBoard();
   };
 
-  #handleViewAction = (actionType, updateType, update, commentInfo, {newComment = false, deleteComment = false}={}) => {
-
-    this.updateFilmCardModel = update;
-    if(newComment){
-      const comment = this.filmComment.getNewComment(commentInfo);
-      this.filmComment.addNewComment(comment);
-      this.updateFilmCardModel.comments.push(comment.id);
-    }
-    if(deleteComment){
-      this.filmComment.deleteComment(commentInfo);
-      this.updateFilmCardModel = this.#filmsCardModel.deleteCommentId(update, commentInfo);
-    }
-
+  #handleViewAction = async (actionType, updateType, update,comment) => {
+    this.#uiBlocker.block();
     switch (actionType){
-      case UserAction.ADD_FILMS:
-        this.#filmsCardModel.addFilms(updateType, this.updateFilmCardModel);
+      case UserAction.ADD_FILM_COMMENT:
+        try{
+          await this.filmComment.addNewComment(update, comment);
+        }catch (err){
+          this.#openPopup.open.getErrorActionPopup(ShakeClass.POPUP);
+        }
         break;
-      case UserAction.UPDATE_FILMS:
-        this.#filmsCardModel.updateFilms(updateType, this.updateFilmCardModel);
+      case UserAction.UPDATE_FILM:
+        try{
+          await this.#filmsCardModel.updateFilms(updateType, update);
+        }catch (err){
+          if(this.#openPopup.open === null){
+            this.#filmCardPresenters.get(update.id).shakeFilmCard(ShakeClass.FILM_CARD_CONTROLS);
+          }else{
+            this.#openPopup.open.getErrorActionPopup(ShakeClass.POPUP_DETAILS);
+          }
+        }
         break;
-      case UserAction.DELETE_FILM:
-        this.#filmsCardModel.deleteFilms(updateType, this.updateFilmCardModel);
+      case UserAction.DELETE_COMMENT:
+        this.#openPopup.open.getBlockPopup();
+        try{
+          await this.filmComment.deleteComment(updateType, update, comment);
+        }catch (err){
+          this.#openPopup.open.getErrorActionPopup(ShakeClass.POPUP_COMMENTS);
+        }
         break;
     }
-
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, updateInfo) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#filmCardPresenters.get(updateInfo.id).resetPopup(updateInfo, this.filmComment);
+        this.#filmCardPresenters.get(updateInfo.id).resetPopup(updateInfo);
         break;
       case UpdateType.MINOR:
-        this.#clearFilmBoard({resetRenderedFilmsCount: true, resetSortType: true});
-        this.#renderFilmsBoard();
         if(this.#openPopup.open !==null){
-          this.#openPopup.open.getRenderPopup(updateInfo, this.filmComment);
+          this.#filmCardPresenters.get(updateInfo.id).resetPopup(updateInfo);
         }
+
+        this.#filmCardPresenters.get(updateInfo.id).resetFilmCard(updateInfo, false);
         break;
       case UpdateType.MAJOR:
         this.#clearFilmBoard({resetRenderedFilmsCount: true});
