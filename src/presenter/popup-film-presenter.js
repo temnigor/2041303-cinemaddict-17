@@ -97,10 +97,6 @@ export default class PopupFilmPresenter {
 
   };
 
-  setDeleting =()=>{
-    this.#popup.setDeleting();
-  };
-
   submitComment =(filmInfo, newCommentInfo )=>{
     this.#renderFilmsCard(UserAction.ADD_FILM_COMMENT, UpdateType.PATCH, filmInfo, newCommentInfo);
   };

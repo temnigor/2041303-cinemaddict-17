@@ -26,7 +26,6 @@ const getComment = (comments, isDisabled, idDeleting) => {
       emotion
     } = commentInfo;
     const normalDate = getDateComment(date);
-
     const commentDom = `<li class="film-details__comment">
 <span class="film-details__comment-emoji">
   <img src="./images/emoji/${emotion}.png" alt="emoji-${emotion}" width="55" height="55">
@@ -343,15 +342,10 @@ export default class Popup extends AbstractStatefulView {
     if(evt.target.localName === 'button'){
       evt.preventDefault();
       this._state.initElementScrollTop = this.element.scrollTop;
-      this.deletingButton = evt.target;
       this._state.block.IdForDeleting = evt.target.dataset.idComments;
       this._callback.deleteComment(evt.target.dataset.idComments);
       this.#scrollToPosition(this._state.initElementScrollTop);
     }
-  };
-
-  setDeleting =()=>{
-    this.deletingButton.textContent = 'Deleting...';
   };
 
   _restoreHandlers =()=>{
