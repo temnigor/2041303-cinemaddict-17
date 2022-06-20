@@ -10,7 +10,6 @@ const EMOJI =  {
 const ControlDetailsFilmCard= {
   UNBLOCK_CONTROL_PANEL: 'UNBLOCK',
   UPDATE_CONTROL_PANEL: 'UPDATE',
-
 };
 const getReleaseYear = (date) => dayjs(date).format('YYYY');
 const getRuntime = (min) =>{

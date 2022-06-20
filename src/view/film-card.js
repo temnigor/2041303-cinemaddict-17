@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { getReleaseYear, getRuntime, getNormalList, getNormalDescription, getFilmCardControlActive} from '../utils/popup-and-film-cards-utils.js';
+import { getReleaseYear, getRuntime, getNormalDescription, getFilmCardControlActive} from '../utils/popup-and-film-cards-utils.js';
 
 const getDomFilmCard = (filmInfo, isDisabled) => {
   const {
@@ -11,7 +11,7 @@ const getDomFilmCard = (filmInfo, isDisabled) => {
       description},
     userDetails
   } = filmInfo;
-  const normalGenre = getNormalList(allGenre);
+  const normalGenre = allGenre[0];
   const normalDescription = getNormalDescription(description);
   const releaseDate = getReleaseYear(date);
   const runtimeHourMinute = getRuntime(runtime);
