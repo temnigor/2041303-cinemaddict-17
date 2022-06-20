@@ -16,7 +16,7 @@ const getImgEmoji =(emojiInfo)=>{
   }}
   return'';
 };
-const getComment = (comments, isDisabled, isDelete) => {
+const getComment = (comments, isDisabled, idDeleting) => {
   const commentsList = comments.map((commentInfo) => {
     const {
       id,
@@ -26,6 +26,7 @@ const getComment = (comments, isDisabled, isDelete) => {
       emotion
     } = commentInfo;
     const normalDate = getDateComment(date);
+
     const commentDom = `<li class="film-details__comment">
 <span class="film-details__comment-emoji">
   <img src="./images/emoji/${emotion}.png" alt="emoji-${emotion}" width="55" height="55">
@@ -35,7 +36,7 @@ const getComment = (comments, isDisabled, isDelete) => {
   <p class="film-details__comment-info">
     <span class="film-details__comment-author">${author}</span>
     <span class="film-details__comment-day">${normalDate}</span>
-    <button class="film-details__comment-delete" ${isDisabled ? 'disabled' : ''}  data-id-comments = '${id}'>${isDelete ? 'Deleting...': 'Delete'}</button>
+    <button class="film-details__comment-delete" ${isDisabled ? 'disabled' : ''}  data-id-comments = '${id}'> ${id=== idDeleting? 'Deleting...' : 'Delete'}</button>
   </p>
 </div>
 </li>`;
@@ -66,7 +67,7 @@ const getDomPopup = (filmInfo, comments, state) => {
   } = state.emoji;
   const {
     isDisabled,
-    isDelete
+    IdForDeleting
   } = state.block;
   const addCommentInput = state.newComment.comment;
   const normalWriters = getNormalList(allWriters);
@@ -74,7 +75,7 @@ const getDomPopup = (filmInfo, comments, state) => {
   const runtimeHourMinute = getRuntime(runtime);
   const normalGenre = getGenreList(genre);
   const normalDate = getReleaseDate(date);
-  const commentsList = getComment(comments, isDisabled, isDelete);
+  const commentsList = getComment(comments, isDisabled, IdForDeleting);
   const emojiNewComment= getImgEmoji(state.emoji);
   return ( `<section class="film-details">
 <form class="film-details__inner" action="" method="get">
@@ -140,7 +141,7 @@ const getDomPopup = (filmInfo, comments, state) => {
     </div>
 
     <section class="film-details__controls">
-      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.watchList)} film-details__control-button--watchList" id="watchList" name="watchList" ${isDisabled ? 'disabled' : ''}>Add to watchlist</button>
+      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.watchlist)} film-details__control-button--watchList" id="watchList" name="watchList" ${isDisabled ? 'disabled' : ''}>Add to watchlist</button>
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.alreadyWatched)} film-details__control-button--watched" id="watched" name="watched" ${isDisabled ? 'disabled' : ''}>Already watched!</button>
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.favorite)} film-details__control-button--favorite" id="favorite" name="favorite" ${isDisabled ? 'disabled' : ''}>Add to favorites</button>
     </section>
@@ -159,8 +160,8 @@ const getDomPopup = (filmInfo, comments, state) => {
         ${emojiNewComment}
         </div>
 
-        <label class="film-details__comment-label" ${isDisabled ? 'disabled' : ''}>
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" >${he.encode(addCommentInput)}</textarea>
+        <label class="film-details__comment-label" >
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"  ${isDisabled ? 'disabled' : ''}>${he.encode(addCommentInput)}</textarea>
         </label>
 
         <div class="film-details__emoji-list" >
@@ -210,7 +211,7 @@ export default class Popup extends AbstractStatefulView {
     };
     this._state.block = {
       isDisabled : false,
-      isDelete : false
+      IdForDeleting : null
     };
     this.buttonFilmDetailsControls = this.element.querySelector('.film-details__close-btn');
     this.#filmAddEmoji = this.element.querySelector('.film-details__add-emoji-label');
@@ -234,7 +235,7 @@ export default class Popup extends AbstractStatefulView {
     };
     this._state.block = {
       isDisabled : false,
-      isDelete : false
+      IdForDeleting : null
     };
     this.updateElement(this._state);
     this.#scrollToPosition(this._state.initElementScrollTop);
@@ -242,10 +243,7 @@ export default class Popup extends AbstractStatefulView {
 
   getBlockPopup =()=>{
     this._state.initElementScrollTop = this.element.scrollTop;
-    this._state.block = {
-      isDisabled : true,
-      isDelete : true
-    };
+    this._state.block.isDisabled = true;
     this.updateElement(this._state);
     this.#scrollToPosition(this._state.initElementScrollTop);
   };
@@ -254,7 +252,7 @@ export default class Popup extends AbstractStatefulView {
     this._state.initElementScrollTop = this.element.scrollTop;
     this._state.block = {
       isDisabled : false,
-      isDelete : false
+      IdForDeleting : null
     };
     this.updateElement(this._state);
     this.#scrollToPosition(this._state.initElementScrollTop);
@@ -345,9 +343,15 @@ export default class Popup extends AbstractStatefulView {
     if(evt.target.localName === 'button'){
       evt.preventDefault();
       this._state.initElementScrollTop = this.element.scrollTop;
+      this.deletingButton = evt.target;
+      this._state.block.IdForDeleting = evt.target.dataset.idComments;
       this._callback.deleteComment(evt.target.dataset.idComments);
       this.#scrollToPosition(this._state.initElementScrollTop);
     }
+  };
+
+  setDeleting =()=>{
+    this.deletingButton.textContent = 'Deleting...';
   };
 
   _restoreHandlers =()=>{

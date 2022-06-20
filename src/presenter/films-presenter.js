@@ -1,5 +1,6 @@
 import { remove, render, } from '../framework/render.js';
 import { UpdateType, UserAction } from '../utils/filters.js';
+import { ControlDetailsFilmCard } from '../utils/popup-and-film-cards-utils.js';
 import FilmCard from '../view/film-card.js';
 import PopupFilmPresenter from './popup-film-presenter.js';
 export default class FilmsPresenter {
@@ -15,47 +16,44 @@ export default class FilmsPresenter {
 
 
   init = (filmModel) => {
-    const prevFilmCard = this.#filmCard;
     this.filmCardModel = filmModel;
     this.#filmCard = new FilmCard (this.filmCardModel);
-    if(prevFilmCard === null){
-      this.#filmCard.setClickOpenPopupHandler(this.#setClickPopupHandler);
-      render(this.#filmCard,this.#filmsContainer);
-      this.#getFilmDetailsControlButton();
-    }
+    render(this.#filmCard,this.#filmsContainer);
+    this.#filmCard.setClickOpenPopupHandler(this.#setClickPopupHandler);
+    this.#filmCard.setFilmDetailsControlHandler(this.#getFilmDetailsControlButton);
+
   };
 
   destroy = () => {
     remove(this.#filmCard);
   };
 
-  #getFilmDetailsControlButton = () =>{
-    this.#filmCard.setFilmDetailsControlHandler((evt)=>{
-      while(evt.target.id){
-        if(evt.target.id === 'watchListCard'){
-          this.resetFilmCard(this.filmCardModel, true);
-          const updateFilm = this.filmCardModel;
-          updateFilm.userDetails.watchList = !updateFilm.userDetails.watchList;
-          this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
-          break;
-        }
-        if(evt.target.id === 'watchedCard'){
-          this.resetFilmCard(this.filmCardModel, true);
-          const updateFilm = this.filmCardModel;
-          updateFilm.userDetails.alreadyWatched = !updateFilm.userDetails.alreadyWatched;
-          this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
-          break;
-        }
-        if(evt.target.id === 'favoriteCard'){
-          this.resetFilmCard(this.filmCardModel, true);
-          const updateFilm = this.filmCardModel;
-          updateFilm.userDetails.favorite = !updateFilm.userDetails.favorite;
-          this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
-          break;
-        }
+  #getFilmDetailsControlButton = (evt) =>{
+    while(evt.target.id){
+      if(evt.target.id === 'watchListCard'){
+        this.#filmCard.blockButtonControlFilmCard();
+        const updateFilm = this.filmCardModel;
+        updateFilm.userDetails.watchlist = !updateFilm.userDetails.watchlist;
+        this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
       }
-    });
+      if(evt.target.id === 'watchedCard'){
+        this.#filmCard.blockButtonControlFilmCard();
+        const updateFilm = this.filmCardModel;
+        updateFilm.userDetails.alreadyWatched = !updateFilm.userDetails.alreadyWatched;
+        this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
+        break;
+      }
+      if(evt.target.id === 'favoriteCard'){
+        this.#filmCard.blockButtonControlFilmCard();
+        const updateFilm = {...this.filmCardModel};
+        updateFilm.userDetails.favorite = !updateFilm.userDetails.favorite;
+        this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
+        break;
+      }
+      break;
+    }
+
   };
 
   #setClickPopupHandler = ()=>{
@@ -71,9 +69,6 @@ export default class FilmsPresenter {
     }
   }
 
-  shakeFilmCard = (shakeClass)=>{
-    this.#filmCard.shake(this.#filmCard.reset(this.filmCardModel, false), shakeClass);
-  };
 
   initPopup=()=>{
     this.openPopup.open.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
@@ -86,8 +81,13 @@ export default class FilmsPresenter {
     this.openPopup.open.getRenderPopup(filmInfo);
   };
 
-  resetFilmCard=(filmInfo, disabled)=>{
-    this.filmCardModel = filmInfo;
-    this.#filmCard.reset(filmInfo, disabled);
+  resetFilmCard=(ControlDetails, film)=>{
+    switch (ControlDetails){
+      case ControlDetailsFilmCard.UNBLOCK_CONTROL_PANEL:
+        this.#filmCard.unblockButtonControlFilmCard();
+        break;
+      case ControlDetailsFilmCard.UPDATE_CONTROL_PANEL:
+        this.#filmCard.reset(film);
+    }
   };
 }

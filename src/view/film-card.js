@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { getReleaseYear, getRuntime, getNormalList, getNormalDescription, getFilmCardControlActive,} from '../utils/popup-and-film-cards-utils.js';
+import { getReleaseYear, getRuntime, getNormalList, getNormalDescription, getFilmCardControlActive} from '../utils/popup-and-film-cards-utils.js';
 
 const getDomFilmCard = (filmInfo, isDisabled) => {
   const {
@@ -15,7 +15,7 @@ const getDomFilmCard = (filmInfo, isDisabled) => {
   const normalDescription = getNormalDescription(description);
   const releaseDate = getReleaseYear(date);
   const runtimeHourMinute = getRuntime(runtime);
-  return (  `<article class="film-card">
+  return (  `<article class="film-card" width="230">
 <a class="film-card__link">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${totalRating}</p>
@@ -24,12 +24,12 @@ const getDomFilmCard = (filmInfo, isDisabled) => {
     <span class="film-card__duration">${runtimeHourMinute}</span>
     <span class="film-card__genre">${normalGenre}</span>
   </p>
-  <img src=${poster} alt="" class="film-card__poster">
+  <img src=${poster} alt="" class="film-card__poster" width="230">
   <p class="film-card__description">${normalDescription}</p>
   <span class="film-card__comments">${comments.length} comments</span>
 </a>
 <div class="film-card__controls">
-  <button  class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchList)}" id="watchListCard" type="button" ${isDisabled ? 'disabled' : ''}>Add to watchList</button>
+  <button  class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchlist)}" id="watchListCard" type="button" ${isDisabled ? 'disabled' : ''}>Add to watchList</button>
   <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${getFilmCardControlActive(userDetails.alreadyWatched)}" id="watchedCard" type="button" ${isDisabled ? 'disabled' : ''}>Mark as watched</button>
   <button class="film-card__controls-item film-card__controls-item--favorite ${getFilmCardControlActive(userDetails.favorite)}" id="favoriteCard" type="button" ${isDisabled ? 'disabled' : ''}>Mark as favorite</button>
 </div>
@@ -38,6 +38,7 @@ const getDomFilmCard = (filmInfo, isDisabled) => {
 
 export default class FilmCard extends AbstractStatefulView{
   #filmInfo = null;
+  #prevFilmInfo = null;
   #isDisabled = false;
   constructor( filmInfo) {
     super();
@@ -59,6 +60,7 @@ export default class FilmCard extends AbstractStatefulView{
   };
 
   setFilmDetailsControlHandler = (callback)=>{
+    this.#prevFilmInfo = {...this.#filmInfo};
     this._callback.clickFilmDetailsControl = callback;
     this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
   };
@@ -68,12 +70,26 @@ export default class FilmCard extends AbstractStatefulView{
     this._callback.clickFilmDetailsControl(evt);
   };
 
-  reset =(filmInfo, disabled=false)=>{
+  reset =(filmInfo)=>{
+    this._state = {};
     this.#filmInfo = filmInfo;
-    this.#isDisabled = disabled;
+    this.#isDisabled = false;
     this.updateElement(this.#filmInfo);
 
   };
+
+  blockButtonControlFilmCard =()=>{
+    this._state = {};
+    this.#isDisabled = true;
+    this.updateElement( this.#prevFilmInfo);
+  };
+
+  unblockButtonControlFilmCard =()=>{
+    this._state = {};
+    this.#isDisabled = false;
+    this.updateElement(this.#prevFilmInfo);
+  };
+
 
   _restoreHandlers =()=>{
     this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);

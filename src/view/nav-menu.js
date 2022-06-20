@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { FilterType } from '../utils/filters.js';
 
 const getDomNavMenu = (films, filterModels) =>{
@@ -20,17 +20,15 @@ data-filter-type = ${FilterType.FAVORITE}>Favorites <span class="main-navigation
   );
 };
 
-export default class NavMenu extends AbstractView {
-  #films = null;
-  #filterModel = null;
+export default class NavMenu extends AbstractStatefulView {
   constructor(films, filterModel){
     super();
-    this.#films = films;
-    this.#filterModel = filterModel;
+    this._state.filter = filterModel;
+    this._state.films = films;
   }
 
   get template() {
-    return getDomNavMenu(this.#films, this.#filterModel.filter);
+    return getDomNavMenu(this._state.films, this._state.filter);
   }
 
   setClickNavHandler = (callback)=>{
@@ -44,5 +42,14 @@ export default class NavMenu extends AbstractView {
       this._callback.clickNav(evt.target.dataset.filterType);
     }
 
+  };
+
+  reset=(films)=>{
+    this._state.films = films;
+    this.updateElement(this._state.films);
+  };
+
+  _restoreHandlers =()=>{
+    this.element.addEventListener('click', this.#navMenuClickHandler);
   };
 }

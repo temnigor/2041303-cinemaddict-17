@@ -8,7 +8,8 @@ import NavMenuPresenter from './nav-menu-presenter.js';
 import Sort from '../view/sort.js';
 import Loading from '../view/loading.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
-const FILM_COUNT_PER_STEP = 4;
+import { ControlDetailsFilmCard } from '../utils/popup-and-film-cards-utils.js';
+const FILM_COUNT_PER_STEP = 5;
 const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
@@ -40,7 +41,7 @@ export default class FilmsCatalogPresenter {
     this.#buttonPlace = this.body.querySelector('.films-list');
     this.menuPlace = this.body.querySelector('.main');
     this.#filterNavMenu = new FilterModel();
-    this.#navMenuPresenter = new NavMenuPresenter(this.#filmsCardModel);
+    this.#navMenuPresenter = new NavMenuPresenter();
     this.#filmsCardModel.addObserver(this.#handleModelEvent);
     this.#filterNavMenu.addObserver(this.#handleModelEvent);
     this.filmComment.addObserver(this.#handleModelEvent);
@@ -131,12 +132,12 @@ export default class FilmsCatalogPresenter {
     }
     const filmsModelsLength = this.filmsModelsFiltered.length;
     if(filmsModelsLength === 0) {
-      this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu);
+      this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu, this.#filmsCardModel);
       this.#renderNoFilmsCards();
 
     }else {
       this.#renderSort();
-      this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu);
+      this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu, this.#filmsCardModel);
       const films = this.filmsModelsFiltered.slice(0, Math.min(filmsModelsLength,this.#filmRenderCount));
       this.#renderFilms(films);
       if(filmsModelsLength > this.#filmRenderCount){
@@ -178,6 +179,7 @@ export default class FilmsCatalogPresenter {
     this.#uiBlocker.block();
     switch (actionType){
       case UserAction.ADD_FILM_COMMENT:
+        this.#openPopup.open.getBlockPopup();
         try{
           await this.filmComment.addNewComment(update, comment);
         }catch (err){
@@ -189,7 +191,7 @@ export default class FilmsCatalogPresenter {
           await this.#filmsCardModel.updateFilms(updateType, update);
         }catch (err){
           if(this.#openPopup.open === null){
-            this.#filmCardPresenters.get(update.id).shakeFilmCard(ShakeClass.FILM_CARD_CONTROLS);
+            this.#filmCardPresenters.get(update.id).resetFilmCard(ControlDetailsFilmCard.UNBLOCK_CONTROL_PANEL);
           }else{
             this.#openPopup.open.getErrorActionPopup(ShakeClass.POPUP_DETAILS);
           }
@@ -215,9 +217,12 @@ export default class FilmsCatalogPresenter {
       case UpdateType.MINOR:
         if(this.#openPopup.open !==null){
           this.#filmCardPresenters.get(updateInfo.id).resetPopup(updateInfo);
+          this.#navMenuPresenter.resetNavMenu(this.#filmsCardModel);
+          this.#filmCardPresenters.get(updateInfo.id).resetFilmCard(ControlDetailsFilmCard.UPDATE_CONTROL_PANEL, updateInfo);
+          return;
         }
-
-        this.#filmCardPresenters.get(updateInfo.id).resetFilmCard(updateInfo, false);
+        this.#filmCardPresenters.get(updateInfo.id).resetFilmCard(ControlDetailsFilmCard.UPDATE_CONTROL_PANEL, updateInfo);
+        this.#navMenuPresenter.resetNavMenu(this.#filmsCardModel);
         break;
       case UpdateType.MAJOR:
         this.#clearFilmBoard({resetRenderedFilmsCount: true});

@@ -35,14 +35,12 @@ export default class FilmCardModel extends Observable {
       release : {date:adaptFilm.filmInfo.release.date, releaseCountry: adaptFilm.filmInfo.release.release_country}
     };
     adaptFilm.userDetails= {...adaptFilm.userDetails,
-      watchList:adaptFilm.userDetails.watch_list,
       alreadyWatched:adaptFilm.userDetails.already_watched
     };
     delete adaptFilm.filmInfo.alternative_title;
     delete  adaptFilm.filmInfo.age_rating;
     delete adaptFilm.filmInfo.total_rating;
     delete adaptFilm.filmInfo.release.release_country;
-    delete adaptFilm.userDetails.watch_list;
     delete adaptFilm.userDetails.already_watched;
     delete adaptFilm.film_info;
     delete adaptFilm.user_details;
@@ -50,14 +48,15 @@ export default class FilmCardModel extends Observable {
   };
 
   updateFilms = async (updateType, update) => {
-    const index = this.#films.findIndex((task) => task.id === update.id);
+    const index = this.#films.findIndex((film) => film.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexciting task');
+      throw new Error('Can\'t update unexciting film');
     }
+
     try{
 
-      const response = await this.#apiServes.updateFilms(update);
+      const response = await this.#apiServes.updateFilm(update);
       const updateFilms = this.#adaptToClient(response);
 
       this.#films = [
@@ -65,6 +64,7 @@ export default class FilmCardModel extends Observable {
         updateFilms,
         ...this.#films.slice(index + 1),
       ];
+
       this._notify(updateType, updateFilms);
     }catch(err){
       throw new Error('Не получилось обновить');

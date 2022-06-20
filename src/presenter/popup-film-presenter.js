@@ -50,7 +50,7 @@ export default class PopupFilmPresenter {
         if(evt.target.id === 'watchList'){
           this.#popup.getBlockPopup();
           const updateFilm = this.filmCardModel;
-          updateFilm.userDetails.watchList = !updateFilm.userDetails.watchList;
+          updateFilm.userDetails.watchlist = !updateFilm.userDetails.watchlist;
           this.#renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
           break;
         }
@@ -95,6 +95,10 @@ export default class PopupFilmPresenter {
     this.filmCardModel.comments = this.filmCardModel.comments.filter((comment)=>comment !== deleteCommentId);
     this.#renderFilmsCard(UserAction.DELETE_COMMENT, UpdateType.PATCH, this.filmCardModel, deleteCommentId);
 
+  };
+
+  setDeleting =()=>{
+    this.#popup.setDeleting();
   };
 
   submitComment =(filmInfo, newCommentInfo )=>{

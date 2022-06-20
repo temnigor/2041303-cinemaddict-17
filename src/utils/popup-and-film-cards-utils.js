@@ -7,6 +7,11 @@ const EMOJI =  {
   'puke': '',
   'angry': ''
 };
+const ControlDetailsFilmCard= {
+  UNBLOCK_CONTROL_PANEL: 'UNBLOCK',
+  UPDATE_CONTROL_PANEL: 'UPDATE',
+
+};
 const getReleaseYear = (date) => dayjs(date).format('YYYY');
 const getRuntime = (min) =>{
   const hours = Math.trunc(min/60);
@@ -34,16 +39,16 @@ const getNormalDescription = (description) => {
     : description;
   return descriptionForFilmCard;
 };
-const getFilmDetailsControlActive = (filmDetailsControlButton)=>{
-  if(filmDetailsControlButton === true){
-    return 'film-details__control-button--active';
-  }
+const getFilmDetailsControlActive = (filmDetailsControlButton)=>
+  filmDetailsControlButton
+    ? 'film-details__control-button--active'
+    : '';
 
-};
 const getFilmCardControlActive = (filmDetailsControlButton)=>
   filmDetailsControlButton
     ? 'film-card__controls-item--active'
     : '';
+
 
 const getNeedComment = (allFilmComments, filmsModel) => {
   const keyFilmsComments = filmsModel.comments;
@@ -67,8 +72,9 @@ export {
   getNormalDescription,
   getDateComment,
   getFilmDetailsControlActive,
-  getFilmCardControlActive,
   EMOJI,
+  ControlDetailsFilmCard,
+  getFilmCardControlActive,
   getNeedComment,
   getActualDate,
 };

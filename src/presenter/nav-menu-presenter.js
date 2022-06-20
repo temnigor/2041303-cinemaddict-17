@@ -7,21 +7,19 @@ export default class NavMenuPresenter {
   #filmsCardModel = null;
   #navMenu = null;
   #navMenuPlace = null;
-  constructor(filmsCardModel){
-    this. #filmsCardModel = filmsCardModel;
-  }
 
-  get filmsFilterLength () {
-    const filterFilms = this.#filmsCardModel.films;
+  getFilmsFilterLength=(films)=>{
+    const filterFilms = films;
     return ({
       wishlist: filter[FilterType.WATCH_LIST](filterFilms).length,
       history: filter[FilterType.ALREADY_WATCHED](filterFilms).length,
       favorites: filter[FilterType.FAVORITE](filterFilms).length,
     });
-  }
+  };
 
-  init = (main, filterNavMenu) =>{
-    const filterLength = this.filmsFilterLength;
+  init = (main, filterNavMenu, films) =>{
+    this.#filmsCardModel = films;
+    const filterLength = this.getFilmsFilterLength(this.#filmsCardModel.films);
     this.#navMenuPlace = main;
     this.filterNavMenu = filterNavMenu;
     this.#navMenu = new NavMenu (filterLength,  this.filterNavMenu);
@@ -29,6 +27,11 @@ export default class NavMenuPresenter {
     this.#navMenu.setClickNavHandler(this.#filterChang);
   };
 
+  resetNavMenu = (films)=>{
+    this.#filmsCardModel = films;
+    const filterLength = this.getFilmsFilterLength(this.#filmsCardModel.films);
+    this.#navMenu.reset(filterLength);
+  };
 
   #filterChang =(filterType)=>{
     if( this.filterNavMenu.filters === filterType){

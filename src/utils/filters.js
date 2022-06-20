@@ -26,11 +26,10 @@ const FilterType = {
 const ShakeClass = {
   POPUP_COMMENTS : '.film-details__comments-wrap',
   POPUP :'.film-details__inner',
-  POPUP_DETAILS: '.film-details__controls',
-  FILM_CARD_CONTROLS: '.film-card__controls'
+  POPUP_DETAILS: '.film-details__controls'
 };
 
-const isWatchList = (film)=> film.userDetails.watchList === true;
+const isWatchList = (film)=> film.userDetails.watchlist === true;
 const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
