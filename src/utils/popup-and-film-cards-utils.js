@@ -34,7 +34,7 @@ const getNormalList = (...genre) => {
 const getNormalDescription = (description) => {
   const shortDescription = description.slice(START_SLICE_DESCRIPTION,SIZE_DESCRIPTION);
   const descriptionForFilmCard = shortDescription.length<description.length
-    ? `${shortDescription}(…)`
+    ? `${shortDescription}…`
     : description;
   return descriptionForFilmCard;
 };
