@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 const START_SLICE_DESCRIPTION = 0;
-const SIZE_DESCRIPTION = 139;
+const SIZE_DESCRIPTION = 140;
 const EMOJI =  {
   'smile': '',
   'sleeping': '',
@@ -33,8 +33,8 @@ const getNormalList = (...genre) => {
 };
 const getNormalDescription = (description) => {
   const shortDescription = description.slice(START_SLICE_DESCRIPTION,SIZE_DESCRIPTION);
-  const descriptionForFilmCard = shortDescription<=description
-    ? `${shortDescription}...`
+  const descriptionForFilmCard = shortDescription.length<description.length
+    ? `${shortDescription}(…)`
     : description;
   return descriptionForFilmCard;
 };

@@ -6,8 +6,9 @@ export default class PopupFilmPresenter {
   #filmComments = null;
   #popup = null;
   #renderFilmsCard=null;
-  constructor (renderFilmsCard){
+  constructor (renderFilmsCard, filmControlDetailId){
     this.#renderFilmsCard = renderFilmsCard;
+    this.filmControlDetailId = filmControlDetailId;
   }
 
   init = (filmContainer, filmCardModel, filmComments, openPopup) => {
@@ -15,30 +16,30 @@ export default class PopupFilmPresenter {
     this.filmCardModel = filmCardModel;
     this.#filmComments = filmComments;
     this.openPopup = openPopup;
-    this.#popup = new Popup( this.filmCardModel, this.#filmComments);
+    this.#popup = new Popup( this.filmCardModel, this.#filmComments, this.filmControlDetailId);
     render (this.#popup, this.#filmsContainer);
     this.#filmsContainer.classList.add('hide-overflow');
     this.#popup.setCommitCatalogHandler(this.submitComment);
     this.#popup.setDeleteCommentHandler(this.deleteCommentFilm);
     this.#popup.setEventCloseHandler(()=>{
       this.#filmsContainer.classList.remove('hide-overflow');
-      this.#filmsContainer.removeChild(this.#popup.element);
-      this.#popup.removeElement();
+      this.openPopup.open.removePopup();
       this.openPopup.open = null;
     });
     this.#getFilmDetailsControlButton();
   };
 
-  getRenderPopup = (filmInfo) => {
+  getRenderPopup = (filmInfo, openPopup) => {
     this.filmCardModel = filmInfo;
+    this.openPopup.open = openPopup;
     this.#popup.reset(this.filmCardModel);
     this.#filmsContainer.classList.add('hide-overflow');
     this.#popup.setCommitCatalogHandler(this.submitComment);
     this.#popup.setDeleteCommentHandler(this.deleteCommentFilm);
     this.#popup.setEventCloseHandler(()=>{
       this.#filmsContainer.classList.remove('hide-overflow');
+      this.openPopup.open.removePopup();
       this.openPopup.open = null;
-      this.removePopup();
     });
     this.#getFilmDetailsControlButton();
   };
@@ -48,13 +49,15 @@ export default class PopupFilmPresenter {
     this.#popup.setFilmDetailsControlHandler((evt)=>{
       while(evt.target.id){
         if(evt.target.id === 'watchList'){
+          this.openPopup.controlDetailId = evt.target.id;
           this.#popup.getBlockPopup();
           const updateFilm = this.filmCardModel;
           updateFilm.userDetails.watchlist = !updateFilm.userDetails.watchlist;
           this.#renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
           break;
         }
-        if(evt.target.id === 'watched'){
+        if(evt.target.id === 'alreadyWatched'){
+          this.openPopup.controlDetailId = evt.target.id;
           this.#popup.getBlockPopup();
           const updateFilm = this.filmCardModel;
           updateFilm.userDetails.alreadyWatched = ! updateFilm.userDetails.alreadyWatched;
@@ -62,6 +65,7 @@ export default class PopupFilmPresenter {
           break;
         }
         if(evt.target.id === 'favorite'){
+          this.openPopup.controlDetailId = evt.target.id;
           this.#popup.getBlockPopup();
           const updateFilm = this.filmCardModel;
           updateFilm.userDetails.favorite = !updateFilm.userDetails.favorite;
@@ -80,6 +84,7 @@ export default class PopupFilmPresenter {
   removePopup = () =>{
     this.#filmsContainer.removeChild(this.#popup.element);
     this.#popup.removeElement();
+    this.#popup.removeGlobalEvent();
   };
 
   getBlockPopup =()=>{

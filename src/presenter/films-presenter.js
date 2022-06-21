@@ -12,8 +12,12 @@ export default class FilmsPresenter {
     this.renderFilmsCard = renderFilmsCard;
     this.openPopup = openPopup;
     this.filmCommits = filmComments;
+    this.filmControlDetailId = null;
   }
 
+  get filmControlDetail () {
+    return this.filmControlDetailId;
+  }
 
   init = (filmModel) => {
     this.filmCardModel = filmModel;
@@ -30,21 +34,24 @@ export default class FilmsPresenter {
 
   #getFilmDetailsControlButton = (evt) =>{
     while(evt.target.id){
-      if(evt.target.id === 'watchListCard'){
+      if(evt.target.id === 'watchList'){
+        this.filmControlDetailId = evt.target.id;
         this.#filmCard.blockButtonControlFilmCard();
         const updateFilm = this.filmCardModel;
         updateFilm.userDetails.watchlist = !updateFilm.userDetails.watchlist;
         this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
       }
-      if(evt.target.id === 'watchedCard'){
+      if(evt.target.id === 'alreadyWatched'){
+        this.filmControlDetailId = evt.target.id;
         this.#filmCard.blockButtonControlFilmCard();
         const updateFilm = this.filmCardModel;
         updateFilm.userDetails.alreadyWatched = !updateFilm.userDetails.alreadyWatched;
         this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
       }
-      if(evt.target.id === 'favoriteCard'){
+      if(evt.target.id === 'favorite'){
+        this.filmControlDetailId = evt.target.id;
         this.#filmCard.blockButtonControlFilmCard();
         const updateFilm = {...this.filmCardModel};
         updateFilm.userDetails.favorite = !updateFilm.userDetails.favorite;
@@ -65,7 +72,6 @@ export default class FilmsPresenter {
   #isPopupOpen (){
     if(this.openPopup.open !== null){
       this.openPopup.open.removePopup();
-      this.openPopup.open = null;
     }
   }
 
@@ -78,7 +84,7 @@ export default class FilmsPresenter {
   resetPopup =(filmInfo, disabled)=>{
     this.filmCardModel = filmInfo;
     this.#filmCard.reset(filmInfo, disabled);
-    this.openPopup.open.getRenderPopup(filmInfo);
+    this.openPopup.open.getRenderPopup(filmInfo, this.openPopup.open);
   };
 
   resetFilmCard=(ControlDetails, film)=>{

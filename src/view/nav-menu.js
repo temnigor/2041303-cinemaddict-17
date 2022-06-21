@@ -23,7 +23,7 @@ data-filter-type = ${FilterType.FAVORITE}>Favorites <span class="main-navigation
 export default class NavMenu extends AbstractStatefulView {
   constructor(films, filterModel){
     super();
-    this._state.filter = filterModel;
+    this._state.filter = filterModel.filter;
     this._state.films = films;
   }
 

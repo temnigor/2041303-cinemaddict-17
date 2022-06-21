@@ -29,9 +29,9 @@ const getDomFilmCard = (filmInfo, isDisabled) => {
   <span class="film-card__comments">${comments.length} comments</span>
 </a>
 <div class="film-card__controls">
-  <button  class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchlist)}" id="watchListCard" type="button" ${isDisabled ? 'disabled' : ''}>Add to watchList</button>
-  <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${getFilmCardControlActive(userDetails.alreadyWatched)}" id="watchedCard" type="button" ${isDisabled ? 'disabled' : ''}>Mark as watched</button>
-  <button class="film-card__controls-item film-card__controls-item--favorite ${getFilmCardControlActive(userDetails.favorite)}" id="favoriteCard" type="button" ${isDisabled ? 'disabled' : ''}>Mark as favorite</button>
+  <button  class="film-card__controls-item film-card__controls-item--add-to-watchlist ${getFilmCardControlActive(userDetails.watchlist)}" id="watchList" type="button" ${isDisabled ? 'disabled' : ''}>Add to watchList</button>
+  <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${getFilmCardControlActive(userDetails.alreadyWatched)}" id="alreadyWatched" type="button" ${isDisabled ? 'disabled' : ''}>Mark as watched</button>
+  <button class="film-card__controls-item film-card__controls-item--favorite ${getFilmCardControlActive(userDetails.favorite)}" id="favorite" type="button" ${isDisabled ? 'disabled' : ''}>Mark as favorite</button>
 </div>
 </article>`);
 };

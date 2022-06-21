@@ -127,7 +127,7 @@ const getDomPopup = (filmInfo, comments, state) => {
             <td class="film-details__cell">${releaseCountry}</td>
           </tr>
           <tr class="film-details__row">
-            <td class="film-details__term">Genres</td>
+            <td class="film-details__term">${genre.length === 1?'Genre':'Genres'}</td>
             <td class="film-details__cell">
               ${normalGenre}
           </tr>
@@ -141,7 +141,7 @@ const getDomPopup = (filmInfo, comments, state) => {
 
     <section class="film-details__controls">
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.watchlist)} film-details__control-button--watchList" id="watchList" name="watchList" ${isDisabled ? 'disabled' : ''}>Add to watchlist</button>
-      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.alreadyWatched)} film-details__control-button--watched" id="watched" name="watched" ${isDisabled ? 'disabled' : ''}>Already watched!</button>
+      <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.alreadyWatched)} film-details__control-button--watched" id="alreadyWatched" name="watched" ${isDisabled ? 'disabled' : ''}>Already watched!</button>
       <button type="button" class="film-details__control-button ${getFilmDetailsControlActive(userDetails.favorite)} film-details__control-button--favorite" id="favorite" name="favorite" ${isDisabled ? 'disabled' : ''}>Add to favorites</button>
     </section>
   </div>
@@ -276,6 +276,13 @@ export default class Popup extends AbstractStatefulView {
 
   #removeElementAndEvent = () => {
     this._callback.click();
+    document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
+    document.removeEventListener('keydown', this.#submitHandler);
+    document.removeEventListener('keyup', this.#deleteUpKey);
+
+  };
+
+  removeGlobalEvent = () => {
     document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
     document.removeEventListener('keydown', this.#submitHandler);
     document.removeEventListener('keyup', this.#deleteUpKey);
