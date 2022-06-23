@@ -1,7 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { FilterType } from '../utils/filters.js';
 
-const getDomNavMenu = (films, filterModels) =>{
+const getDomNavMenu = (films, filterModels) => {
   const {wishlist, history, favorites} = films;
   return (`<nav class="main-navigation">
 <a href="#all" class="main-navigation__item
@@ -21,7 +21,7 @@ data-filter-type = ${FilterType.FAVORITE}>Favorites <span class="main-navigation
 };
 
 export default class NavMenu extends AbstractStatefulView {
-  constructor(films, filterModel){
+  constructor(films, filterModel) {
     super();
     this._state.filter = filterModel.filter;
     this._state.films = films;
@@ -31,25 +31,24 @@ export default class NavMenu extends AbstractStatefulView {
     return getDomNavMenu(this._state.films, this._state.filter);
   }
 
-  setClickNavHandler = (callback)=>{
-    this._callback.clickNav = callback;
-    this.element.addEventListener('click', this.#navMenuClickHandler);
-  };
-
-  #navMenuClickHandler =(evt)=>{
-    if(evt.target.tagName === 'A'){
-      evt.preventDefault();
-      this._callback.clickNav(evt.target.dataset.filterType);
-    }
-
-  };
-
-  reset=(films)=>{
+  reset = (films) => {
     this._state.films = films;
     this.updateElement(this._state.films);
   };
 
-  _restoreHandlers =()=>{
+  _restoreHandlers = () => {
+    this.element.addEventListener('click', this.#navMenuClickHandler);
+  };
+
+  #navMenuClickHandler = (evt) => {
+    if(evt.target.tagName === 'A'){
+      evt.preventDefault();
+      this._callback.clickNav(evt.target.dataset.filterType);
+    }
+  };
+
+  setClickNavHandler = (callback) => {
+    this._callback.clickNav = callback;
     this.element.addEventListener('click', this.#navMenuClickHandler);
   };
 }

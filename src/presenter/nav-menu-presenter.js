@@ -8,7 +8,7 @@ export default class NavMenuPresenter {
   #navMenu = null;
   #navMenuPlace = null;
 
-  getFilmsFilterLength=(films)=>{
+  getFilmsFilterLength = (films) => {
     const filterFilms = films;
     return ({
       wishlist: filter[FilterType.WATCH_LIST](filterFilms).length,
@@ -17,7 +17,7 @@ export default class NavMenuPresenter {
     });
   };
 
-  init = (main, filterNavMenu, films) =>{
+  init = (main, filterNavMenu, films) => {
     this.#filmsCardModel = films;
     const filterLength = this.getFilmsFilterLength(this.#filmsCardModel.films);
     this.#navMenuPlace = main;
@@ -27,13 +27,13 @@ export default class NavMenuPresenter {
     this.#navMenu.setClickNavHandler(this.#filterChang);
   };
 
-  resetNavMenu = (films)=>{
+  reset = (films) => {
     this.#filmsCardModel = films;
     const filterLength = this.getFilmsFilterLength(this.#filmsCardModel.films);
     this.#navMenu.reset(filterLength);
   };
 
-  #filterChang =(filterType)=>{
+  #filterChang = (filterType) => {
     if( this.filterNavMenu.filters === filterType){
       return;
     }

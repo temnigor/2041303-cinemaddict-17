@@ -5,9 +5,10 @@ const getDomAvatar = (avatarRank) =>
 <p class="profile__rating">${avatarRank}</p>
 <img class="profile__avatar" src="images/bitmap.png" alt="Avatar" width="35" height="35">
 </section>`;
+
 export default class AvatarRank extends AbstractView {
   #avatarRank;
-  constructor(avatarRank){
+  constructor(avatarRank) {
     super();
     this.#avatarRank = avatarRank;
   }

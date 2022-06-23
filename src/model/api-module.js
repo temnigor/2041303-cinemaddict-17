@@ -10,7 +10,6 @@ const Method = {
 export default class Api extends ApiService {
 
   get films () {
-
     return this._load({url:'movies'})
       .then(ApiService.parseResponse);
   }
@@ -47,10 +46,9 @@ export default class Api extends ApiService {
       headers: new Headers({'Content-Type': 'application/json'}),
     });
     return this.updateFilm(film);
-
   };
 
-  adaptFilmToServer =(film)=>{
+  adaptFilmToServer = (film) => {
     const adaptFilm =  {...film,
       ['film_info']: film.filmInfo,
       ['user_details']: film.userDetails,

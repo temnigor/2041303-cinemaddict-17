@@ -32,27 +32,54 @@ export default class FilmsPresenter {
     remove(this.#filmCard);
   };
 
-  #getFilmDetailsControlButton = (evt) =>{
-    while(evt.target.id){
-      if(evt.target.id === 'watchList'){
+  initPopup = () => {
+    this.openPopup.open.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
+  };
+
+
+  resetPopup = (filmInfo, disabled) => {
+    this.filmCardModel = filmInfo;
+    this.#filmCard.reset(filmInfo, disabled);
+    this.openPopup.open.update(filmInfo, this.openPopup.open);
+  };
+
+  resetFilmCard = (ControlDetails, film) => {
+    switch (ControlDetails){
+      case ControlDetailsFilmCard.UNBLOCK_CONTROL_PANEL:
+        this.#filmCard.unblock();
+        break;
+      case ControlDetailsFilmCard.UPDATE_CONTROL_PANEL:
+        this.#filmCard.reset(film);
+    }
+  };
+
+  #isPopupOpen () {
+    if(this.openPopup.open !== null) {
+      this.openPopup.open.remove();
+    }
+  }
+
+  #getFilmDetailsControlButton = (evt) => {
+    while(evt.target.id) {
+      if(evt.target.id === 'watchList') {
         this.filmControlDetailId = evt.target.id;
-        this.#filmCard.blockButtonControlFilmCard();
+        this.#filmCard.block();
         const updateFilm = this.filmCardModel;
         updateFilm.userDetails.watchlist = !updateFilm.userDetails.watchlist;
         this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
       }
-      if(evt.target.id === 'alreadyWatched'){
+      if(evt.target.id === 'alreadyWatched') {
         this.filmControlDetailId = evt.target.id;
-        this.#filmCard.blockButtonControlFilmCard();
+        this.#filmCard.block();
         const updateFilm = this.filmCardModel;
         updateFilm.userDetails.alreadyWatched = !updateFilm.userDetails.alreadyWatched;
         this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
       }
-      if(evt.target.id === 'favorite'){
+      if(evt.target.id === 'favorite') {
         this.filmControlDetailId = evt.target.id;
-        this.#filmCard.blockButtonControlFilmCard();
+        this.#filmCard.block();
         const updateFilm = {...this.filmCardModel};
         updateFilm.userDetails.favorite = !updateFilm.userDetails.favorite;
         this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
@@ -63,37 +90,9 @@ export default class FilmsPresenter {
 
   };
 
-  #setClickPopupHandler = ()=>{
+  #setClickPopupHandler = () => {
     this.#isPopupOpen();
     this.openPopup.open = new PopupFilmPresenter(this.renderFilmsCard);
     this.filmCommits.init(this.filmCardModel);
-  };
-
-  #isPopupOpen (){
-    if(this.openPopup.open !== null){
-      this.openPopup.open.removePopup();
-    }
-  }
-
-
-  initPopup=()=>{
-    this.openPopup.open.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
-  };
-
-
-  resetPopup =(filmInfo, disabled)=>{
-    this.filmCardModel = filmInfo;
-    this.#filmCard.reset(filmInfo, disabled);
-    this.openPopup.open.getRenderPopup(filmInfo, this.openPopup.open);
-  };
-
-  resetFilmCard=(ControlDetails, film)=>{
-    switch (ControlDetails){
-      case ControlDetailsFilmCard.UNBLOCK_CONTROL_PANEL:
-        this.#filmCard.unblockButtonControlFilmCard();
-        break;
-      case ControlDetailsFilmCard.UPDATE_CONTROL_PANEL:
-        this.#filmCard.reset(film);
-    }
   };
 }

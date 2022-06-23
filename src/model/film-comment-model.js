@@ -1,11 +1,12 @@
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../utils/filters.js';
+
 export default class FilmCommentModel extends Observable {
   #addCommentResponse = null;
   #filmAddComment = null;
   #comments = [];
   #apiServes = null;
-  constructor(api){
+  constructor(api) {
     super();
     this.#apiServes= api;
   }
@@ -14,7 +15,7 @@ export default class FilmCommentModel extends Observable {
     return this.#comments;
   }
 
-  init = async (film) =>{
+  init = async (film) => {
     try{
       const comments = await this.#apiServes.getComments(film.id);
       this.#comments = comments;
@@ -24,19 +25,19 @@ export default class FilmCommentModel extends Observable {
     this._notify(UpdateType.INIT_POPUP, film);
   };
 
-  addNewComment = async(film,addComment)=>{
+  addNewComment = async(film,addComment) => {
     try{
       this.#addCommentResponse = await this.#apiServes.addComment(film, addComment);
       this.#filmAddComment = this.#adaptToClient(this.#addCommentResponse.movie);
       this.#comments = this.#addCommentResponse.comments;
-    }catch (err){
+    }catch (err) {
       throw new Error ('Not addComment!');
     }
     this._notify(UpdateType.PATCH,this.#filmAddComment);
 
   };
 
-  deleteComment = async( updateType, film, deleteCommentId)=>{
+  deleteComment = async( updateType, film, deleteCommentId) => {
     const updateFilm = film;
     updateFilm.comments = updateFilm.comments.filter((comment)=>comment !== deleteCommentId);
     try{
@@ -52,7 +53,7 @@ export default class FilmCommentModel extends Observable {
 
   };
 
-  #adaptToClient =(films)=>{
+  #adaptToClient = (films) => {
     const adaptFilm =  {...films,
       filmInfo: films.film_info,
       userDetails: films.user_details,

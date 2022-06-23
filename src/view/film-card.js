@@ -49,8 +49,28 @@ export default class FilmCard extends AbstractStatefulView{
     return getDomFilmCard(this.#filmInfo, this.#isDisabled);
   }
 
-  setClickOpenPopupHandler = (callback ) =>{
-    this._callback.click = callback;
+  reset = (filmInfo) => {
+    this._state = {};
+    this.#filmInfo = filmInfo;
+    this.#isDisabled = false;
+    this.updateElement(this.#filmInfo);
+
+  };
+
+  block = () => {
+    this._state = {};
+    this.#isDisabled = true;
+    this.updateElement( this.#prevFilmInfo);
+  };
+
+  unblock = () => {
+    this._state = {};
+    this.#isDisabled = false;
+    this.updateElement(this.#prevFilmInfo);
+  };
+
+  _restoreHandlers = () => {
+    this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
     this.element.querySelector('.film-card__link').addEventListener('click', this.#setClickHandler);
   };
 
@@ -59,41 +79,20 @@ export default class FilmCard extends AbstractStatefulView{
     this._callback.click();
   };
 
-  setFilmDetailsControlHandler = (callback)=>{
-    this.#prevFilmInfo = {...this.#filmInfo};
-    this._callback.clickFilmDetailsControl = callback;
-    this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
-  };
-
-  #addDetailsControl = (evt)=>{
+  #addDetailsControl = (evt) => {
     evt.preventDefault();
     this._callback.clickFilmDetailsControl(evt);
   };
 
-  reset =(filmInfo)=>{
-    this._state = {};
-    this.#filmInfo = filmInfo;
-    this.#isDisabled = false;
-    this.updateElement(this.#filmInfo);
-
-  };
-
-  blockButtonControlFilmCard =()=>{
-    this._state = {};
-    this.#isDisabled = true;
-    this.updateElement( this.#prevFilmInfo);
-  };
-
-  unblockButtonControlFilmCard =()=>{
-    this._state = {};
-    this.#isDisabled = false;
-    this.updateElement(this.#prevFilmInfo);
-  };
-
-
-  _restoreHandlers =()=>{
-    this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
+  setClickOpenPopupHandler = (callback ) => {
+    this._callback.click = callback;
     this.element.querySelector('.film-card__link').addEventListener('click', this.#setClickHandler);
+  };
+
+  setFilmDetailsControlHandler = (callback) => {
+    this.#prevFilmInfo = {...this.#filmInfo};
+    this._callback.clickFilmDetailsControl = callback;
+    this.element.querySelector('.film-card__controls').addEventListener('click', this.#addDetailsControl);
   };
 
 }

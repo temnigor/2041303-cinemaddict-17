@@ -29,16 +29,16 @@ const ShakeClass = {
   POPUP_DETAILS: '.film-details__controls'
 };
 
-const isWatchList = (film)=> film.userDetails.watchlist === true;
+const isWatchList = (film) => film.userDetails.watchlist === true;
 const isAlreadyWatched = (film) => film.userDetails.alreadyWatched === true;
 const isFavorite = (film) => film.userDetails.favorite === true;
 const filter = {
-  [FilterType.All]:(films)=> [...films],
+  [FilterType.All]:(films) => [...films],
   [FilterType.WATCH_LIST]: (films) => films.filter((film) => isWatchList(film)),
-  [FilterType.ALREADY_WATCHED]: (films)=>films.filter((film) => isAlreadyWatched(film)),
-  [FilterType.FAVORITE]: (films)=>films.filter((film) => isFavorite(film))
+  [FilterType.ALREADY_WATCHED]: (films) => films.filter((film) => isAlreadyWatched(film)),
+  [FilterType.FAVORITE]: (films) => films.filter((film) => isFavorite(film))
 };
-const generateFilter = (films)=> Object.entries(filter).map(([nameArray, filterArray])=>({
+const generateFilter = (films) => Object.entries(filter).map(([nameArray, filterArray]) => ({
   name: nameArray,
   count: filterArray(films)
 })

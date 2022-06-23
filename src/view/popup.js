@@ -6,10 +6,15 @@ import {
   getGenreList,
   getNormalList,
   getDateComment,
-  getFilmDetailsControlActive,
-  EMOJI
+  getFilmDetailsControlActive
 } from '../utils/popup-and-film-cards-utils.js';
-const getImgEmoji =(emojiInfo)=>{
+const Emoji =  {
+  'smile': '',
+  'sleeping': '',
+  'puke': '',
+  'angry': ''
+};
+const getImgEmoji = (emojiInfo) => {
   for(const [key, value] of Object.entries(emojiInfo))
   {if(value === 'checked'){
     return `<img src="./images/emoji/${key}.png" width="55" height="55" alt="emoji-${key}"></img>`;
@@ -193,8 +198,6 @@ const getDomPopup = (filmInfo, comments, state) => {
 
 export default class Popup extends AbstractStatefulView {
   #filmInfo = null;
-  #filmAddEmoji= null;
-  #filmEmojiList = null;
   #filmComment = null;
   #keyPressedForSubmit = new Set();
   constructor(filmInfo, filmComment) {
@@ -203,7 +206,7 @@ export default class Popup extends AbstractStatefulView {
     this.#filmComment = filmComment;
     this._state.comments = [...this.#filmComment.comments];
     this._state.filmInfo = {...this.#filmInfo};
-    this._state.emoji = {...EMOJI};
+    this._state.emoji = {...Emoji};
     this._state.newComment = {
       'comment':'',
       'emotion':''
@@ -213,21 +216,21 @@ export default class Popup extends AbstractStatefulView {
       IdForDeleting : null
     };
     this.buttonFilmDetailsControls = this.element.querySelector('.film-details__close-btn');
-    this.#filmAddEmoji = this.element.querySelector('.film-details__add-emoji-label');
-    this.#filmEmojiList = this.element.querySelector('.film-details__emoji-list');
+    this.filmAddEmoji = this.element.querySelector('.film-details__add-emoji-label');
+    this.filmEmojiList = this.element.querySelector('.film-details__emoji-list');
   }
 
   get template() {
     return getDomPopup(this._state.filmInfo, this._state.comments, this._state);
   }
 
-  reset =(filmInfo)=>{
+  reset = (filmInfo) => {
     this._state = {};
     this._state.initElementScrollTop = this.element.scrollTop;
     this.#filmInfo = filmInfo;
     this._state.comments = [...this.#filmComment.comments];
     this._state.filmInfo = {...this.#filmInfo};
-    this._state.emoji = {...EMOJI};
+    this._state.emoji = {...Emoji};
     this._state.newComment = {
       'comment':'',
       'emotion':''
@@ -240,14 +243,14 @@ export default class Popup extends AbstractStatefulView {
     this.#scrollToPosition(this._state.initElementScrollTop);
   };
 
-  getBlockPopup =()=>{
+  block = () => {
     this._state.initElementScrollTop = this.element.scrollTop;
     this._state.block.isDisabled = true;
     this.updateElement(this._state);
     this.#scrollToPosition(this._state.initElementScrollTop);
   };
 
-  getUnblockPopup =()=>{
+  unblock = () => {
     this._state.initElementScrollTop = this.element.scrollTop;
     this._state.block = {
       isDisabled : false,
@@ -257,15 +260,26 @@ export default class Popup extends AbstractStatefulView {
     this.#scrollToPosition(this._state.initElementScrollTop);
   };
 
+  removeGlobalEvent = () => {
+    document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
+    document.removeEventListener('keydown', this.#submitHandler);
+    document.removeEventListener('keyup', this.#deleteUpKey);
 
-  setEventCloseHandler = (callback) => {
-    this._callback.click = callback;
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
+  };
+
+  _restoreHandlers = () => {
+    this.element.querySelector('.film-details__controls').addEventListener('click', this.#addDetailsControl);
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) => {
       evt.preventDefault();
       this.#removeElementAndEvent();
     });
-    document.addEventListener('keydown',this.#removeElementAndEventKeydown);
+    document.addEventListener('keydown', this.#submitHandler);
+    document.addEventListener('keyup', this.#deleteUpKey);
+    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#saveInputText);
   };
+
 
   #removeElementAndEventKeydown = (evt) => {
     if(evt.code === 'Escape'){
@@ -282,70 +296,42 @@ export default class Popup extends AbstractStatefulView {
 
   };
 
-  removeGlobalEvent = () => {
-    document.removeEventListener('keydown', this.#removeElementAndEventKeydown);
-    document.removeEventListener('keydown', this.#submitHandler);
-    document.removeEventListener('keyup', this.#deleteUpKey);
-
-  };
-
-  setFilmDetailsControlHandler = (callback)=>{
-    this._callback.clickFilmDetailsControl = callback;
-    this.element.querySelector('.film-details__controls').addEventListener('click', this.#addDetailsControl);
-  };
-
-  #addDetailsControl = (evt)=>{
+  #addDetailsControl = (evt) => {
     evt.preventDefault();
     this._callback.clickFilmDetailsControl(evt);
   };
 
-  #submitHandler = (evt)=>{
+  #submitHandler = (evt) => {
     if(this._state.newComment.comment.length >= 1 && this._state.newComment.emotion.length >=4){
       this.#keyPressedForSubmit.add(evt.code);
       if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
         this.#keyPressedForSubmit.clear();
         this._callback.submit(this._state.filmInfo, this._state.newComment);
-
       }
-
     }
   };
 
-  #deleteUpKey = (evt)=>{
+  #deleteUpKey = (evt) => {
     this.#keyPressedForSubmit.delete(evt.code);
   };
 
-  setDeleteCommentHandler =(callback)=>{
-    this._callback.deleteComment = callback;
-    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+  #saveInputText = (evt) => {
+    this._state.newComment.comment = evt.target.value;
   };
 
-  setCommitCatalogHandler =(callback)=>{
-    this._callback.submit = callback;
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
-    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#saveInputText);
-    document.addEventListener('keydown', this.#submitHandler);
-    document.addEventListener('keyup', this.#deleteUpKey);
-  };
-
-  #saveInputText =(evt)=>{
-    this._state.newComment.comment=evt.target.value;
-  };
-
-  #chiosEmoji = (evt) =>{
+  #chiosEmoji = (evt) => {
     evt.preventDefault();
     if(evt.target.parentElement.control !== undefined){
       this._state.initElementScrollTop = this.element.scrollTop;
-      this._state.emoji = {...EMOJI};
+      this._state.emoji = {...Emoji};
       this._state.emoji[evt.target.parentElement.control.value] = 'checked';
       this._state.newComment.emotion = evt.target.parentElement.control.value;
       this.updateElement(this._state);
       this.#scrollToPosition(this._state.initElementScrollTop);
     }
-
   };
 
-  #deleteComment =(evt)=>{
+  #deleteComment = (evt) => {
     if(evt.target.localName === 'button'){
       evt.preventDefault();
       this._state.initElementScrollTop = this.element.scrollTop;
@@ -355,20 +341,34 @@ export default class Popup extends AbstractStatefulView {
     }
   };
 
-  _restoreHandlers =()=>{
-    this.element.querySelector('.film-details__controls').addEventListener('click', this.#addDetailsControl);
+  #scrollToPosition = (intValue) => {
+    this.element.scrollTop = intValue;
+  };
+
+  setEventCloseHandler = (callback) => {
+    this._callback.click = callback;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) =>{
       evt.preventDefault();
       this.#removeElementAndEvent();
     });
-    document.addEventListener('keydown', this.#submitHandler);
-    document.addEventListener('keyup', this.#deleteUpKey);
-    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
-    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#saveInputText);
+    document.addEventListener('keydown',this.#removeElementAndEventKeydown);
   };
 
-  #scrollToPosition=(intValue)=>{
-    this.element.scrollTop=intValue;
+  setFilmDetailsControlHandler = (callback) => {
+    this._callback.clickFilmDetailsControl = callback;
+    this.element.querySelector('.film-details__controls').addEventListener('click', this.#addDetailsControl);
+  };
+
+  setDeleteCommentHandler = (callback) => {
+    this._callback.deleteComment = callback;
+    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#deleteComment);
+  };
+
+  setCommitCatalogHandler = (callback) => {
+    this._callback.submit = callback;
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#chiosEmoji);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#saveInputText);
+    document.addEventListener('keydown', this.#submitHandler);
+    document.addEventListener('keyup', this.#deleteUpKey);
   };
 }

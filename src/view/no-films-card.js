@@ -8,13 +8,13 @@ const noFilmsCardType = {
 };
 
 const getDomNoFilmCard = (filterType) => {
-
   const noFilmsTextValue = noFilmsCardType[filterType];
   return (`<h2 class="films-list__title"> ${noFilmsTextValue} </h2>`);
 };
+
 export default class NoFilmCard extends AbstractView {
   #filterType = null;
-  constructor(filterType){
+  constructor(filterType) {
     super();
     this.#filterType = filterType;
   }

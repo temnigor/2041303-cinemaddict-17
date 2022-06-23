@@ -5,6 +5,7 @@ const getDomFilmsMostComment = () =>
 <div class="films-list__container most_commented">
 </div>
 </section>`;
+
 export default class FilmsMostComment extends AbstractView {
   get template() {
     return getDomFilmsMostComment();

@@ -4,7 +4,7 @@ import { UpdateType } from '../utils/filters.js';
 export default class FilmCardModel extends Observable {
   #films = [];
   #apiServes = null;
-  constructor(apiClass){
+  constructor(apiClass) {
     super();
     this.#apiServes = apiClass;
   }
@@ -13,38 +13,14 @@ export default class FilmCardModel extends Observable {
     return this.#films;
   }
 
-  init = async () =>{
+  init = async () => {
     try{
       const films = await this.#apiServes.films;
       this.#films = films.map(this.#adaptToClient);
     } catch (err) {
-      this.#films =[];
+      this.#films = [];
     }
     this._notify(UpdateType.INIT);
-  };
-
-  #adaptToClient =(films)=>{
-    const adaptFilm =  {...films,
-      filmInfo: films.film_info,
-      userDetails: films.user_details,
-    };
-    adaptFilm.filmInfo = {...adaptFilm.filmInfo,
-      alternativeTitle: adaptFilm.filmInfo.alternative_title,
-      ageRating: adaptFilm.filmInfo.age_rating,
-      totalRating: adaptFilm.filmInfo.total_rating,
-      release : {date:adaptFilm.filmInfo.release.date, releaseCountry: adaptFilm.filmInfo.release.release_country}
-    };
-    adaptFilm.userDetails= {...adaptFilm.userDetails,
-      alreadyWatched:adaptFilm.userDetails.already_watched
-    };
-    delete adaptFilm.filmInfo.alternative_title;
-    delete  adaptFilm.filmInfo.age_rating;
-    delete adaptFilm.filmInfo.total_rating;
-    delete adaptFilm.filmInfo.release.release_country;
-    delete adaptFilm.userDetails.already_watched;
-    delete adaptFilm.film_info;
-    delete adaptFilm.user_details;
-    return adaptFilm;
   };
 
   updateFilms = async (updateType, update) => {
@@ -66,9 +42,32 @@ export default class FilmCardModel extends Observable {
       ];
 
       this._notify(updateType, updateFilms);
-    }catch(err){
+    }catch(err) {
       throw new Error('Не получилось обновить');
     }
   };
 
+  #adaptToClient = (films) => {
+    const adaptFilm =  {...films,
+      filmInfo: films.film_info,
+      userDetails: films.user_details,
+    };
+    adaptFilm.filmInfo = {...adaptFilm.filmInfo,
+      alternativeTitle: adaptFilm.filmInfo.alternative_title,
+      ageRating: adaptFilm.filmInfo.age_rating,
+      totalRating: adaptFilm.filmInfo.total_rating,
+      release : {date:adaptFilm.filmInfo.release.date, releaseCountry: adaptFilm.filmInfo.release.release_country}
+    };
+    adaptFilm.userDetails = {...adaptFilm.userDetails,
+      alreadyWatched:adaptFilm.userDetails.already_watched
+    };
+    delete adaptFilm.filmInfo.alternative_title;
+    delete  adaptFilm.filmInfo.age_rating;
+    delete adaptFilm.filmInfo.total_rating;
+    delete adaptFilm.filmInfo.release.release_country;
+    delete adaptFilm.userDetails.already_watched;
+    delete adaptFilm.film_info;
+    delete adaptFilm.user_details;
+    return adaptFilm;
+  };
 }
