@@ -1,12 +1,13 @@
 import Popup from '../view/popup.js';
 import { render } from '../framework/render.js';
 import { UserAction, UpdateType} from '../utils/filters.js';
+
 export default class PopupFilmPresenter {
   #filmsContainer = null;
   #filmComments = null;
   #popup = null;
-  #renderFilmsCard=null;
-  constructor (renderFilmsCard, filmControlDetailId){
+  #renderFilmsCard = null;
+  constructor (renderFilmsCard, filmControlDetailId) {
     this.#renderFilmsCard = renderFilmsCard;
     this.filmControlDetailId = filmControlDetailId;
   }
