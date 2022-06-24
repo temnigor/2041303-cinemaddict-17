@@ -58,9 +58,9 @@ export default class PopupFilmPresenter {
     this.#popup.block();
   };
 
-  getErrorAction = (shakeClass) => {
-    const unblock = this.#popup.unblock();
-    this.#popup.shake(unblock, shakeClass);
+  shakeElement = (shakeClass) => {
+    this.#popup.shake(null, shakeClass);
+    this.#popup.unblock();
   };
 
   deleteCommentFilm = (deleteCommentId) => {

@@ -167,7 +167,7 @@ export default class FilmsCatalogPresenter {
         try{
           await this.filmComment.addNewComment(update, comment);
         }catch (err){
-          this.#openPopup.open.getErrorAction(ShakeClass.POPUP);
+          this.#openPopup.open.shakeElement(ShakeClass.POPUP);
         }
         break;
       case UserAction.UPDATE_FILM:
@@ -178,7 +178,7 @@ export default class FilmsCatalogPresenter {
           if(this.#openPopup.open === null) {
             this.#filmCardPresenters.get(update.id).resetFilmCard(ControlDetailsFilmCard.UNBLOCK_CONTROL_PANEL);
           }else {
-            this.#openPopup.open.getErrorAction(ShakeClass.POPUP_DETAILS);
+            this.#openPopup.open.shakeElement(ShakeClass.POPUP_DETAILS);
           }
         }
         break;
@@ -187,7 +187,7 @@ export default class FilmsCatalogPresenter {
         try{
           await this.filmComment.deleteComment(updateType, update, comment);
         }catch (err) {
-          this.#openPopup.open.getErrorAction(ShakeClass.POPUP_COMMENTS);
+          this.#openPopup.open.shakeElement(ShakeClass.POPUP_COMMENTS);
         }
         break;
     }
